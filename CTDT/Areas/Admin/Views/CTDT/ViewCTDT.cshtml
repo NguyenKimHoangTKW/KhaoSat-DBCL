@@ -1,0 +1,291 @@
+﻿
+@{
+    ViewBag.Title = "ViewCTDT";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<div class="main-content">
+    <div class="page-header">
+        <h2 class="header-title">Quản Lý Chương Trình Đào Tạo</h2>
+        <div class="header-sub-title">
+            <nav class="breadcrumb breadcrumb-dash">
+                <a href="#" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Home</a>
+                <span class="breadcrumb-item active">Danh sách CTĐT</span>
+            </nav>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <h4>Quản Lý Danh Sách Chương Trình Đào Tạo</h4>
+            <div>
+                <button class="btn btn-primary btn-tone m-r-5" data-toggle="modal" data-target="#bd-example-modal-lg">Thêm mới</button>
+            </div>
+            <!--Modal Thêm mới CTDT-->
+            <div class="modal fade" id="bd-example-modal-lg">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title h4">Thêm mới CTĐT</h5>
+                            <button type="button" class="close" data-dismiss="modal">
+                                <i class="anticon anticon-close"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="form-validation" method="post" action="/CTDT/Add">
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label control-label">Tên CTĐT *</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" name="ten_ctdt" id="ten_ctdt" placeholder="Nhập tên Khoa ... *">
+                                    </div>
+                                    <label class="col-sm-2 col-form-label control-label" style="margin-top: 10px;">Chọn Khoa *</label>
+                                    <div class="col-sm-10" style="margin-top: 10px;">
+                                    <select id="MaKhoa" name="id_khoa" class="form-control">
+                                        <option value="">-- Chọn Khoa --</option>
+                                        @foreach (var item in ViewBag.KhoaList)
+                                        {
+                                            <option value="@item.Value">@item.Text</option>
+                                        }
+                                    </select>
+                                     </div>
+                                </div>
+                            </form>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger btn-tone m-r-5" data-dismiss="modal">Thoát</button>
+                                <button type="button" class="btn btn-success btn-tone m-r-5" id="btnSave">Lưu</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--End Modal Thêm mới CTDT-->
+            <!-- Modal Sửa CTDT -->
+            <div class="modal fade" id="ModalEditCTDT">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title h4">Sửa đổi CTDT</h5>
+                            <button type="button" class="close" data-dismiss="modal">
+                                <i class="anticon anticon-close"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="form-validation" method="post" action="/CTDT/Edit">
+                                <input type="hidden" id="Edit_MaCTDT" name="Edit_MaCTDT" />
+                                <input type="hidden" id="change_Ngay_Tao" name="change_Ngay_Tao" />
+                                <input type="hidden" id="change_Ngay_Cap_Nhat" name="change_Ngay_Cap_Nhat" />
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label control-label">Tên CTĐT *</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="Edit_TenCTDT" name="Edit_TenCTDT">
+                                    </div>
+                                        <label class="col-sm-2 col-form-label control-label" style="margin-top: 10px;">Chọn Khoa *</label>
+                                        <div class="col-sm-10" style="margin-top: 10px;">
+                                            <select id="Edit_Ma_Khoa" name="Edit_Ma_Khoa" class="form-control select2">
+                                                @foreach (var item in ViewBag.KhoaList)
+                                                {
+                                                    <option value="@item.Value">@item.Text</option>
+                                                }
+                                            </select>
+                                        </div>
+                                </div>
+                            </form>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger btn-tone m-r-5" data-dismiss="modal">Thoát</button>
+                                <button type="button" class="btn btn-success btn-tone m-r-5" id="btnSaveChange">Thay đổi</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--End Modal Sửa CTDT -->
+            <div class="m-t-25">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th scope="col">STT</th>
+                                <th scope="col">Mã CTĐT</th>
+                                <th scope="col">Tên Khoa</th>
+                                <th scope="col">Tên CTĐT</th>
+                                <th scope="col">Ngày Cập Nhật</th>
+                                <th scope="col">Ngày Tạo</th>
+                                <th scope="col">Chức năng</th>
+                            </tr>
+                        </thead>
+                        <tbody id="showdata">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<!-- page css -->
+<link href="~/Areas/assets/vendors/select2/select2.css" rel="stylesheet">
+
+<!-- page js -->
+<script src="~/Areas/assets/vendors/select2/select2.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        LoadData();
+        $(document).on("click", "#btnSave", function () {
+            AddCTDT();
+        });
+
+        $(document).on("click", "#btnEdit", function () {
+            var MaCTDT = $(this).closest("tr").find("td:eq(1)").text();
+            GetByID(MaCTDT);
+        });
+
+        $(document).on("click", "#btnSaveChange", function () {
+            EditCTDT();
+        });
+
+        $(document).on("click", "#btnDelete", function () {
+            var MaCTDT = $(this).closest("tr").find("td:eq(1)").text();
+            var TenCTDT = $(this).closest("tr").find("td:eq(3)").text();
+            if (confirm("Bạn có chắc muốn xóa khoa '" + TenCTDT + "'không?")) {
+                DelCTDT(MaCTDT);
+            }
+        });
+    });
+
+    function GetByID(id) {
+        $.ajax({
+            url: '/CTDT/GetByID',
+            type: 'GET',
+            data: { id: id },
+            success: function (res) {
+                $('#Edit_MaCTDT').val(res.data.MaCTDT);
+                $('#Edit_TenCTDT').val(res.data.TenCTDT);
+                $('#Edit_Ma_Khoa').val(res.data.MaKhoa);
+                $('#change_Ngay_Tao').val(res.data.NgayTao);
+                $('#change_Ngay_Cap_Nhat').val(res.data.NgayCapNhat);
+            }
+        });
+    }
+
+    function LoadData() {
+        $.ajax({
+            url: '/CTDT/LoadDataCTDT',
+            type: 'GET',
+            success: function (res) {
+                var items = res.data;
+                var html = "";
+
+                if (items.length === 0) {
+                    html += "<tr><td colspan='9' class='text-center'>Không có dữ liệu</td></tr>";
+                } else {
+                    for (let i = 0; i < items.length; i++) {
+                        var formattedDate1 = unixTimestampToDate(items[i].NgayCapNhat);
+                        var formattedDate2 = unixTimestampToDate(items[i].NgayTao);
+                        var index = i + 1;
+                        html += "<tr>";
+                        html += "<td>" + index + "</td>"
+                        html += "<td>" + "#" + items[i].MaCTDT + "</td>";
+                        html += "<td>" + items[i].TenKhoa + "</td>";
+                        html += "<td>" + items[i].TenCTDT + "</td>";
+                        html += "<td>" + formattedDate1 + "</td>";
+                        html += "<td>" + formattedDate2 + "</td>";
+                        html += "<td><button class='btn btn-icon btn-hover btn-sm btn-rounded pull-right ' id='btnEdit' data-toggle='modal' data-target='#ModalEditCTDT'> <i class='anticon anticon-edit'></i></button><button class='btn btn-icon btn-hover btn-sm btn-rounded pull-right' id='btnDelete' > <i class='anticon anticon-delete'></i></button> </td> ";
+                        html += "</tr>";
+                    }
+                }
+                $('#showdata').html(html);
+            }
+        });
+    };
+
+
+    function AddCTDT() {
+        var ten_ctdt = $("#ten_ctdt").val().trim();
+        var MaKhoa = $("#MaKhoa").val().trim();
+        $.ajax({
+            url: '/CTDT/Add',
+            type: 'POST',
+            dataType: 'JSON',
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({
+                ten_ctdt: ten_ctdt,
+                id_khoa: MaKhoa
+            }),
+            success: function (response) {
+                alert(response.status);
+                LoadData();
+            },
+            error: function (response) {
+                alert(response.status)
+            },
+        });
+    };
+
+    function EditCTDT() {
+        var TenCTDT = $('#Edit_TenCTDT').val();
+        var MaCTDT = $('#Edit_MaCTDT').val()
+        var MaKhoa = $('#Edit_Ma_Khoa').val();
+        var NgayTao = $('#change_Ngay_Tao').val();
+        var NgayCapNhat = $('#change_Ngay_Cap_Nhat').val();
+        var ctdt = {
+            id_ctdt: MaCTDT,
+            ten_ctdt: TenCTDT,
+            id_khoa: MaKhoa,
+            ten_ctdt: TenCTDT,
+            ngaycapnhat: NgayCapNhat,
+            ngaytao: NgayTao,
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: '/CTDT/Edit',
+            dataType: 'JSON',
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(ctdt),
+            success: function (response) {
+                alert(response.status);
+                LoadData();
+            }
+
+        });
+    };
+
+    function DelCTDT(id) {
+        $.ajax({
+            type: 'POST',
+            url: '/CTDT/Delete',
+            data: { id: id },
+            success: function (response) {
+                alert(response.status);
+                LoadData();
+            },
+            error: function (response) {
+                alert(response.status)
+            },
+        });
+    };
+
+    function unixTimestampToDate(unixTimestamp) {
+        // Multiply by 1000 because JavaScript works in milliseconds instead of seconds
+        var date = new Date(unixTimestamp * 1000);
+
+        // Define an array of weekday names
+        var weekdays = ['Chủ Nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
+
+        // Get the day of the week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+        var dayOfWeek = weekdays[date.getDay()];
+
+        // Months are zero-based, so we add 1 to the month
+        var month = ("0" + (date.getMonth() + 1)).slice(-2);
+        var day = ("0" + date.getDate()).slice(-2);
+        var year = date.getFullYear();
+        var hours = ("0" + date.getHours()).slice(-2);
+        var minutes = ("0" + date.getMinutes()).slice(-2);
+        var seconds = ("0" + date.getSeconds()).slice(-2);
+
+        // Display the formatted date with the day of the week
+        var formattedDate = dayOfWeek + ', ' + day + "-" + month + "-" + year + " " + ', ' + hours + ":" + minutes + ":" + seconds;
+        return formattedDate;
+    }
+</script>

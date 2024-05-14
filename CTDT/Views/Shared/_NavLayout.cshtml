@@ -1,0 +1,35 @@
+﻿<nav class="navbar navbar-expand-sm bg-blue navbar-dark sticky">
+    <div class="container">
+        <a class="navbar-brand" href="@Url.Action("Index","Home")">Trang Chủ</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav h4">
+                <li class="nav-item">
+                    <a class="nav-link" href="https://tdmu.edu.vn/gioi-thieu">Giới thiệu</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://tdmu.edu.vn/lien-he">Liên hệ</a>
+                </li>
+            </ul>
+        </div>
+         
+            @*<div class="dropdown">
+                <a href="#" class="nav-link" style="text-decoration: none; color: white; font-size: 1.7rem;">
+                    <i class="fa-solid fa-user" style="padding-right: 10px; font-size:2rem;"></i>Xin chào - '.session()->get("user_login")['name'].'
+                </a>
+                <ul class="dropdown-content" style="list-style: none">
+                    <li><a href="#"><i class="fa fa-note-sticky"></i>Biểu mẫu đã khảo sát</a></li>
+                    <li><a href="'.base_url().'/logout"><i class="fa-solid fa-right-from-bracket"></i>Đăng xuất</a></li>
+                </ul>
+            </div>*@
+      
+      
+            <a href="#" class="nav-link" style="text-decoration: none; color: white; font-size: 1.7rem;">
+                <i class="fa-solid fa-user" style="padding-right: 10px; font-size:2rem;"></i>Tài khoản
+            </a>
+    
+          
+    </div>
+</nav>

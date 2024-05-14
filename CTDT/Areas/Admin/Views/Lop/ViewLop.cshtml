@@ -1,0 +1,281 @@
+﻿
+@{
+    ViewBag.Title = "ViewLop";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="main-content">
+    <div class="page-header">
+        <h2 class="header-title">Quản Lý Danh Sách Lớp</h2>
+        <div class="header-sub-title">
+            <nav class="breadcrumb breadcrumb-dash">
+                <a href="#" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Home</a>
+                <span class="breadcrumb-item active">Danh sách Lớp</span>
+            </nav>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <h4>Quản Lý Danh Sách Lớp</h4>
+            <div>
+                <button class="btn btn-primary btn-tone m-r-5" data-toggle="modal" data-target="#bd-example-modal-lg">Thêm mới</button>
+            </div>
+            <!--Modal Thêm mới Lớp-->
+            <div class="modal fade" id="bd-example-modal-lg">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title h4">Thêm mới Lớp</h5>
+                            <button type="button" class="close" data-dismiss="modal">
+                                <i class="anticon anticon-close"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="form-validation" method="post" action="/Lop/Add">
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label control-label">Tên Lớp *</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="TenLop" placeholder="Nhập tên Lớp ... *">
+                                    </div>
+                                    <label class="col-sm-2 col-form-label control-label" style="margin-top: 10px;">Chọn CTĐT *</label>
+                                    <div class="col-sm-10" style="margin-top: 10px;">
+                                        <select id="MaCTDT" class="form-control">
+                                            <option value="">-- Chọn CTĐT --</option>
+                                            @foreach (var item in ViewBag.CTDTList)
+                                            {
+                                                <option value="@item.Value">@item.Text</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger btn-tone m-r-5" data-dismiss="modal">Thoát</button>
+                                <button type="button" class="btn btn-success btn-tone m-r-5" id="btnSave">Lưu</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--End Modal Thêm mới Lớp-->
+            <!-- Modal Sửa Lớp -->
+            <div class="modal fade" id="ModalEditLop">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title h4">Sửa đổi Lớp</h5>
+                            <button type="button" class="close" data-dismiss="modal">
+                                <i class="anticon anticon-close"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="form-validation" method="post" action="/Lop/Add">
+                                <div class="form-group row">
+                                    <input type="hidden" id="Edit_MaLop"/>
+                                    <input type="hidden" id="change_Ngay_Tao" name="change_Ngay_Tao" />
+                                    <input type="hidden" id="change_Ngay_Cap_Nhat" name="change_Ngay_Cap_Nhat" />
+                                    <label class="col-sm-2 col-form-label control-label">Tên Lớp *</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="Edit_TenLop" placeholder="Nhập tên Lớp ... *">
+                                    </div>
+                                    <label class="col-sm-2 col-form-label control-label" style="margin-top: 10px;">Chọn CTĐT *</label>
+                                    <div class="col-sm-10" style="margin-top: 10px;">
+                                        <select id="Edit_Ma_CTDT" class="form-control">
+                                            <option value="">-- Chọn CTĐT --</option>
+                                            @foreach (var item in ViewBag.CTDTList)
+                                            {
+                                                <option value="@item.Value">@item.Text</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger btn-tone m-r-5" data-dismiss="modal">Thoát</button>
+                                <button type="button" class="btn btn-success btn-tone m-r-5" id="btnSaveChange">Thay đổi</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--End Modal Sửa Lớp -->
+            <div class="m-t-25">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th scope="col">STT</th>
+                                <th scope="col">ID Lớp</th>
+                                <th scope="col">Mã Lớp</th>
+                                <th scope="col">Tên CTĐT</th>
+                                <th scope="col">Ngày Cập Nhật</th>
+                                <th scope="col">Ngày Tạo</th>
+                                <th scope="col">Chức năng</th>
+                            </tr>
+                        </thead>
+                        <tbody id="showdata">
+                        </tbody>
+                    </table>
+                    <div id="registrationForm"></div>
+                    <button onclick="saveFormData()">Lưu</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            LoadData();
+            $(document).on("click", "#btnSave", function () {
+                AddLop();
+            });
+        });
+        function AddLop() {
+            var TenLop = $("#TenLop").val().trim();
+            var MaCTDT = $("#MaCTDT").val().trim();
+            $.ajax({
+                url: '/Lop/Add',
+                type: 'POST',
+                dataType: 'JSON',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({
+                    ma_lop: TenLop,
+                    id_ctdt: MaCTDT
+                }),
+                success: function (response) {
+                    alert(response.status);
+                    LoadData();
+                },
+                error: function (response) {
+                    alert(response.status)
+                },
+            });
+        };
+        function LoadData() {
+            $.ajax({
+                url: '/Lop/LoadDataLop',
+                type: 'GET',
+                success: function (res) {
+                    var items = res.data;
+                    var html = "";
+
+                    if (items.length === 0) {
+                        html += "<tr><td colspan='7' class='text-center'>Không có dữ liệu</td></tr>";
+                    } else {
+                        for (let i = 0; i < items.length; i++) {
+                            var formattedDate1 = unixTimestampToDate(items[i].NgayCapNhat);
+                            var formattedDate2 = unixTimestampToDate(items[i].NgayTao);
+                            var index = i + 1;
+                            html += "<tr>";
+                            html += "<td>" + index + "</td>";
+                            html += "<td>" + "#" + items[i].IdLop + "</td>";
+                            html += "<td>" + items[i].MaLop + "</td>";
+                            html += "<td>" + items[i].MaCTDT + "</td>";
+                            html += "<td>" + formattedDate1 + "</td>";
+                            html += "<td>" + formattedDate2 + "</td>";
+                            html += "<td><button class='btn btn-icon btn-hover btn-sm btn-rounded pull-right btnEdit' data-toggle='modal' data-target='#ModalEditLop'> <i class='anticon anticon-edit'></i></button><button class='btn btn-icon btn-hover btn-sm btn-rounded pull-right btnDelete' > <i class='anticon anticon-delete'></i></button> </td> ";
+                            html += "</tr>";
+                        }
+                    }
+                    $('#showdata').html(html);
+                },
+                error: function () {
+                    var html = "<tr><td colspan='7' class='text-center'>Không thể tải dữ liệu</td></tr>";
+                    $('#showdata').html(html);
+                }
+            });
+        };
+
+        function EditLop() {
+            var IdLop = $('#Edit_MaLop').val();
+            var TenLop = $('#Edit_TenLop').val()
+            var MaCTDT = $('#Edit_Ma_CTDT').val();
+            var NgayTao = $('#change_Ngay_Tao').val();
+            var NgayCapNhat = $('#change_Ngay_Cap_Nhat').val();
+            var ctdt = {
+                id_lop: IdLop,
+                id_ctdt: MaCTDT,
+                ma_lop: TenLop,
+                ngaycapnhat: NgayCapNhat,
+                ngaytao: NgayTao,
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: '/Lop/Edit',
+                dataType: 'JSON',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(ctdt),
+                success: function (response) {
+                    alert(response.status);
+                    LoadData();
+                }
+
+            });
+        };
+
+        function unixTimestampToDate(unixTimestamp) {
+            // Multiply by 1000 because JavaScript works in milliseconds instead of seconds
+            var date = new Date(unixTimestamp * 1000);
+
+            // Define an array of weekday names
+            var weekdays = ['Chủ Nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
+
+            // Get the day of the week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+            var dayOfWeek = weekdays[date.getDay()];
+
+            // Months are zero-based, so we add 1 to the month
+            var month = ("0" + (date.getMonth() + 1)).slice(-2);
+            var day = ("0" + date.getDate()).slice(-2);
+            var year = date.getFullYear();
+            var hours = ("0" + date.getHours()).slice(-2);
+            var minutes = ("0" + date.getMinutes()).slice(-2);
+            var seconds = ("0" + date.getSeconds()).slice(-2);
+
+            // Display the formatted date with the day of the week
+            var formattedDate = dayOfWeek + ', ' + day + "-" + month + "-" + year + " " + ', ' + hours + ":" + minutes + ":" + seconds;
+            return formattedDate;
+        }
+
+        // Dữ liệu JSON định nghĩa form đăng ký
+        var formData = [
+            { label: "Họ và tên", type: "text", name: "fullname", placeholder: "Nhập họ và tên" },
+            { label: "Email", type: "email", name: "email", placeholder: "Nhập email" },
+            { label: "Mật khẩu", type: "password", name: "password", placeholder: "Nhập mật khẩu" },
+            { label: "Xác nhận mật khẩu", type: "password", name: "confirmPassword", placeholder: "Nhập lại mật khẩu" }
+        ];
+
+        // Hàm tạo form từ dữ liệu JSON
+        function createForm() {
+            var formContainer = document.getElementById("registrationForm");
+            formData.forEach(function (field) {
+                var label = document.createElement("label");
+                label.textContent = field.label + ": ";
+                formContainer.appendChild(label);
+                var input = document.createElement("input");
+                input.type = field.type;
+                input.name = field.name;
+                input.placeholder = field.placeholder;
+                formContainer.appendChild(input);
+                formContainer.appendChild(document.createElement("br"));
+            });
+        }
+
+        // Hàm lưu dữ liệu từ form thành JSON
+        function saveFormData() {
+            var formValues = {};
+            formData.forEach(function (field) {
+                var input = document.querySelector('input[name="' + field.name + '"]');
+                formValues[field.name] = input.value;
+            });
+            var jsonData = JSON.stringify(formValues);
+            console.log(jsonData);
+            // Ở đây bạn có thể gửi dữ liệu JSON điều này hoặc thực hiện các thao tác khác
+        }
+
+        // Tạo form khi trang được tải
+        window.onload = createForm;
+
+    </script>
