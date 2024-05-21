@@ -1,0 +1,105 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <style>
+        .form-section {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h1>PHIẾU KHẢO SÁT Ý KIẾN CỰU NGƯỜI HỌC</h1>
+        <div class="form-section">
+            <h2>{{ json.titles }}</h2>
+            <label>Tiêu đề chính:</label>
+            <input v-model="json.titles" placeholder="Tiêu đề chính" />
+        </div>
+        <div class="form-section">
+            <label>Mô tả:</label>
+            <input v-model="json.description" placeholder="Mô tả" />
+        </div>
+        <button v-on:click="addPage">Thêm Trang</button>
+        <div v-for="(page, pageIndex) in json.pages" :key="pageIndex" class="form-section">
+            <h2>{{ page.title }}</h2>
+            <input v-model="page.title" placeholder="Tiêu đề trang" />
+            <button v-on:click="addElement(pageIndex)">Thêm phần tử</button>
+            <div v-for="(element, elementIndex) in page.elements" :key="elementIndex" class="form-section">
+                <input v-model="element.title" placeholder="Tiêu đề phần tử" />
+                <select v-model="element.type" v-on:change="updateChoiceType(pageIndex, elementIndex)">
+                    <option value="text">Text</option>
+                    <option value="number">Number</option>
+                    <option value="radiogroup">Radio Group</option>
+                    <option value="checkbox">Checkbox</option>
+                    <option value="textarea">Textarea</option>
+                    <option value="select">Select</option>
+                </select>
+                <label>Bắt buộc:</label>
+                <input type="checkbox" v-model="element.isRequired" />
+                <button v-on:click="addChoice(pageIndex, elementIndex)" v-if="element.type === 'radiogroup' || element.type === 'checkbox' || element.type === 'select'">Thêm lựa chọn</button>
+                <div v-if="element.type === 'radiogroup' || element.type === 'checkbox' || element.type === 'select'">
+                    <div v-for="(choice, choiceIndex) in element.choices" :key="choiceIndex">
+                        <input v-model="choice.text" placeholder="Lựa chọn" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <pre>{{ json }}</pre>
+    </div>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data() {
+                return {
+                    json: {
+                        titles: '',
+                        description: '',
+                        pages: []
+                    },
+                    elementCount: 1,
+                    choiceCount: 1
+                }
+            },
+            methods: {
+                addPage() {
+                    this.json.pages.push({
+                        title: '',
+                        elements: []
+                    });
+                },
+                addElement(pageIndex) {
+                    let elementName = `question${this.elementCount}`;
+                    this.json.pages[pageIndex].elements.push({
+                        type: 'text',
+                        name: elementName,
+                        title: '',
+                        isRequired: false,
+                        choices: []
+                    });
+                    this.elementCount++;
+                },
+                addChoice(pageIndex, elementIndex) {
+                    let choiceName = `${this.json.pages[pageIndex].elements[elementIndex].name}_${this.choiceCount}`;
+                    this.json.pages[pageIndex].elements[elementIndex].choices.push({
+                        name: choiceName,
+                        text: ''
+                    });
+                    this.choiceCount++;
+                },
+                updateChoiceType(pageIndex, elementIndex) {
+                    // Reset choices when type changes
+                    this.$set(this.json.pages[pageIndex].elements[elementIndex], 'choices', []);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

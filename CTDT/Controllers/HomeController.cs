@@ -43,6 +43,7 @@ namespace CTDT.Controllers
 
             return Content(JsonConvert.SerializeObject(new { data = hedaotao, TotalItems = hedaotao.Count, status = "Load Dữ liệu thành công" }), "application/json");
         }
+
         [HttpGet]
         public ActionResult LoadPhieuKhaoSat(int id)
         {
@@ -120,8 +121,8 @@ namespace CTDT.Controllers
         {
             try
             {
-                Session["SelectedKhoaByXT"] = khoa;
                 Session["SelectedCTDTByXT"] = ctdt;
+                Session["SelectedKhoaByXT"] = khoa;
                 Session["SelectedLopByXT"] = lop;
                 Session["SelectedSvByXT"] = sv;
                 int idPhieu = Convert.ToInt32(Session["IDPhieu"]);
@@ -144,6 +145,13 @@ namespace CTDT.Controllers
             Session.Remove("SelectedKhoaByXTCTDT");
             Session.Remove("SelectedCTDTByXTCTDT");
             return new HttpStatusCodeResult(HttpStatusCode.OK);
+        }
+
+
+        public ActionResult test()
+        {
+
+            return View();
         }
     }
 }

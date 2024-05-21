@@ -23,5 +23,20 @@ namespace CTDT.Controllers
 
             return View(jsonObject);
         }
+        [HttpPost]
+        public ActionResult AddAnswer(answer_response answer)
+        {
+            var status = "";
+            if (ModelState.IsValid)
+            {
+                status = "Khảo sát thành công";
+                DateTime now = DateTime.UtcNow;
+                int unixTimestamp = (int)(now.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+                answer.time = unixTimestamp;
+                db.answer_response.Add(answer);
+                db.SaveChanges();
+            }
+            return Json(new { status = status }, JsonRequestBehavior.AllowGet);
+        }
     }
 }

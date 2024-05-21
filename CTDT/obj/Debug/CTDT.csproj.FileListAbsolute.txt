@@ -153,3 +153,11 @@ D:\KhaoSatDanhGia\CTDT\CTDT\bin\Microsoft.Owin.Security.dll
 D:\KhaoSatDanhGia\CTDT\CTDT\bin\Microsoft.Owin.Security.Google.dll
 D:\KhaoSatDanhGia\CTDT\CTDT\bin\Microsoft.Owin.Security.xml
 D:\KhaoSatDanhGia\CTDT\CTDT\bin\Microsoft.Owin.Security.Google.xml
+D:\KhaoSatDanhGia\CTDT\CTDT\bin\Microsoft.AspNet.Identity.Core.dll
+D:\KhaoSatDanhGia\CTDT\CTDT\bin\Microsoft.AspNet.Identity.Owin.dll
+D:\KhaoSatDanhGia\CTDT\CTDT\bin\Microsoft.Owin.Security.Cookies.dll
+D:\KhaoSatDanhGia\CTDT\CTDT\bin\Microsoft.Owin.Security.OAuth.dll
+D:\KhaoSatDanhGia\CTDT\CTDT\bin\Microsoft.AspNet.Identity.Core.xml
+D:\KhaoSatDanhGia\CTDT\CTDT\bin\Microsoft.AspNet.Identity.Owin.xml
+D:\KhaoSatDanhGia\CTDT\CTDT\bin\Microsoft.Owin.Security.Cookies.xml
+D:\KhaoSatDanhGia\CTDT\CTDT\bin\Microsoft.Owin.Security.OAuth.xml
