@@ -22,6 +22,23 @@ namespace CTDT.Areas.Admin.Controllers
             ViewBag.LKS = new SelectList(db.LoaiKhaoSat, "id_loaikhaosat", "name_loaikhaosat");
             return View();
         }
+        [HttpPost]
+        public ActionResult NewSurvey(survey s)
+        {
+            var status = "";
+            DateTime now = DateTime.UtcNow;
+            if (ModelState.IsValid)
+            {
+                int unixTimestamp = (int)(now.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+                s.surveyTimeMake = unixTimestamp;
+                s.surveyTimeUpdate = unixTimestamp;
+                db.survey.Add(s);
+                db.SaveChanges();
+                status = "Tạo mới phiếu khảo sát thành công";
+            }
+            return Json(new { status = status}, JsonRequestBehavior.AllowGet);
+        }
+
         public ActionResult KetQuaPKS(int id)
         {
             ViewBag.id = id;
@@ -59,57 +76,13 @@ namespace CTDT.Areas.Admin.Controllers
             }).ToList();
             return Json(new {status= "Load dữ liệu thành công" , data = ListKQPKS }, JsonRequestBehavior.AllowGet);
         }
+
         public ActionResult AnswerSurvey(int id)
         {
-            string jsonData = string.Join("", db.answer_response.Where(d => d.surveyID == id).Select(x => x.json_answer));
-            JObject surveyData = JObject.Parse(jsonData);
-            JArray pagesArray = (JArray)surveyData["pages"];
-            string formattedJson = pagesArray.ToString();
-            return Content(formattedJson, "application/json");
+            var answers = db.answer_response.Where(d => d.surveyID == id).Select(x => x.json_answer).ToList();
+            string jsonData = "[" + string.Join(",", answers) + "]";
+            JArray surveyData = JArray.Parse(jsonData);
+            return Content(surveyData.ToString(), "application/json");
         }
-        public ActionResult ExportJsonAnswerToExcel(int id)
-        {
-            var answerResponse = db.answer_response.Find(id);
-            if (answerResponse == null)
-            {
-                return HttpNotFound();
-            }
-
-            JObject json = JObject.Parse(answerResponse.json_answer);
-
-            using (ExcelPackage excelPackage = new ExcelPackage())
-            {
-                ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add("Data");
-
-                int row = 1;
-                foreach (var page in json)
-                {
-                    worksheet.Cells[row, 1].Value = page.Value["title"].ToString();
-                    row++;
-
-                    foreach (var element in page.Value["elements"])
-                    {
-                        string title = element["title"].ToString();
-                        string text = element["response"]["text"].ToString();
-
-                        worksheet.Cells[row, 1].Value = title;
-                        worksheet.Cells[row, 2].Value = text;
-                        row++;
-                    }
-
-                    row++;
-                }
-
-                string fileName = "data_" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".xlsx";
-                string filePath = Path.Combine(Server.MapPath("~/Content"), fileName);
-                FileInfo excelFile = new FileInfo(filePath);
-
-                excelPackage.SaveAs(excelFile);
-
-                string fileUrl = Url.Content("~/Content/Exports/" + fileName);
-                return Json(new { fileUrl = fileUrl }, JsonRequestBehavior.AllowGet);
-            }
-        }
-
     }
 }

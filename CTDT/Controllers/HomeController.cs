@@ -47,7 +47,7 @@ namespace CTDT.Controllers
         [HttpGet]
         public ActionResult LoadPhieuKhaoSat(int id)
         {
-            var phieukhaosat = db.survey.Select(c => new
+            var phieukhaosat = db.survey.Where(c=>c.surveyStatus == 1).Select(c => new
             {
                 MaPhieu = c.surveyID,
                 TenPKS = c.surveyTitle,

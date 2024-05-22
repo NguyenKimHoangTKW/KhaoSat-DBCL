@@ -55,12 +55,12 @@
                     html += "</a>";
                     html += "<h5 class='card-title'>" + items[i].TenPKS + "</h5>";
                     html += "<p class='card-text'>" + truncatedText + "</p>";
-                    if (items[i].TenLoaiKhaoSat == "Kinh Doanh") {
+                    if (items[i].TenLoaiKhaoSat == "DOANH NGHIỆP") {
                         html += "<a href='/Home/XacThucCTDT?id= " + items[i].MaPhieu +"'>";
                         html += "<button class='btn btn-primary'>Thực hiện khảo sát</button>";
                         html += "</a>";
                     }
-                    else if (items[i].TenLoaiKhaoSat == "Cựu Sinh Viên") {
+                    else if (items[i].TenLoaiKhaoSat == "CỰU SINH VIÊN") {
                         html += "<a href='/Home/XacThuc?id= " + items[i].MaPhieu + "'>";
                         html += "<button class='btn btn-primary'>Thực hiện khảo sát</button>";
                         html += "</a>";

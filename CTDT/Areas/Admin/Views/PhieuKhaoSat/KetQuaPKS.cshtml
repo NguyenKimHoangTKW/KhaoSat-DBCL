@@ -16,7 +16,6 @@
     <div class="card">
         <div class="card-body">
             <h4>Thống kê kết quả phiếu khảo sát</h4>
-            <h1>@ViewBag.id</h1>
             <div>
                 <button class="btn btn-success btn-tone m-r-5" onclick="ExportToExcel()">Xuất Excel</button>
             </div>
@@ -51,18 +50,6 @@
     $(document).ready(function () {
         LoadData();
     });
-    function ExportToExcel() {
-        $.ajax({
-            url: '/Admin/PhieuKhaoSat/ExportJsonAnswerToExcel?id=' + @ViewBag.id,
-            type: 'GET',
-            success: function (response) {
-                window.location.href = response.fileUrl;
-            },
-            error: function () {
-                alert('Xuất Excel không thành công');
-            }
-        });
-    }
     function LoadData() {
         $.ajax({
             url: '/Admin/PhieuKhaoSat/LoadKetQuaPKS?id=' + @ViewBag.id,
