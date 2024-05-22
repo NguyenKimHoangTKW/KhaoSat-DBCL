@@ -14,12 +14,20 @@
                         <label class="form-label" style="font-size: 16px;font-weight: bold;color: #333">Tìm theo hệ đào tạo:</label>
                         <select class="form-control" name="surveyTypeTS" id="surveyTypeTS">
                             <option value="">Tất cả</option>
+                            @foreach (var item in ViewBag.HDT)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
                         </select>
                     </div>
                     <div class="col-3">
                         <label class="form-label" style="font-size: 16px;font-weight: bold;color: #333">Tìm theo đối tượng:</label>
                         <select class="form-control" name="surveyType" id="surveyType">
                             <option value="">Tất cả</option>
+                            @foreach (var item in ViewBag.LKS)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
                         </select>
                     </div>
                     <div class="col-4">
@@ -51,9 +59,14 @@
 <script>
     $(document).ready(function () {
         LoadData();
+
+        $("#btnFilter").click(function () {
+            var selectHdt = $("#surveyTypeTS").val();
+            alert (selectHdt);
+        });
     });
 
-    function LoadData() {
+    function LoadData() {   
         $.ajax({
             url: '/PhieuKhaoSat/LoadPhieu',
             type: 'GET',
@@ -75,7 +88,7 @@
                         html += "            -";
                         html += "            <span style='color: #333; font-weight: bold; font-size: 15px'>ĐANG MỞ</span>";
                         html += "        </div>";
-                        html += "        <img src='~/Areas/assets/images/logo/logo_test_2.png' alt='' class='img-fluid'>";
+                        html += "        <img src='' alt='' class='img-fluid'>";
                         html += "        <div class='card-body'>";
                         html += "            <div class='card-title mb-4' style='font-size: 14px; font-family: \'Inter\';font-style: normal;font-weight: 600;line-height: 150%;overflow: hidden'>";
                         html += "                <a href='#' style='color: #333'>" + items[i].TieuDePhieu + "</a>";

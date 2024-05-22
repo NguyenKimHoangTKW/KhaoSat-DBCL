@@ -3,12 +3,12 @@
   "WorkspaceRootPath": "D:\\KhaoSatDanhGia\\CTDT\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{D6CEE176-D9C5-454D-9B4D-6C2D46C88776}|CTDT\\CTDT.csproj|d:\\khaosatdanhgia\\ctdt\\ctdt\\views\\survey\\survey.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{D6CEE176-D9C5-454D-9B4D-6C2D46C88776}|CTDT\\CTDT.csproj|solutionrelative:ctdt\\views\\survey\\survey.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{D6CEE176-D9C5-454D-9B4D-6C2D46C88776}|CTDT\\CTDT.csproj|d:\\khaosatdanhgia\\ctdt\\ctdt\\areas\\admin\\controllers\\phieukhaosatcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D6CEE176-D9C5-454D-9B4D-6C2D46C88776}|CTDT\\CTDT.csproj|solutionrelative:ctdt\\areas\\admin\\controllers\\phieukhaosatcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D6CEE176-D9C5-454D-9B4D-6C2D46C88776}|CTDT\\CTDT.csproj|d:\\khaosatdanhgia\\ctdt\\ctdt\\controllers\\surveycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D6CEE176-D9C5-454D-9B4D-6C2D46C88776}|CTDT\\CTDT.csproj|solutionrelative:ctdt\\controllers\\surveycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D6CEE176-D9C5-454D-9B4D-6C2D46C88776}|CTDT\\CTDT.csproj|d:\\khaosatdanhgia\\ctdt\\ctdt\\areas\\admin\\views\\phieukhaosat\\ketquapks.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{D6CEE176-D9C5-454D-9B4D-6C2D46C88776}|CTDT\\CTDT.csproj|solutionrelative:ctdt\\areas\\admin\\views\\phieukhaosat\\ketquapks.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -23,27 +23,27 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "Survey.cshtml",
-              "DocumentMoniker": "D:\\KhaoSatDanhGia\\CTDT\\CTDT\\Views\\Survey\\Survey.cshtml",
-              "RelativeDocumentMoniker": "CTDT\\Views\\Survey\\Survey.cshtml",
-              "ToolTip": "D:\\KhaoSatDanhGia\\CTDT\\CTDT\\Views\\Survey\\Survey.cshtml",
-              "RelativeToolTip": "CTDT\\Views\\Survey\\Survey.cshtml",
-              "ViewState": "AQIAAPMAAAAAAAAAAAAAAAcBAAATAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-05-21T09:32:18.256Z",
+              "Title": "PhieuKhaoSatController.cs",
+              "DocumentMoniker": "D:\\KhaoSatDanhGia\\CTDT\\CTDT\\Areas\\Admin\\Controllers\\PhieuKhaoSatController.cs",
+              "RelativeDocumentMoniker": "CTDT\\Areas\\Admin\\Controllers\\PhieuKhaoSatController.cs",
+              "ToolTip": "D:\\KhaoSatDanhGia\\CTDT\\CTDT\\Areas\\Admin\\Controllers\\PhieuKhaoSatController.cs",
+              "RelativeToolTip": "CTDT\\Areas\\Admin\\Controllers\\PhieuKhaoSatController.cs",
+              "ViewState": "AQIAAE0AAAAAAAAAAAAAwEMAAAA+AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-22T02:39:16.018Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "SurveyController.cs",
-              "DocumentMoniker": "D:\\KhaoSatDanhGia\\CTDT\\CTDT\\Controllers\\SurveyController.cs",
-              "RelativeDocumentMoniker": "CTDT\\Controllers\\SurveyController.cs",
-              "ToolTip": "D:\\KhaoSatDanhGia\\CTDT\\CTDT\\Controllers\\SurveyController.cs",
-              "RelativeToolTip": "CTDT\\Controllers\\SurveyController.cs",
-              "ViewState": "AQIAAA4AAAAAAAAAAAAQwA8AAAAIAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-21T07:20:27.196Z",
+              "Title": "KetQuaPKS.cshtml",
+              "DocumentMoniker": "D:\\KhaoSatDanhGia\\CTDT\\CTDT\\Areas\\Admin\\Views\\PhieuKhaoSat\\KetQuaPKS.cshtml",
+              "RelativeDocumentMoniker": "CTDT\\Areas\\Admin\\Views\\PhieuKhaoSat\\KetQuaPKS.cshtml",
+              "ToolTip": "D:\\KhaoSatDanhGia\\CTDT\\CTDT\\Areas\\Admin\\Views\\PhieuKhaoSat\\KetQuaPKS.cshtml",
+              "RelativeToolTip": "CTDT\\Areas\\Admin\\Views\\PhieuKhaoSat\\KetQuaPKS.cshtml",
+              "ViewState": "AQIAACcAAAAAAAAAAAAgwGIAAAARAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-05-22T02:34:52.435Z",
               "EditorCaption": ""
             }
           ]
