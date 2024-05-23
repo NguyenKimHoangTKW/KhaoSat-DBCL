@@ -33,23 +33,30 @@ namespace CTDT.Areas.Admin.Controllers
             return Json(new { status = status }, JsonRequestBehavior.AllowGet);
         }
         [HttpGet]
-        public ActionResult LoadDataLop()
+        public ActionResult LoadDataLop(int pageNumber = 1, int pageSize = 10)
         {
             try
             {
-                var lop = db.lop.Select(l => new
-                {
-                    IdLop = l.id_lop,
-                    MaCTDT = l.ctdt.ten_ctdt,
-                    MaLop = l.ma_lop,
-                    NgayCapNhat = l.ngaycapnhat,
-                    NgayTao = l.ngaytao,
-                }).ToList();
-                return Json(new { data = lop, status = "Load dữ liệu thành công" }, JsonRequestBehavior.AllowGet);
+                var lop = db.lop.OrderBy(l => l.id_lop)
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .Select(l => new
+                    {
+                        IdLop = l.id_lop,
+                        MaCTDT = l.ctdt.ten_ctdt,
+                        MaLop = l.ma_lop,
+                        NgayCapNhat = l.ngaycapnhat,
+                        NgayTao = l.ngaytao,
+                    }).ToList();
+
+                var totalRecords = db.lop.Count();
+                var totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
+
+                return Json(new { data = lop, totalPages = totalPages, status = "Load dữ liệu thành công" }, JsonRequestBehavior.AllowGet);
             }
             catch
             {
-                return Json(new { status = "Load dữ liệu thất bại"}, JsonRequestBehavior.AllowGet);
+                return Json(new { status = "Load dữ liệu thất bại" }, JsonRequestBehavior.AllowGet);
             }
         }
     }

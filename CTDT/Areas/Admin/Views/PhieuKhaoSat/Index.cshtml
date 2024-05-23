@@ -1,5 +1,6 @@
 ﻿
 @{
+    ViewBag.title = "Phiếu khảo sát- TDMU";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
@@ -125,6 +126,10 @@
                 <!--Load dữ liệu-->
             </div>
         </div>
+
+    </div>
+    <div id="pagination" class="m-t-15 pagination-right">
+        <!-- Pagination buttons will be inserted here -->
     </div>
     <div>
         <button class="btn btn-primary btn-tone m-r-5" data-toggle="modal" data-target="#bd-example-modal-lg">Thêm mới</button>
@@ -133,6 +138,8 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
+    var currentPage = 1;
+    var totalPages = 0;
     $(document).ready(function () {
         LoadData();
 
@@ -140,14 +147,23 @@
             var selectHdt = $("#surveyTypeTS").val();
             alert (selectHdt);
         });
+        $(document).on("click", ".page-link", function () {
+            var page = $(this).data("page");
+            if (page > 0 && page <= totalPages) {
+                currentPage = page;
+                LoadData(currentPage);
+            }
+        });
     });
 
-    function LoadData() {   
+    function LoadData(pageNumber) {   
         $.ajax({
             url: '/PhieuKhaoSat/LoadPhieu',
             type: 'GET',
+            data: { pageNumber: pageNumber, pageSize: 10 },
             success: function (res) {
                 var items = res.data;
+                totalPages = res.totalPages;
                 var html = "";
                 if (items.length === 0) {
                     html += "<tr><td colspan='7' class='text-center'>Không có dữ liệu</td></tr>";
@@ -212,6 +228,7 @@
                     }
                 }
                 $('#card-view').html(html);
+                renderPagination(pageNumber, totalPages);
             },
             error: function () {
                 var html = "<tr><td colspan='7' class='text-center'>Không thể tải dữ liệu</td></tr>";
@@ -219,7 +236,19 @@
             }
         });
     };
+    function renderPagination(currentPage, totalPages) {
+        var html = '<nav aria-label="Page navigation example"><ul class="pagination justify-content-end">';
+        html += '<li class="page-item ' + (currentPage == 1 ? 'disabled' : '') + '"><a class="page-link" href="#" data-page="' + (currentPage - 1) + '">Trước</a></li>';
 
+        for (var i = 1; i <= totalPages; i++) {
+            html += '<li class="page-item ' + (currentPage == i ? 'active' : '') + '"><a class="page-link" href="#" data-page="' + i + '">' + i + '</a></li>';
+        }
+
+        html += '<li class="page-item ' + (currentPage == totalPages ? 'disabled' : '') + '"><a class="page-link" href="#" data-page="' + (currentPage + 1) + '">Tiếp</a></li>';
+        html += '</ul></nav>';
+
+        $('#pagination').html(html);
+    }
     function AddPKS() {
         var tieuDe = $('#TieuDe').val();
         var moTa = $('#MoTa').val();

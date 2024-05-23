@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -36,17 +37,30 @@ namespace CTDT.Areas.Admin.Controllers
 
 
         [HttpGet]
-        public ActionResult LoadDataCTDT()
+        public ActionResult LoadDataCTDT(int pageNumber = 1, int pageSize = 10)
         {
-            var ctdt = db.ctdt.Select(c => new
+            try
             {
-                MaCTDT = c.id_ctdt,
-                TenCTDT = c.ten_ctdt,
-                NgayCapNhat = c.ngaycapnhat,
-                NgayTao = c.ngaytao,
-                TenKhoa = c.khoa.ten_khoa,
-            }).ToList();
-            return Json(new { data = ctdt, TotalItems = ctdt.Count , status = "Load Dữ liệu thành công"}, JsonRequestBehavior.AllowGet);
+                var ctdt = db.ctdt
+                    .OrderBy(l => l.id_ctdt)
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .Select(c => new
+                    {
+                        MaCTDT = c.id_ctdt,
+                        TenCTDT = c.ten_ctdt,
+                        NgayCapNhat = c.ngaycapnhat,
+                        NgayTao = c.ngaytao,
+                        TenKhoa = c.khoa.ten_khoa,
+                    }).ToList();
+                var totalRecords = db.ctdt.Count();
+                var totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
+                return Json(new { data = ctdt, totalPages = totalPages, status = "Load Dữ liệu thành công" }, JsonRequestBehavior.AllowGet);
+            }
+            catch
+            {
+                return Json(new { status = "Load dữ liệu thất bại" }, JsonRequestBehavior.AllowGet);
+            }
         }
         [HttpPost]
         public ActionResult Add(ctdt ct)

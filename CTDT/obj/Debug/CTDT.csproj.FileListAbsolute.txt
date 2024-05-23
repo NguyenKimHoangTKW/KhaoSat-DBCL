@@ -176,3 +176,7 @@ D:\KhaoSatDanhGia\CTDT\CTDT\bin\System.Buffers.xml
 D:\KhaoSatDanhGia\CTDT\CTDT\bin\System.Memory.xml
 D:\KhaoSatDanhGia\CTDT\CTDT\bin\System.Numerics.Vectors.xml
 D:\KhaoSatDanhGia\CTDT\CTDT\bin\System.Runtime.CompilerServices.Unsafe.xml
+D:\KhaoSatDanhGia\CTDT\CTDT\bin\Microsoft.Owin.Host.SystemWeb.dll
+D:\KhaoSatDanhGia\CTDT\CTDT\bin\Microsoft.Owin.Host.SystemWeb.xml
+D:\KhaoSatDanhGia\CTDT\CTDT\bin\Microsoft.AspNet.Identity.EntityFramework.dll
+D:\KhaoSatDanhGia\CTDT\CTDT\bin\Microsoft.AspNet.Identity.EntityFramework.xml

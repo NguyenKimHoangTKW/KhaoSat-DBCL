@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "ViewLop";
+    ViewBag.Title = "Danh sách lớp - TDMU";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
@@ -116,8 +116,10 @@
                         <tbody id="showdata">
                         </tbody>
                     </table>
-                    <div id="registrationForm"></div>
 
+                </div>
+                <div id="pagination" class="m-t-15 pagination-right">
+                    <!-- Pagination buttons will be inserted here -->
                 </div>
             </div>
         </div>
@@ -125,12 +127,25 @@
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script>
+        var currentPage = 1;
+        var totalPages = 0;
+
         $(document).ready(function () {
-            LoadData();
+            LoadData(currentPage);
+
             $(document).on("click", "#btnSave", function () {
                 AddLop();
             });
+
+            $(document).on("click", ".page-link", function () {
+                var page = $(this).data("page");
+                if (page > 0 && page <= totalPages) {
+                    currentPage = page;
+                    LoadData(currentPage);
+                }
+            });
         });
+
         function AddLop() {
             var TenLop = $("#TenLop").val().trim();
             var MaCTDT = $("#MaCTDT").val().trim();
@@ -145,19 +160,22 @@
                 }),
                 success: function (response) {
                     alert(response.status);
-                    LoadData();
+                    LoadData(currentPage);
                 },
                 error: function (response) {
                     alert(response.status)
                 },
             });
-        };
-        function LoadData() {
+        }
+
+        function LoadData(pageNumber) {
             $.ajax({
                 url: '/Lop/LoadDataLop',
                 type: 'GET',
+                data: { pageNumber: pageNumber, pageSize: 10 },
                 success: function (res) {
                     var items = res.data;
+                    totalPages = res.totalPages;
                     var html = "";
 
                     if (items.length === 0) {
@@ -166,54 +184,60 @@
                         for (let i = 0; i < items.length; i++) {
                             var formattedDate1 = unixTimestampToDate(items[i].NgayCapNhat);
                             var formattedDate2 = unixTimestampToDate(items[i].NgayTao);
-                            var index = i + 1;
+                            var index = (pageNumber - 1) * 10 + i + 1;
                             html += "<tr>";
-                            html += "<td>" + index + "</td>";
+                            html += "<td>" +index + "</td>";
                             html += "<td>" + "#" + items[i].IdLop + "</td>";
                             html += "<td>" + items[i].MaLop + "</td>";
                             html += "<td>" + items[i].MaCTDT + "</td>";
                             html += "<td>" + formattedDate1 + "</td>";
                             html += "<td>" + formattedDate2 + "</td>";
-                            html += "<td><button class='btn btn-icon btn-hover btn-sm btn-rounded pull-right btnEdit' data-toggle='modal' data-target='#ModalEditLop'> <i class='anticon anticon-edit'></i></button><button class='btn btn-icon btn-hover btn-sm btn-rounded pull-right btnDelete' > <i class='anticon anticon-delete'></i></button> </td> ";
+                            html += "<td><button class='btn btn-icon btn-hover btn-sm btn-rounded pull-right btnEdit' data-toggle='modal' data-target='#ModalEditLop'> <i class='anticon anticon-edit'></i></button><button class='btn btn-icon btn-hover btn-sm btn-rounded pull-right btnDelete'> <i class='anticon anticon-delete'></i></button></td>";
                             html += "</tr>";
                         }
                     }
                     $('#showdata').html(html);
+                    renderPagination(pageNumber, totalPages);
                 },
                 error: function () {
                     var html = "<tr><td colspan='7' class='text-center'>Không thể tải dữ liệu</td></tr>";
                     $('#showdata').html(html);
                 }
             });
-        };
+        }
 
-        function EditLop() {
-            var IdLop = $('#Edit_MaLop').val();
-            var TenLop = $('#Edit_TenLop').val()
-            var MaCTDT = $('#Edit_Ma_CTDT').val();
-            var NgayTao = $('#change_Ngay_Tao').val();
-            var NgayCapNhat = $('#change_Ngay_Cap_Nhat').val();
-            var ctdt = {
-                id_lop: IdLop,
-                id_ctdt: MaCTDT,
-                ma_lop: TenLop,
-                ngaycapnhat: NgayCapNhat,
-                ngaytao: NgayTao,
-            };
+        function renderPagination(currentPage, totalPages) {
+            var html = '<nav aria-label="Page navigation example"><ul class="pagination justify-content-end">';
 
-            $.ajax({
-                type: 'POST',
-                url: '/Lop/Edit',
-                dataType: 'JSON',
-                contentType: "application/json; charset=utf-8",
-                data: JSON.stringify(ctdt),
-                success: function (response) {
-                    alert(response.status);
-                    LoadData();
-                }
+            var startPage = currentPage - 2;
+            var endPage = currentPage + 2;
 
-            });
-        };
+            if (startPage < 1) {
+                startPage = 1;
+                endPage = 5;
+            }
+
+            if (endPage > totalPages) {
+                endPage = totalPages;
+                startPage = totalPages - 4;
+            }
+
+            if (startPage < 1) {
+                startPage = 1;
+            }
+
+            html += '<li class="page-item ' + (currentPage == 1 ? 'disabled' : '') + '"><a class="page-link" href="#" data-page="' + (currentPage - 1) + '">Trước</a></li>';
+
+            for (var i = startPage; i <= endPage; i++) {
+                html += '<li class="page-item ' + (currentPage == i ? 'active' : '') + '"><a class="page-link" href="#" data-page="' + i + '">' + i + '</a></li>';
+            }
+
+            html += '<li class="page-item ' + (currentPage == totalPages ? 'disabled' : '') + '"><a class="page-link" href="#" data-page="' + (currentPage + 1) + '">Tiếp</a></li>';
+            html += '</ul></nav>';
+
+            $('#pagination').html(html);
+        }
+
 
         function unixTimestampToDate(unixTimestamp) {
             var date = new Date(unixTimestamp * 1000);
@@ -228,9 +252,7 @@
             var hours = ("0" + date.getHours()).slice(-2);
             var minutes = ("0" + date.getMinutes()).slice(-2);
             var seconds = ("0" + date.getSeconds()).slice(-2);
-            var formattedDate = dayOfWeek + ', ' + day + "-" + month + "-" + year + " " + ', ' + hours + ":" + minutes + ":" + seconds;
+            var formattedDate = dayOfWeek + ', ' + day + "-" + month + "-" + year + " " + hours + ":" + minutes + ":" + seconds;
             return formattedDate;
         }
-
-
     </script>

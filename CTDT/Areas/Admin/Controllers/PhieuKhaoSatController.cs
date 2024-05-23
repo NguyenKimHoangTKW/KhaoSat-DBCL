@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -45,25 +46,45 @@ namespace CTDT.Areas.Admin.Controllers
             var litsKQ = db.answer_response.Where(kq => kq.surveyID == id).ToList();
             return View(litsKQ);
         }
-        [HttpGet]
-        public ActionResult LoadPhieu()
+        public ActionResult AnswerPKS(int id)
         {
-            var ListPhieu = db.survey.Select(p => new
-            {
-                MaPhieu = p.surveyID,
-                TenHDT = p.hedaotao.ten_hedaotao,
-                MaHDT = p.id_hedaotao,
-                TieuDePhieu = p.surveyTitle,
-                MoTaPhieu = p.surveyDescription,
-                NgayTao = p.surveyTimeStart,
-                NgayChinhSua = p.surveyTimeMake,
-                LoaiKhaoSat = p.LoaiKhaoSat.name_loaikhaosat,
-                MaLKS = p.id_loaikhaosat,
-            }).ToList();
-            return Json(new { data = ListPhieu, status = "Load dữ liệu thành công" }, JsonRequestBehavior.AllowGet);
+            ViewBag.id = id;
+            var litsKQ = db.answer_response.Where(kq => kq.surveyID == id).ToList();
+            return View(litsKQ);
         }
+        [HttpGet]
+        public ActionResult LoadPhieu(int pageNumber = 1, int pageSize = 10)
+        {
+            try
+            {
+                var ListPhieu = db.survey
+                    .OrderBy(l => l.surveyID)
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .Select(p => new
+                    {
+                        MaPhieu = p.surveyID,
+                        TenHDT = p.hedaotao.ten_hedaotao,
+                        MaHDT = p.id_hedaotao,
+                        TieuDePhieu = p.surveyTitle,
+                        MoTaPhieu = p.surveyDescription,
+                        NgayTao = p.surveyTimeStart,
+                        NgayChinhSua = p.surveyTimeMake,
+                        LoaiKhaoSat = p.LoaiKhaoSat.name_loaikhaosat,
+                        MaLKS = p.id_loaikhaosat,
+                    }).ToList();
 
+                var totalRecords = db.survey.Count();
 
+                var totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
+
+                return Json(new { data = ListPhieu, totalPages = totalPages, status = "Load dữ liệu thành công" }, JsonRequestBehavior.AllowGet);
+            }
+            catch
+            {
+                return Json(new { status = "Load dữ liệu thất bại" }, JsonRequestBehavior.AllowGet);
+            }
+        }
         [HttpGet]
         public ActionResult LoadKetQuaPKS(int id)
         {

@@ -1,8 +1,10 @@
 ﻿using Microsoft.Owin;
+using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
 using Owin;
-using System;
-using System.Threading.Tasks;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security;
 
 [assembly: OwinStartup(typeof(CTDT.App_Start.Startup))]
 
@@ -10,8 +12,10 @@ namespace CTDT.App_Start
 {
     public class Startup
     {
+        
         public void Configuration(IAppBuilder app)
         {
+            app.SetDefaultSignInAsAuthenticationType(CookieAuthenticationDefaults.AuthenticationType);
             // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=316888
             app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions
             {

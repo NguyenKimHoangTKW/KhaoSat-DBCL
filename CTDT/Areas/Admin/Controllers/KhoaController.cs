@@ -17,17 +17,30 @@ namespace CTDT.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetDataKhoa()
+        public ActionResult GetDataKhoa(int pageNumber = 1, int pageSize = 10)
         {
-            var listKhoa = db.khoa.Select(k => new
+            try
             {
-                MaKhoa = k.id_khoa,
-                TenKhoa = k.ten_khoa,
-                NgayCapNhat  = k.ngaycapnhat,
-                NgayTao = k.ngaytao,
-            }).ToList();
-            return Json(new {data = listKhoa, TotalItems = listKhoa.Count}, JsonRequestBehavior.AllowGet);
+                var listKhoa = db.khoa.OrderBy(l => l.id_khoa)
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize).Select(k => new
+                    {
+                        MaKhoa = k.id_khoa,
+                        TenKhoa = k.ten_khoa,
+                        NgayCapNhat = k.ngaycapnhat,
+                        NgayTao = k.ngaytao,
+                    }).ToList();
+
+                var totalRecords = db.khoa.Count();
+                var totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
+                return Json(new { data = listKhoa, totalPages = totalPages, totalItems = totalRecords }, JsonRequestBehavior.AllowGet);
+            }
+            catch
+            {
+                return Json(new { status = "Load dữ liệu thất bại" }, JsonRequestBehavior.AllowGet);
+            }
         }
+
 
         [HttpPost]
         public ActionResult Add(khoa k)
