@@ -4,13 +4,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>@ViewBag.Title</title>
+    <title>Tạo mới Form Phiếu khảo sát</title>
+    <link rel="shortcut icon" href="https://tdmu.edu.vn/hinh/Icon.png">
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
     <style>
         .form-section {
             margin-bottom: 20px;
             padding: 10px;
             border: 1px solid #ccc;
+        }
+
+        .delete-button {
+            margin-left: 10px;
+            color: red;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -30,6 +37,7 @@
         <div v-for="(page, pageIndex) in json.pages" :key="pageIndex" class="form-section">
             <h2>{{ page.title }}</h2>
             <input v-model="page.title" placeholder="Tiêu đề trang" />
+            <span class="delete-button" v-on:click="removePage(pageIndex)">Xóa Trang</span>
             <button v-on:click="addElement(pageIndex)">Thêm phần tử</button>
             <div v-for="(element, elementIndex) in page.elements" :key="elementIndex" class="form-section">
                 <input v-model="element.title" placeholder="Tiêu đề phần tử" />
@@ -43,17 +51,18 @@
                 </select>
                 <label>Bắt buộc:</label>
                 <input type="checkbox" v-model="element.isRequired" />
+                <span class="delete-button" v-on:click="removeElement(pageIndex, elementIndex)">Xóa Phần tử</span>
                 <button v-on:click="addChoice(pageIndex, elementIndex)" v-if="element.type === 'radiogroup' || element.type === 'checkbox' || element.type === 'select'">Thêm lựa chọn</button>
                 <div v-if="element.type === 'radiogroup' || element.type === 'checkbox' || element.type === 'select'">
-                    <div v-for="(choice, choiceIndex) in element.choices" :key="choiceIndex">
+                    <div v-for="(choice, choiceIndex) in element.choices" :key="choiceIndex" class="form-section">
                         <input v-model="choice.text" placeholder="Lựa chọn" />
+                        <span class="delete-button" v-on:click="removeChoice(pageIndex, elementIndex, choiceIndex)">Xóa</span>
                     </div>
                 </div>
             </div>
         </div>
         <pre>{{ json }}</pre>
     </div>
-
     <script>
         new Vue({
             el: '#app',
@@ -69,14 +78,29 @@
                 }
             },
             methods: {
+                increaseId() {
+                    let maxId = 0;
+                    this.json.pages.forEach((page) => {
+                        page.elements.forEach((element) => {
+                            const number = parseInt(element.name.match(/\d+$/)[0]);
+                            if (!isNaN(number) && number > maxId) {
+                                maxId = number;
+                            }
+                        });
+                    });
+                    return maxId + 1;
+                },
                 addPage() {
                     this.json.pages.push({
                         title: '',
                         elements: []
                     });
                 },
+                removePage(pageIndex) {
+                    this.json.pages.splice(pageIndex, 1);
+                },
                 addElement(pageIndex) {
-                    let elementName = `question${this.elementCount}`;
+                    let elementName = `question${this.increaseId()}`;
                     this.json.pages[pageIndex].elements.push({
                         type: 'text',
                         name: elementName,
@@ -84,7 +108,9 @@
                         isRequired: false,
                         choices: []
                     });
-                    this.elementCount++;
+                },
+                removeElement(pageIndex, elementIndex) {
+                    this.json.pages[pageIndex].elements.splice(elementIndex, 1);
                 },
                 addChoice(pageIndex, elementIndex) {
                     let choiceName = `${this.json.pages[pageIndex].elements[elementIndex].name}_${this.choiceCount}`;
@@ -94,12 +120,15 @@
                     });
                     this.choiceCount++;
                 },
+                removeChoice(pageIndex, elementIndex, choiceIndex) {
+                    this.json.pages[pageIndex].elements[elementIndex].choices.splice(choiceIndex, 1);
+                },
                 updateChoiceType(pageIndex, elementIndex) {
-                    // Reset choices when type changes
                     this.$set(this.json.pages[pageIndex].elements[elementIndex], 'choices', []);
                 }
             }
         });
     </script>
+
 </body>
 </html>

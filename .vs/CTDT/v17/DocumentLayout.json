@@ -1,12 +1,71 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "D:\\KhaoSatDanhGia\\CTDT\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{D6CEE176-D9C5-454D-9B4D-6C2D46C88776}|CTDT\\CTDT.csproj|d:\\khaosatdanhgia\\ctdt\\ctdt\\areas\\admin\\views\\phieukhaosat\\ketquapks.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{D6CEE176-D9C5-454D-9B4D-6C2D46C88776}|CTDT\\CTDT.csproj|solutionrelative:ctdt\\areas\\admin\\views\\phieukhaosat\\ketquapks.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D6CEE176-D9C5-454D-9B4D-6C2D46C88776}|CTDT\\CTDT.csproj|d:\\khaosatdanhgia\\ctdt\\ctdt\\models\\answer_response.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D6CEE176-D9C5-454D-9B4D-6C2D46C88776}|CTDT\\CTDT.csproj|solutionrelative:ctdt\\models\\answer_response.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D6CEE176-D9C5-454D-9B4D-6C2D46C88776}|CTDT\\CTDT.csproj|d:\\khaosatdanhgia\\ctdt\\ctdt\\areas\\admin\\controllers\\phieukhaosatcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D6CEE176-D9C5-454D-9B4D-6C2D46C88776}|CTDT\\CTDT.csproj|solutionrelative:ctdt\\areas\\admin\\controllers\\phieukhaosatcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "answer_response.cs",
+              "DocumentMoniker": "D:\\KhaoSatDanhGia\\CTDT\\CTDT\\Models\\answer_response.cs",
+              "RelativeDocumentMoniker": "CTDT\\Models\\answer_response.cs",
+              "ToolTip": "D:\\KhaoSatDanhGia\\CTDT\\CTDT\\Models\\answer_response.cs",
+              "RelativeToolTip": "CTDT\\Models\\answer_response.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABYAAAAXAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-23T09:00:08.133Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "KetQuaPKS.cshtml",
+              "DocumentMoniker": "D:\\KhaoSatDanhGia\\CTDT\\CTDT\\Areas\\Admin\\Views\\PhieuKhaoSat\\KetQuaPKS.cshtml",
+              "RelativeDocumentMoniker": "CTDT\\Areas\\Admin\\Views\\PhieuKhaoSat\\KetQuaPKS.cshtml",
+              "ToolTip": "D:\\KhaoSatDanhGia\\CTDT\\CTDT\\Areas\\Admin\\Views\\PhieuKhaoSat\\KetQuaPKS.cshtml",
+              "RelativeToolTip": "CTDT\\Areas\\Admin\\Views\\PhieuKhaoSat\\KetQuaPKS.cshtml",
+              "ViewState": "AQIAAE4AAAAAAAAAAAAAAFkAAAAtAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-05-23T08:59:36.836Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "PhieuKhaoSatController.cs",
+              "DocumentMoniker": "D:\\KhaoSatDanhGia\\CTDT\\CTDT\\Areas\\Admin\\Controllers\\PhieuKhaoSatController.cs",
+              "RelativeDocumentMoniker": "CTDT\\Areas\\Admin\\Controllers\\PhieuKhaoSatController.cs",
+              "ToolTip": "D:\\KhaoSatDanhGia\\CTDT\\CTDT\\Areas\\Admin\\Controllers\\PhieuKhaoSatController.cs",
+              "RelativeToolTip": "CTDT\\Areas\\Admin\\Controllers\\PhieuKhaoSatController.cs",
+              "ViewState": "AQIAAHsAAAAAAAAAAAAAAJQAAAAJAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-23T08:59:32.826Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
     }
   ]
 }

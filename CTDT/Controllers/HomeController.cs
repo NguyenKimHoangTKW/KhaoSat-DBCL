@@ -146,12 +146,5 @@ namespace CTDT.Controllers
             Session.Remove("SelectedCTDTByXTCTDT");
             return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
-
-
-        public ActionResult test()
-        {
-
-            return View();
-        }
     }
 }

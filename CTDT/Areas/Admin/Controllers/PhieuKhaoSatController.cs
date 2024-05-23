@@ -39,7 +39,25 @@ namespace CTDT.Areas.Admin.Controllers
             }
             return Json(new { status = status}, JsonRequestBehavior.AllowGet);
         }
-
+        [HttpGet]
+        public ActionResult AddSurvey(int id)
+        {
+            ViewBag.ID = id;
+            var items = db.survey.Where(x => x.surveyID == id).ToList();
+           return View(items);
+        }
+        [HttpPost]
+        public ActionResult AddSurvey(survey s)
+        {
+            var status = "";
+            DateTime now = DateTime.UtcNow;
+            int unixTimestamp = (int)(now.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+            s.surveyTimeMake = unixTimestamp;
+            s.surveyTimeUpdate = unixTimestamp;
+            db.SaveChanges();
+            status = "Tạo phiếu thành công";
+            return Json(new { status = status }, JsonRequestBehavior.AllowGet);
+        }
         public ActionResult KetQuaPKS(int id)
         {
             ViewBag.id = id;
@@ -49,7 +67,11 @@ namespace CTDT.Areas.Admin.Controllers
         public ActionResult AnswerPKS(int id)
         {
             ViewBag.id = id;
-            var litsKQ = db.answer_response.Where(kq => kq.surveyID == id).ToList();
+            var litsKQ = db.answer_response.Where(kq => kq.id == id).ToList();
+            foreach (var item in litsKQ)
+            {
+                ViewBag.IDPhieu = item.surveyID;
+            }
             return View(litsKQ);
         }
         [HttpGet]
@@ -94,16 +116,36 @@ namespace CTDT.Areas.Admin.Controllers
                 Email = kq.users.email,
                 SinhVien = kq.sinhvien.hovaten,
                 ThoiGianThucHien = kq.time,
+                MaAnswer = kq.id,
             }).ToList();
             return Json(new {status= "Load dữ liệu thành công" , data = ListKQPKS }, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult AnswerSurvey(int id)
         {
+            var answers = db.answer_response.Where(d => d.id == id).Select(x => x.json_answer).ToList();
+            List<JObject> surveyData = new List<JObject>();
+
+            foreach (var answer in answers)
+            {
+                JObject answerObject = JObject.Parse(answer);
+                surveyData.Add(answerObject);
+            }
+
+            return Content(JsonConvert.SerializeObject(surveyData), "application/json");
+        }
+        public ActionResult ExportExcelSurvey(int id)
+        {
             var answers = db.answer_response.Where(d => d.surveyID == id).Select(x => x.json_answer).ToList();
-            string jsonData = "[" + string.Join(",", answers) + "]";
-            JArray surveyData = JArray.Parse(jsonData);
-            return Content(surveyData.ToString(), "application/json");
+            List<JObject> surveyData = new List<JObject>();
+
+            foreach (var answer in answers)
+            {
+                JObject answerObject = JObject.Parse(answer);
+                surveyData.Add(answerObject);
+            }
+
+            return Content(JsonConvert.SerializeObject(surveyData), "application/json");
         }
     }
 }

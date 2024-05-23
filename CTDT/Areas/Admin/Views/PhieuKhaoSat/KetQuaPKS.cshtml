@@ -17,7 +17,7 @@
         <div class="card-body">
             <h4>Thống kê kết quả phiếu khảo sát</h4>
             <div>
-                <button class="btn btn-success btn-tone m-r-5" onclick="ExportToExcel()">Xuất Excel</button>
+                <button class="btn btn-success btn-tone m-r-5" onclick="XuatExcel()">Xuất Excel</button>
                 <button class="btn btn-secondary btn-tone m-r-5" onclick="window.location.href='/Admin/PhieuKhaoSat/Index'">Quay trở về</button>
             </div>
             <div class="m-t-25">
@@ -39,6 +39,8 @@
                     <div id="registrationForm"></div>
 
                 </div>
+                <pre id="surveyData"></pre>
+
             </div>
         </div>
 
@@ -50,7 +52,64 @@
 <script>
     $(document).ready(function () {
         LoadData();
+
     });
+    function XuatExcel() {
+        $.ajax({
+            url: '/Admin/PhieuKhaoSat/ExportExcelSurvey?id=' + @ViewBag.id,
+            type: 'GET',
+            success: function (data) {
+                exportToExcel(data);
+            },
+            error: function () {
+                console.error('Failed to fetch survey data.');
+            }
+        });
+    };
+    function exportToExcel(data) {
+        var workbook = XLSX.utils.book_new();
+        var worksheet = XLSX.utils.aoa_to_sheet([]);
+
+        var excelData = []; // Mảng chứa dữ liệu cho Excel
+
+        // Thêm tiêu đề cho Excel
+        var titleRow = []; // Dòng tiêu đề
+        data[0].pages.forEach(function (page) {
+            page.elements.forEach(function (element) {
+                titleRow.push(element.title);
+            });
+        });
+        excelData.push(titleRow);
+
+        // Duyệt qua từng kết quả phiếu và thêm dữ liệu tương ứng
+        data.forEach(function (survey) {
+            var rowData = []; // Dòng dữ liệu
+            survey.pages.forEach(function (page) {
+                page.elements.forEach(function (element) {
+                    if (element.type === "text") {
+                        rowData.push(element.response ? element.response.text || "" : "");
+                    } else if (element.type === "radiogroup") {
+                        rowData.push(element.response ? element.response.text || "" : "");
+                    } else {
+                        rowData.push("");
+                    }
+                });
+            });
+            excelData.push(rowData); // Thêm dòng dữ liệu vào mảng
+        });
+
+        // Thêm dữ liệu vào sheet Excel
+        excelData.forEach(function (row, rowIndex) {
+            XLSX.utils.sheet_add_aoa(worksheet, [row], { origin: -1 });
+        });
+
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'SurveyData');
+        XLSX.writeFile(workbook, 'SurveyData.xlsx');
+    }
+
+
+
+
     function LoadData() {
         $.ajax({
             url: '/Admin/PhieuKhaoSat/LoadKetQuaPKS?id=' + @ViewBag.id,
@@ -81,7 +140,7 @@
                             html += "<td>" + items[i].sinhvien + "</td>";
                         }
                         html += "<td>" + formattedThoiGianThucHien + "</td>";
-                        html += "<td><button class='btn btn-icon btn-hover btn-sm btn-rounded pull-right btnEdit' onclick=\"window.location.href='/Admin/PhieuKhaoSat/AnswerPKS?id=@ViewBag.id'\"> <i class='fas fa-chalkboard-teacher'></i></button></td>";
+                        html += "<td><button class='btn btn-icon btn-hover btn-sm btn-rounded pull-right btnEdit' onclick=\"window.location.href='/Admin/PhieuKhaoSat/AnswerPKS?id=" + items[i].MaAnswer +"'\"> <i class='fas fa-chalkboard-teacher'></i></button></td>";
                         html += "</tr>";
                     }
                 }
