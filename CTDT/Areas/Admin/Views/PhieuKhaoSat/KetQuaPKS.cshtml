@@ -70,20 +70,16 @@
         var workbook = XLSX.utils.book_new();
         var worksheet = XLSX.utils.aoa_to_sheet([]);
 
-        var excelData = []; // Mảng chứa dữ liệu cho Excel
-
-        // Thêm tiêu đề cho Excel
-        var titleRow = []; // Dòng tiêu đề
+        var excelData = [];
+        var titleRow = []; 
         data[0].pages.forEach(function (page) {
             page.elements.forEach(function (element) {
                 titleRow.push(element.title);
             });
         });
         excelData.push(titleRow);
-
-        // Duyệt qua từng kết quả phiếu và thêm dữ liệu tương ứng
         data.forEach(function (survey) {
-            var rowData = []; // Dòng dữ liệu
+            var rowData = []; 
             survey.pages.forEach(function (page) {
                 page.elements.forEach(function (element) {
                     if (element.type === "text") {
@@ -95,10 +91,9 @@
                     }
                 });
             });
-            excelData.push(rowData); // Thêm dòng dữ liệu vào mảng
+            excelData.push(rowData); 
         });
 
-        // Thêm dữ liệu vào sheet Excel
         excelData.forEach(function (row, rowIndex) {
             XLSX.utils.sheet_add_aoa(worksheet, [row], { origin: -1 });
         });
@@ -106,10 +101,6 @@
         XLSX.utils.book_append_sheet(workbook, worksheet, 'SurveyData');
         XLSX.writeFile(workbook, 'SurveyData.xlsx');
     }
-
-
-
-
     function LoadData() {
         $.ajax({
             url: '/Admin/PhieuKhaoSat/LoadKetQuaPKS?id=' + @ViewBag.id,

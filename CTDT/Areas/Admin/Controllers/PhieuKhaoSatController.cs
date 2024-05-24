@@ -75,11 +75,26 @@ namespace CTDT.Areas.Admin.Controllers
             return View(litsKQ);
         }
         [HttpGet]
-        public ActionResult LoadPhieu(int pageNumber = 1, int pageSize = 10)
+        public ActionResult LoadPhieu(int pageNumber = 1, int pageSize = 10, int hdt = 0, int loaiks = 0)
         {
             try
             {
-                var ListPhieu = db.survey
+                var query = db.survey.AsQueryable();
+
+                if (hdt != 0)
+                {
+                    query = query.Where(p => p.id_hedaotao == hdt);
+                }
+
+                if (loaiks != 0)
+                {
+                    query = query.Where(p => p.id_loaikhaosat == loaiks);
+                }
+
+                var totalRecords = query.Count();
+                var totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
+
+                var ListPhieu = query
                     .OrderBy(l => l.surveyID)
                     .Skip((pageNumber - 1) * pageSize)
                     .Take(pageSize)
@@ -95,10 +110,6 @@ namespace CTDT.Areas.Admin.Controllers
                         LoaiKhaoSat = p.LoaiKhaoSat.name_loaikhaosat,
                         MaLKS = p.id_loaikhaosat,
                     }).ToList();
-
-                var totalRecords = db.survey.Count();
-
-                var totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
 
                 return Json(new { data = ListPhieu, totalPages = totalPages, status = "Load dữ liệu thành công" }, JsonRequestBehavior.AllowGet);
             }

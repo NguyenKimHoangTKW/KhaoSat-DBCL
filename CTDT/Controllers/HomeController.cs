@@ -15,7 +15,8 @@ namespace CTDT.Controllers
         dbSurveyEntities db = new dbSurveyEntities();
         public ActionResult Index()
         {
-            return View();
+            var userInfo = Session["UserInfo"] as UserInfoViewModel;
+            return View(userInfo);
         }
         public ActionResult PhieuKhaoSat(int id)
         {

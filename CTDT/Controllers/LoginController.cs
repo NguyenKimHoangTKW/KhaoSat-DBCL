@@ -1,87 +1,112 @@
-﻿using Microsoft.Owin.Security;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
+﻿using System.Web;
 using System.Web.Mvc;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.AspNet.Identity;
+using Microsoft.Owin.Security;
 using System.Security.Claims;
+using System.Linq;
+using Microsoft.AspNet.Identity;
 
-namespace CTDT.Controllers
+public class LoginController : Controller
 {
-    public class LoginController : Controller
+    private const string XsrfKey = "XsrfId";
+    private const string UserInfoSessionKey = "UserInfo";
+
+    // GET: Login
+    public ActionResult Login()
     {
-        // GET: Login
-        private const string XsrfKey = "XsrfId";
+        return View();
+    }
 
-        public ActionResult Login(string returnUrl)
+    // POST: /Login/ExternalLogin
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public ActionResult ExternalLogin(string provider, string returnUrl)
+    {
+        // Request a redirect to the external login provider
+        return new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Login", new { ReturnUrl = returnUrl }));
+    }
+
+    // GET: /Login/ExternalLoginCallback
+    public ActionResult ExternalLoginCallback(string returnUrl)
+    {
+        var loginInfo = HttpContext.GetOwinContext().Authentication.GetExternalLoginInfo();
+        if (loginInfo == null)
         {
-            return new ChallengeResult("Google", Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
+            return RedirectToAction("Login");
         }
 
-        public ActionResult ExternalLoginCallback(string returnUrl)
+        // Sign in the user with this external login provider if the user already has a login
+        var identity = new ClaimsIdentity(loginInfo.ExternalIdentity.Claims, DefaultAuthenticationTypes.ApplicationCookie);
+        HttpContext.GetOwinContext().Authentication.SignIn(new AuthenticationProperties { IsPersistent = false }, identity);
+
+        // Store user information in session
+        var userInfo = new UserInfoViewModel
         {
-            var loginInfo = HttpContext.GetOwinContext().Authentication.GetExternalLoginInfo();
-            if (loginInfo == null)
-            {
-                return RedirectToAction("Login");
-            }
+            Name = loginInfo.ExternalIdentity.Name,
+            Email = loginInfo.ExternalIdentity.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value,
+            Provider = loginInfo.Login.LoginProvider
+        };
+        Session[UserInfoSessionKey] = userInfo;
 
-            // Đăng nhập thành công, thêm logic xử lý đăng nhập tại đây
-            var identity = new ClaimsIdentity(new[] {
-                new Claim(ClaimTypes.Name, loginInfo.DefaultUserName),
-                new Claim(ClaimTypes.Email, loginInfo.Email)
-            }, DefaultAuthenticationTypes.ApplicationCookie);
+        return RedirectToLocal(returnUrl);
+    }
 
-            HttpContext.GetOwinContext().Authentication.SignIn(new AuthenticationProperties { IsPersistent = false }, identity);
+    // GET: /Login/ExternalLoginFailure
+    [HttpGet]
+    public ActionResult ExternalLoginFailure()
+    {
+        return View();
+    }
 
-            return RedirectToLocal(returnUrl);
+    private ActionResult RedirectToLocal(string returnUrl)
+    {
+        if (Url.IsLocalUrl(returnUrl))
+        {
+            return Redirect(returnUrl);
         }
+        return RedirectToAction("Index", "Home");
+    }
 
-        private ActionResult RedirectToLocal(string returnUrl)
+    private void AddErrors(IdentityResult result)
+    {
+        foreach (var error in result.Errors)
         {
-            if (Url.IsLocalUrl(returnUrl))
-            {
-                return Redirect(returnUrl);
-            }
-            return RedirectToAction("Index", "Home");
-        }
-
-        public ActionResult Logout()
-        {
-            HttpContext.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("Index", "Home");
-        }
-
-        internal class ChallengeResult : HttpUnauthorizedResult
-        {
-            public ChallengeResult(string provider, string redirectUri)
-                : this(provider, redirectUri, null)
-            {
-            }
-
-            public ChallengeResult(string provider, string redirectUri, string userId)
-            {
-                LoginProvider = provider;
-                RedirectUri = redirectUri;
-                UserId = userId;
-            }
-
-            public string LoginProvider { get; set; }
-            public string RedirectUri { get; set; }
-            public string UserId { get; set; }
-
-            public override void ExecuteResult(ControllerContext context)
-            {
-                var properties = new AuthenticationProperties { RedirectUri = RedirectUri };
-                if (UserId != null)
-                {
-                    properties.Dictionary[XsrfKey] = UserId;
-                }
-                context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
-            }
+            ModelState.AddModelError("", error);
         }
     }
+
+    private class ChallengeResult : HttpUnauthorizedResult
+    {
+        public ChallengeResult(string provider, string redirectUri)
+            : this(provider, redirectUri, null)
+        {
+        }
+
+        public ChallengeResult(string provider, string redirectUri, string userId)
+        {
+            LoginProvider = provider;
+            RedirectUri = redirectUri;
+            UserId = userId;
+        }
+
+        public string LoginProvider { get; set; }
+        public string RedirectUri { get; set; }
+        public string UserId { get; set; }
+
+        public override void ExecuteResult(ControllerContext context)
+        {
+            var properties = new AuthenticationProperties { RedirectUri = RedirectUri };
+            if (UserId != null)
+            {
+                properties.Dictionary[XsrfKey] = UserId;
+            }
+            context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
+        }
+    }
+}
+
+public class UserInfoViewModel
+{
+    public string Name { get; set; }
+    public string Email { get; set; }
+    public string Provider { get; set; }
 }

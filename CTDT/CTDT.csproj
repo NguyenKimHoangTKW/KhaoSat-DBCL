@@ -1256,12 +1256,12 @@
     <Content Include="Views\Home\PhieuKhaoSat.cshtml" />
     <Content Include="Views\Home\XacThucCTDT.cshtml" />
     <Content Include="Views\Home\XacThuc.cshtml" />
+    <Content Include="Views\Login\Login.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Content\Exports\" />
-    <Folder Include="Views\Login\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

@@ -1,7 +1,15 @@
-﻿@{
+﻿@model UserInfoViewModel
+
+@{
     ViewBag.Title = "Trung tâm Đảm Bảo Chất Lượng - Trường Đại Học Thủ Dầu Một";
 }
+<h2>User Information</h2>
 
+<div>
+    <p><strong>Name:</strong> @Model.Name</p>
+    <p><strong>Email:</strong> @Model.Email</p>
+    <p><strong>Provider:</strong> @Model.Provider</p>
+</div>
 <div style="padding-top: 50px; padding-bottom: 70px;">
     <div class="container">
         <div class="row">

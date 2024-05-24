@@ -1,0 +1,13 @@
+﻿@{
+    ViewBag.Title = "Login";
+}
+
+<h2>Login</h2>
+
+@using (Html.BeginForm("ExternalLogin", "Login", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <div>
+        <button type="submit" name="provider" value="Google" class="btn btn-default">Login with Google</button>
+    </div>
+}
