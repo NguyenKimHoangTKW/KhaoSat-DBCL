@@ -3,11 +3,11 @@
 }
 
 <h2>Login</h2>
+<a href="#" onclick="document.getElementById('externalLoginForm').submit();" class="nav-link" style="text-decoration: none; color: white; font-size: 1.7rem;">
+    <i class="fa-solid fa-user" style="padding-right: 10px; font-size:2rem;"></i>Đăng nhập với Google
+</a>
 
-@using (Html.BeginForm("ExternalLogin", "Login", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-{
+<form id="externalLoginForm" action="@Url.Action("ExternalLogin", "Login")" method="post" class="form-horizontal" role="form">
     @Html.AntiForgeryToken()
-    <div>
-        <button type="submit" name="provider" value="Google" class="btn btn-default">Login with Google</button>
-    </div>
-}
+    <input type="hidden" name="provider" value="Google" />
+</form>

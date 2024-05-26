@@ -4,9 +4,12 @@ using Microsoft.Owin.Security;
 using System.Security.Claims;
 using System.Linq;
 using Microsoft.AspNet.Identity;
+using CTDT.Models;
+using System;
 
 public class LoginController : Controller
 {
+    dbSurveyEntities db = new dbSurveyEntities();
     private const string XsrfKey = "XsrfId";
     private const string UserInfoSessionKey = "UserInfo";
 
@@ -38,14 +41,32 @@ public class LoginController : Controller
         var identity = new ClaimsIdentity(loginInfo.ExternalIdentity.Claims, DefaultAuthenticationTypes.ApplicationCookie);
         HttpContext.GetOwinContext().Authentication.SignIn(new AuthenticationProperties { IsPersistent = false }, identity);
 
-        // Store user information in session
-        var userInfo = new UserInfoViewModel
+        // Extract user information from loginInfo
+        var email = loginInfo.ExternalIdentity.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+
+        // Check if the user already exists in the database
+        var user = db.users.FirstOrDefault(u => u.email == email);
+        if (user == null)
         {
-            Name = loginInfo.ExternalIdentity.Name,
-            Email = loginInfo.ExternalIdentity.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value,
-            Provider = loginInfo.Login.LoginProvider
-        };
-        Session[UserInfoSessionKey] = userInfo;
+            // Create a new user record
+            user = new users
+            {
+                name = loginInfo.ExternalIdentity.Name,
+                email = email,
+                username = email, // or generate a unique username
+                password = null,  // since this is an external login, no password is required
+                type = 1,         // set the default user type
+                credential = 1,   // set the default credential
+                ngaycapnhat = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds,
+                ngaytao = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds
+            };
+
+            db.users.Add(user);
+            db.SaveChanges();
+        }
+
+        // Store user information in session
+        Session["UserInfoSessionKey"] = user;
 
         return RedirectToLocal(returnUrl);
     }
@@ -55,6 +76,16 @@ public class LoginController : Controller
     public ActionResult ExternalLoginFailure()
     {
         return View();
+    }
+
+    // POST: /Login/Logout
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public ActionResult Logout()
+    {
+        HttpContext.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+        Session["UserInfoSessionKey"] = null;
+        return RedirectToAction("Index", "Home");
     }
 
     private ActionResult RedirectToLocal(string returnUrl)
@@ -102,11 +133,4 @@ public class LoginController : Controller
             context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
         }
     }
-}
-
-public class UserInfoViewModel
-{
-    public string Name { get; set; }
-    public string Email { get; set; }
-    public string Provider { get; set; }
 }
