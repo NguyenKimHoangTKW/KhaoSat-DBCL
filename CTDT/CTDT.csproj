@@ -185,6 +185,7 @@
     <Compile Include="Areas\Admin\Controllers\CTDTController.cs" />
     <Compile Include="Areas\Admin\Controllers\KhoaController.cs" />
     <Compile Include="Areas\Admin\Controllers\LopController.cs" />
+    <Compile Include="Areas\Admin\Controllers\NguoiDungController.cs" />
     <Compile Include="Areas\Admin\Controllers\PhieuKhaoSatController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
@@ -192,6 +193,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helper\SessionHelper.cs" />
     <Compile Include="Models\answer_response.cs">
       <DependentUpon>CTDTModel.tt</DependentUpon>
     </Compile>
@@ -232,6 +234,9 @@
       <DependentUpon>CTDTModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sysdiagrams.cs">
+      <DependentUpon>CTDTModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\typeusers.cs">
       <DependentUpon>CTDTModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\users.cs">
@@ -1069,6 +1074,7 @@
     <Content Include="Areas\Admin\Views\PhieuKhaoSat\KetQuaPKS.cshtml" />
     <Content Include="Areas\Admin\Views\PhieuKhaoSat\AnswerPKS.cshtml" />
     <Content Include="Areas\Admin\Views\PhieuKhaoSat\AddSurvey.cshtml" />
+    <Content Include="Areas\Admin\Views\NguoiDung\ViewUser.cshtml" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.1.js" />
     <Content Include="Scripts\jquery-3.7.1.min.js" />

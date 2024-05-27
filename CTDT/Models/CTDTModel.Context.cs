@@ -34,6 +34,7 @@ namespace CTDT.Models
         public virtual DbSet<sinhvien> sinhvien { get; set; }
         public virtual DbSet<survey> survey { get; set; }
         public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
+        public virtual DbSet<typeusers> typeusers { get; set; }
         public virtual DbSet<users> users { get; set; }
     }
 }

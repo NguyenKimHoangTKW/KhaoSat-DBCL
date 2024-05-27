@@ -25,8 +25,7 @@ namespace CTDT.Models
         public string email { get; set; }
         public string username { get; set; }
         public string password { get; set; }
-        public byte type { get; set; }
-        public byte credential { get; set; }
+        public int id_typeusers { get; set; }
         public int ngaycapnhat { get; set; }
         public int ngaytao { get; set; }
         public Nullable<int> id_ctdt { get; set; }
@@ -34,5 +33,6 @@ namespace CTDT.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<answer_response> answer_response { get; set; }
         public virtual ctdt ctdt { get; set; }
+        public virtual typeusers typeusers { get; set; }
     }
 }

@@ -2,13 +2,6 @@
     ViewBag.Title = "Trung tâm Đảm Bảo Chất Lượng - Trường Đại Học Thủ Dầu Một";
     var user = Session["UserInfoSessionKey"] as CTDT.Models.users;
 }
-<h2>User Information</h2>
-@if (user != null)
-{
-    <p>@user.email</p>
-}
-
-
 <div style="padding-top: 50px; padding-bottom: 70px;">
     <div class="container">
         <div class="row">

@@ -46,18 +46,6 @@ namespace CTDT.Areas.Admin.Controllers
             var items = db.survey.Where(x => x.surveyID == id).ToList();
            return View(items);
         }
-        [HttpPost]
-        public ActionResult AddSurvey(survey s)
-        {
-            var status = "";
-            DateTime now = DateTime.UtcNow;
-            int unixTimestamp = (int)(now.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-            s.surveyTimeMake = unixTimestamp;
-            s.surveyTimeUpdate = unixTimestamp;
-            db.SaveChanges();
-            status = "Tạo phiếu thành công";
-            return Json(new { status = status }, JsonRequestBehavior.AllowGet);
-        }
         public ActionResult KetQuaPKS(int id)
         {
             ViewBag.id = id;

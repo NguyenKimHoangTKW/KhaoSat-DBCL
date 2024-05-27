@@ -10,6 +10,7 @@
     <EntitySet Name="sinhvien" EntityType="dbSurveyModel.sinhvien" />
     <EntitySet Name="survey" EntityType="dbSurveyModel.survey" />
     <EntitySet Name="sysdiagrams" EntityType="dbSurveyModel.sysdiagrams" />
+    <EntitySet Name="typeusers" EntityType="dbSurveyModel.typeusers" />
     <EntitySet Name="users" EntityType="dbSurveyModel.users" />
     <AssociationSet Name="FK_answer_response_ctdt" Association="dbSurveyModel.FK_answer_response_ctdt">
       <End Role="ctdt" EntitySet="ctdt" />
@@ -50,6 +51,10 @@
     <AssociationSet Name="FK_sinhvien_lop" Association="dbSurveyModel.FK_sinhvien_lop">
       <End Role="lop" EntitySet="lop" />
       <End Role="sinhvien" EntitySet="sinhvien" />
+    </AssociationSet>
+    <AssociationSet Name="FK_users_typeusers" Association="dbSurveyModel.FK_users_typeusers">
+      <End Role="typeusers" EntitySet="typeusers" />
+      <End Role="users" EntitySet="users" />
     </AssociationSet>
   </EntityContainer>
   <EntityType Name="answer_response">
@@ -130,7 +135,7 @@
     <Property Name="hovaten" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="ngaysinh" Type="DateTime" Nullable="false" Precision="0" />
     <Property Name="sodienthoai" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="true" />
-    <Property Name="diachi" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="diachi" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
     <Property Name="phai" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="namtotnghiep" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
     <Property Name="ngaycapnhat" Type="Int32" />
@@ -167,6 +172,14 @@
     <Property Name="version" Type="Int32" />
     <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
   </EntityType>
+  <EntityType Name="typeusers">
+    <Key>
+      <PropertyRef Name="id_typeusers" />
+    </Key>
+    <Property Name="id_typeusers" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name_typeusers" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="users" Relationship="dbSurveyModel.FK_users_typeusers" FromRole="typeusers" ToRole="users" />
+  </EntityType>
   <EntityType Name="users">
     <Key>
       <PropertyRef Name="id_users" />
@@ -176,13 +189,13 @@
     <Property Name="email" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
     <Property Name="username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="password" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-    <Property Name="type" Type="Byte" Nullable="false" />
-    <Property Name="credential" Type="Byte" Nullable="false" />
+    <Property Name="id_typeusers" Type="Int32" Nullable="false" />
     <Property Name="ngaycapnhat" Type="Int32" Nullable="false" />
     <Property Name="ngaytao" Type="Int32" Nullable="false" />
     <Property Name="id_ctdt" Type="Int32" />
     <NavigationProperty Name="answer_response" Relationship="dbSurveyModel.FK_answer_response_users" FromRole="users" ToRole="answer_response" />
     <NavigationProperty Name="ctdt" Relationship="dbSurveyModel.FK_users_ctdt" FromRole="users" ToRole="ctdt" />
+    <NavigationProperty Name="typeusers" Relationship="dbSurveyModel.FK_users_typeusers" FromRole="users" ToRole="typeusers" />
   </EntityType>
   <Association Name="FK_answer_response_ctdt">
     <End Type="dbSurveyModel.ctdt" Role="ctdt" Multiplicity="0..1" />
@@ -301,6 +314,18 @@
       </Principal>
       <Dependent Role="sinhvien">
         <PropertyRef Name="id_lop" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_users_typeusers">
+    <End Type="dbSurveyModel.typeusers" Role="typeusers" Multiplicity="1" />
+    <End Type="dbSurveyModel.users" Role="users" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="typeusers">
+        <PropertyRef Name="id_typeusers" />
+      </Principal>
+      <Dependent Role="users">
+        <PropertyRef Name="id_typeusers" />
       </Dependent>
     </ReferentialConstraint>
   </Association>

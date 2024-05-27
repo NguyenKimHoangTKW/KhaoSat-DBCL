@@ -1,6 +1,9 @@
-﻿@{
-    var user = Session["UserInfoSessionKey"] as CTDT.Models.users;
+﻿@using CTDT.Helper
+
+@{
+    var user = SessionHelper.GetUser();
 }
+
 <nav class="navbar navbar-expand-sm bg-blue navbar-dark sticky">
     <div class="container">
         <a class="navbar-brand" href="@Url.Action("Index","Home")">Trang Chủ</a>
@@ -17,7 +20,7 @@
                 </li>
             </ul>
         </div>
-        @if (user == null)
+        @if (!SessionHelper.IsUserLoggedIn())
         {
             <a href="#" onclick="document.getElementById('externalLoginForm').submit();" class="nav-link" style="text-decoration: none; color: white; font-size: 1.7rem;">
                 <i class="fa-solid fa-user" style="padding-right: 10px; font-size:2rem;"></i>Tài khoản
@@ -33,7 +36,6 @@
                     <li><a href="#"><i class="fa fa-note-sticky"></i>Biểu mẫu đã khảo sát</a></li>
                     <li>
                         <a href="#" onclick="document.getElementById('logoutForm').submit();"><i class="fa-solid fa-right-from-bracket"></i>Đăng xuất</a>
-
                     </li>
                 </ul>
             </div>

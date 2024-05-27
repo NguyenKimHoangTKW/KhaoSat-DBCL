@@ -6,6 +6,7 @@ using System.Linq;
 using Microsoft.AspNet.Identity;
 using CTDT.Models;
 using System;
+using CTDT.Helper;
 
 public class LoginController : Controller
 {
@@ -53,10 +54,9 @@ public class LoginController : Controller
             {
                 name = loginInfo.ExternalIdentity.Name,
                 email = email,
-                username = email, // or generate a unique username
-                password = null,  // since this is an external login, no password is required
-                type = 1,         // set the default user type
-                credential = 1,   // set the default credential
+                username = null,
+                password = null, 
+                id_typeusers = 1,
                 ngaycapnhat = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds,
                 ngaytao = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds
             };
@@ -66,7 +66,7 @@ public class LoginController : Controller
         }
 
         // Store user information in session
-        Session["UserInfoSessionKey"] = user;
+        SessionHelper.SetUser(user);
 
         return RedirectToLocal(returnUrl);
     }
@@ -84,7 +84,7 @@ public class LoginController : Controller
     public ActionResult Logout()
     {
         HttpContext.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-        Session["UserInfoSessionKey"] = null;
+        SessionHelper.ClearUser();
         return RedirectToAction("Index", "Home");
     }
 

@@ -70,7 +70,7 @@
           <Property Name="hovaten" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="ngaysinh" Type="date" Nullable="false" />
           <Property Name="sodienthoai" Type="nvarchar" MaxLength="15" Nullable="false" />
-          <Property Name="diachi" Type="text" Nullable="false" />
+          <Property Name="diachi" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="phai" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="namtotnghiep" Type="text" />
           <Property Name="ngaycapnhat" Type="int" />
@@ -102,6 +102,13 @@
           <Property Name="version" Type="int" />
           <Property Name="definition" Type="varbinary(max)" />
         </EntityType>
+        <EntityType Name="typeusers">
+          <Key>
+            <PropertyRef Name="id_typeusers" />
+          </Key>
+          <Property Name="id_typeusers" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name_typeusers" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
         <EntityType Name="users">
           <Key>
             <PropertyRef Name="id_users" />
@@ -111,8 +118,7 @@
           <Property Name="email" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="username" Type="nvarchar" MaxLength="50" />
           <Property Name="password" Type="nvarchar" MaxLength="255" />
-          <Property Name="type" Type="tinyint" Nullable="false" />
-          <Property Name="credential" Type="tinyint" Nullable="false" />
+          <Property Name="id_typeusers" Type="int" Nullable="false" />
           <Property Name="ngaycapnhat" Type="int" Nullable="false" />
           <Property Name="ngaytao" Type="int" Nullable="false" />
           <Property Name="id_ctdt" Type="int" />
@@ -237,6 +243,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_users_typeusers">
+          <End Role="typeusers" Type="Self.typeusers" Multiplicity="1" />
+          <End Role="users" Type="Self.users" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="typeusers">
+              <PropertyRef Name="id_typeusers" />
+            </Principal>
+            <Dependent Role="users">
+              <PropertyRef Name="id_typeusers" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="dbSurveyModelStoreContainer">
           <EntitySet Name="answer_response" EntityType="Self.answer_response" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ctdt" EntityType="Self.ctdt" Schema="dbo" store:Type="Tables" />
@@ -247,6 +265,7 @@
           <EntitySet Name="sinhvien" EntityType="Self.sinhvien" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="survey" EntityType="Self.survey" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="typeusers" EntityType="Self.typeusers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="users" EntityType="Self.users" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_answer_response_ctdt" Association="Self.FK_answer_response_ctdt">
             <End Role="ctdt" EntitySet="ctdt" />
@@ -288,6 +307,10 @@
             <End Role="ctdt" EntitySet="ctdt" />
             <End Role="users" EntitySet="users" />
           </AssociationSet>
+          <AssociationSet Name="FK_users_typeusers" Association="Self.FK_users_typeusers">
+            <End Role="typeusers" EntitySet="typeusers" />
+            <End Role="users" EntitySet="users" />
+          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -303,6 +326,7 @@
           <EntitySet Name="sinhvien" EntityType="dbSurveyModel.sinhvien" />
           <EntitySet Name="survey" EntityType="dbSurveyModel.survey" />
           <EntitySet Name="sysdiagrams" EntityType="dbSurveyModel.sysdiagrams" />
+          <EntitySet Name="typeusers" EntityType="dbSurveyModel.typeusers" />
           <EntitySet Name="users" EntityType="dbSurveyModel.users" />
           <AssociationSet Name="FK_answer_response_ctdt" Association="dbSurveyModel.FK_answer_response_ctdt">
             <End Role="ctdt" EntitySet="ctdt" />
@@ -343,6 +367,10 @@
           <AssociationSet Name="FK_sinhvien_lop" Association="dbSurveyModel.FK_sinhvien_lop">
             <End Role="lop" EntitySet="lop" />
             <End Role="sinhvien" EntitySet="sinhvien" />
+          </AssociationSet>
+          <AssociationSet Name="FK_users_typeusers" Association="dbSurveyModel.FK_users_typeusers">
+            <End Role="typeusers" EntitySet="typeusers" />
+            <End Role="users" EntitySet="users" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="answer_response">
@@ -423,7 +451,7 @@
           <Property Name="hovaten" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="ngaysinh" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="sodienthoai" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="true" />
-          <Property Name="diachi" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="diachi" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="phai" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="namtotnghiep" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="ngaycapnhat" Type="Int32" />
@@ -460,6 +488,14 @@
           <Property Name="version" Type="Int32" />
           <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
         </EntityType>
+        <EntityType Name="typeusers">
+          <Key>
+            <PropertyRef Name="id_typeusers" />
+          </Key>
+          <Property Name="id_typeusers" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name_typeusers" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="users" Relationship="dbSurveyModel.FK_users_typeusers" FromRole="typeusers" ToRole="users" />
+        </EntityType>
         <EntityType Name="users">
           <Key>
             <PropertyRef Name="id_users" />
@@ -469,13 +505,13 @@
           <Property Name="email" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="password" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="type" Type="Byte" Nullable="false" />
-          <Property Name="credential" Type="Byte" Nullable="false" />
+          <Property Name="id_typeusers" Type="Int32" Nullable="false" />
           <Property Name="ngaycapnhat" Type="Int32" Nullable="false" />
           <Property Name="ngaytao" Type="Int32" Nullable="false" />
           <Property Name="id_ctdt" Type="Int32" />
           <NavigationProperty Name="answer_response" Relationship="dbSurveyModel.FK_answer_response_users" FromRole="users" ToRole="answer_response" />
           <NavigationProperty Name="ctdt" Relationship="dbSurveyModel.FK_users_ctdt" FromRole="users" ToRole="ctdt" />
+          <NavigationProperty Name="typeusers" Relationship="dbSurveyModel.FK_users_typeusers" FromRole="users" ToRole="typeusers" />
         </EntityType>
         <Association Name="FK_answer_response_ctdt">
           <End Type="dbSurveyModel.ctdt" Role="ctdt" Multiplicity="0..1" />
@@ -597,6 +633,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_users_typeusers">
+          <End Type="dbSurveyModel.typeusers" Role="typeusers" Multiplicity="1" />
+          <End Type="dbSurveyModel.users" Role="users" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="typeusers">
+              <PropertyRef Name="id_typeusers" />
+            </Principal>
+            <Dependent Role="users">
+              <PropertyRef Name="id_typeusers" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -709,14 +757,21 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="typeusers">
+            <EntityTypeMapping TypeName="dbSurveyModel.typeusers">
+              <MappingFragment StoreEntitySet="typeusers">
+                <ScalarProperty Name="name_typeusers" ColumnName="name_typeusers" />
+                <ScalarProperty Name="id_typeusers" ColumnName="id_typeusers" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="users">
             <EntityTypeMapping TypeName="dbSurveyModel.users">
               <MappingFragment StoreEntitySet="users">
                 <ScalarProperty Name="id_ctdt" ColumnName="id_ctdt" />
                 <ScalarProperty Name="ngaytao" ColumnName="ngaytao" />
                 <ScalarProperty Name="ngaycapnhat" ColumnName="ngaycapnhat" />
-                <ScalarProperty Name="credential" ColumnName="credential" />
-                <ScalarProperty Name="type" ColumnName="type" />
+                <ScalarProperty Name="id_typeusers" ColumnName="id_typeusers" />
                 <ScalarProperty Name="password" ColumnName="password" />
                 <ScalarProperty Name="username" ColumnName="username" />
                 <ScalarProperty Name="email" ColumnName="email" />

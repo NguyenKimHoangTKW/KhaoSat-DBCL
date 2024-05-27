@@ -107,14 +107,21 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="typeusers">
+      <EntityTypeMapping TypeName="dbSurveyModel.typeusers">
+        <MappingFragment StoreEntitySet="typeusers">
+          <ScalarProperty Name="name_typeusers" ColumnName="name_typeusers" />
+          <ScalarProperty Name="id_typeusers" ColumnName="id_typeusers" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <EntitySetMapping Name="users">
       <EntityTypeMapping TypeName="dbSurveyModel.users">
         <MappingFragment StoreEntitySet="users">
           <ScalarProperty Name="id_ctdt" ColumnName="id_ctdt" />
           <ScalarProperty Name="ngaytao" ColumnName="ngaytao" />
           <ScalarProperty Name="ngaycapnhat" ColumnName="ngaycapnhat" />
-          <ScalarProperty Name="credential" ColumnName="credential" />
-          <ScalarProperty Name="type" ColumnName="type" />
+          <ScalarProperty Name="id_typeusers" ColumnName="id_typeusers" />
           <ScalarProperty Name="password" ColumnName="password" />
           <ScalarProperty Name="username" ColumnName="username" />
           <ScalarProperty Name="email" ColumnName="email" />

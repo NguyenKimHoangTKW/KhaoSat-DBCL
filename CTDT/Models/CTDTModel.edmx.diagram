@@ -6,14 +6,15 @@
     <edmx:Diagrams>
       <Diagram DiagramId="4bde84ba2e194664bf55980208618204" Name="Diagram1">
         <EntityTypeShape EntityType="dbSurveyModel.answer_response" Width="1.5" PointX="9.75" PointY="10" />
-        <EntityTypeShape EntityType="dbSurveyModel.ctdt" Width="1.5" PointX="3" PointY="8.25" />
+        <EntityTypeShape EntityType="dbSurveyModel.ctdt" Width="1.5" PointX="3" PointY="6.25" />
         <EntityTypeShape EntityType="dbSurveyModel.hedaotao" Width="1.5" PointX="5.25" PointY="10.25" />
-        <EntityTypeShape EntityType="dbSurveyModel.khoa" Width="1.5" PointX="0.75" PointY="8.625" />
+        <EntityTypeShape EntityType="dbSurveyModel.khoa" Width="1.5" PointX="0.75" PointY="6.625" />
         <EntityTypeShape EntityType="dbSurveyModel.LoaiKhaoSat" Width="1.5" PointX="5.25" PointY="3" />
         <EntityTypeShape EntityType="dbSurveyModel.lop" Width="1.5" PointX="5.25" PointY="14.375" />
-        <EntityTypeShape EntityType="dbSurveyModel.sinhvien" Width="1.5" PointX="7.5" PointY="13.875" />
+        <EntityTypeShape EntityType="dbSurveyModel.sinhvien" Width="1.5" PointX="7.5" PointY="13.75" />
         <EntityTypeShape EntityType="dbSurveyModel.survey" Width="1.5" PointX="7.5" PointY="0.75" />
-        <EntityTypeShape EntityType="dbSurveyModel.sysdiagrams" Width="1.5" PointX="0.75" PointY="3.25" />
+        <EntityTypeShape EntityType="dbSurveyModel.sysdiagrams" Width="1.5" PointX="7.75" PointY="6.25" />
+        <EntityTypeShape EntityType="dbSurveyModel.typeusers" Width="1.5" PointX="3" PointY="3.75" />
         <EntityTypeShape EntityType="dbSurveyModel.users" Width="1.5" PointX="5.25" PointY="5.875" />
         <AssociationConnector Association="dbSurveyModel.FK_answer_response_ctdt" />
         <AssociationConnector Association="dbSurveyModel.FK_answer_response_sinhvien" />
@@ -25,6 +26,7 @@
         <AssociationConnector Association="dbSurveyModel.FK_survey_hedaotao" />
         <AssociationConnector Association="dbSurveyModel.FK_survey_LoaiKhaoSat" />
         <AssociationConnector Association="dbSurveyModel.FK_sinhvien_lop" />
+        <AssociationConnector Association="dbSurveyModel.FK_users_typeusers" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
