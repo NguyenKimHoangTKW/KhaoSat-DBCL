@@ -12,11 +12,11 @@
         body {
             font-family: Arial, sans-serif;
             background-color: #f8f9fa;
-            margin: auto; /* Để căn giữa trang theo chiều ngang */
-            max-width: 800px; /* Điều chỉnh độ rộng tối đa của phần nội dung */
-            padding-top: 20px; /* Khoảng cách từ cạnh trên của trang */
-            padding-bottom: 20px; /* Khoảng cách từ cạnh dưới của trang */
-            position: relative; /* Không ghi đè lên vị trí tuyệt đối của nút xóa */
+            margin: auto;
+            max-width: 800px;
+            padding-top: 20px;
+            padding-bottom: 20px;
+            position: relative;
         }
 
         h1 {
@@ -30,7 +30,7 @@
             padding: 20px;
             margin-bottom: 20px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            position: relative; /* Không ghi đè lên vị trí tuyệt đối của nút xóa */
+            position: relative;
         }
 
             .form-section h2 {
@@ -58,6 +58,7 @@
             font-size: 20px;
             padding: 15px;
             margin-bottom: 20px;
+            width: 700px;
         }
 
         input.element-title-input {
@@ -93,9 +94,9 @@
             cursor: pointer;
             font-size: 18px;
             margin-left: 10px;
-            position: relative; /* Thêm thuộc tính position */
-            top: -2px; /* Điều chỉnh vị trí dọc của nút */
-            transition: color 0.3s ease; /* Hiệu ứng màu khi hover */
+            position: relative;
+            top: -2px;
+            transition: color 0.3s ease;
         }
 
         .delete-button {
@@ -128,13 +129,14 @@
     <div id="app">
         <h1>PHIẾU KHẢO SÁT Ý KIẾN CỰU NGƯỜI HỌC</h1>
         <div class="form-section">
-            <h2>{{ json.titles }}</h2>
+            <h2 style="color:red;">{{ json.titles }}</h2>
             <label>Tiêu đề chính:</label>
             <input v-model="json.titles" placeholder="Tiêu đề chính" class="title-input" />
         </div>
         <div class="form-section">
             <label>Mô tả:</label>
-            <input v-model="json.description" placeholder="Mô tả" />
+            <h2>{{ json.description }}</h2>
+            <input v-model="json.description" placeholder="Mô tả" class="title-input" />
         </div>
         <button v-on:click="addPage">Thêm Trang</button>
         <div v-for="(page, pageIndex) in json.pages" :key="pageIndex" class="form-section">
@@ -145,16 +147,21 @@
             <button class="move-button" v-if="pageIndex < json.pages.length - 1" v-on:click="movePage(pageIndex, 'down')">↓</button>
             <button v-on:click="addElement(pageIndex)">Thêm phần tử</button>
             <div v-for="(element, elementIndex) in page.elements" :key="elementIndex" class="form-section">
+                <h2>{{ element.title }}</h2>
                 <input v-model="element.title" placeholder="Tiêu đề phần tử" class="element-title-input" />
                 <select v-model="element.type" v-on:change="updateChoiceType(pageIndex, elementIndex)">
-                    <option value="text">Text</option>
-                    <option value="number">Number</option>
-                    <option value="radiogroup">Radio Group</option>
-                    <option value="checkbox">Checkbox</option>
-                    <option value="comment">Comment</option>
-                    <option value="select">Select</option>
+                    <option value="text">Dạng chữ</option>
+                    <option value="number">Dạng số</option>
+                    <option value="radiogroup">Dạng Radio</option>
+                    <option value="checkbox">Dạng Checkbox</option>
+                    <option value="comment">Dạng ô điền lớn</option>
+                    <option value="select">Dạng Select</option>
                 </select>
                 <label><input type="checkbox" v-model="element.isRequired" /> Bắt buộc</label>
+                <div v-if="element.type === 'radiogroup'">
+                    <label><input type="checkbox" v-model="element.showOtherItem" v-on:change="toggleOtherOption(pageIndex, elementIndex)" /> Khác</label>
+                    <input v-if="element.showOtherItem" v-model="element.otherText" placeholder="Khác" class="element-title-input" />
+                </div>
                 <span class="delete-button" v-on:click="removeElement(pageIndex, elementIndex)">&#10006;</span>
                 <button class="move-button" v-if="elementIndex > 0" v-on:click="moveElement(pageIndex, elementIndex, 'up')">↑</button>
                 <button class="move-button" v-if="elementIndex < page.elements.length - 1" v-on:click="moveElement(pageIndex, elementIndex, 'down')">↓</button>
@@ -220,7 +227,9 @@
                         name: elementName,
                         title: '',
                         isRequired: false,
-                        choices: []
+                        choices: [],
+                        showOtherItem: false,
+                        otherText: ''
                     });
                 },
                 removeElement(pageIndex, elementIndex) {
@@ -247,6 +256,9 @@
                     } else if (direction === 'down') {
                         this.json.pages[pageIndex].elements.splice(elementIndex + 1, 0, element);
                     }
+                },
+                toggleOtherOption(pageIndex, elementIndex) {
+                    this.json.pages[pageIndex].elements[elementIndex].showOtherItem = !this.json.pages[pageIndex].elements[elementIndex].showOtherItem;
                 }
             }
         });
