@@ -115,6 +115,7 @@ namespace CTDT.Areas.Admin.Controllers
                 Email = kq.users.email,
                 SinhVien = kq.sinhvien.hovaten,
                 ThoiGianThucHien = kq.time,
+                CTDT = kq.ctdt.ten_ctdt,
                 MaAnswer = kq.id,
             }).ToList();
             return Json(new {status= "Load dữ liệu thành công" , data = ListKQPKS }, JsonRequestBehavior.AllowGet);

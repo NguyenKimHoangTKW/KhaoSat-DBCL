@@ -1,4 +1,5 @@
-﻿using CTDT.Models;
+﻿using CTDT.Helper;
+using CTDT.Models;
 using Microsoft.Ajax.Utilities;
 using Newtonsoft.Json;
 using System;
@@ -95,19 +96,14 @@ namespace CTDT.Controllers
             List<sinhvien> sinhvien = db.sinhvien.Where(x => x.id_lop == LopID).ToList();
             return Json(sinhvien, JsonRequestBehavior.AllowGet);
         }
-
-
-
         [HttpPost]
-        public ActionResult SaveDataXacThucCTDT(string khoa, string ctdt)
+        public ActionResult SaveDataXacThucCTDT( string ctdt, string sv)
         {
             try
             {
-                Session["SelectedKhoaByXTCTDT"] = khoa;
-                Session["SelectedCTDTByXTCTDT"] = ctdt;
-
+                Session["XTCTDT"] = ctdt;
+                Session["XTSV"] = sv;
                 int idPhieu = Convert.ToInt32(Session["IDPhieu"]);
-
                 return Json(new { success = true, idPhieu = idPhieu });
             }
             catch (Exception ex)
@@ -115,32 +111,9 @@ namespace CTDT.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
-
-        [HttpPost]
-        public ActionResult SaveDataXacThuc(string khoa, string ctdt, string lop, string sv)
-        {
-            try
-            {
-                Session["SelectedCTDTByXT"] = ctdt;
-                Session["SelectedKhoaByXT"] = khoa;
-                Session["SelectedLopByXT"] = lop;
-                Session["SelectedSvByXT"] = sv;
-                int idPhieu = Convert.ToInt32(Session["IDPhieu"]);
-
-                return Json(new { success = true, idPhieu = idPhieu });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = ex.Message });
-            }
-        }
-
         [HttpPost]
         public ActionResult ClearSession()
         {
-            Session.Remove("SelectedKhoaByXT");
-            Session.Remove("SelectedCTDTByXT");
-            Session.Remove("SelectedLopByXT");
             Session.Remove("SelectedSvByXT");
             Session.Remove("SelectedKhoaByXTCTDT");
             Session.Remove("SelectedCTDTByXTCTDT");

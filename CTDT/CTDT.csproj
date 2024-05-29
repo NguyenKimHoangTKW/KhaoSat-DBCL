@@ -193,6 +193,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helper\AccuracyHelper.cs" />
     <Compile Include="Helper\SessionHelper.cs" />
     <Compile Include="Models\answer_response.cs">
       <DependentUpon>CTDTModel.tt</DependentUpon>

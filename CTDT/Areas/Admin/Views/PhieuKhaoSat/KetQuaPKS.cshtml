@@ -27,6 +27,7 @@
                             <tr>
                                 <th scope="col">STT</th>
                                 <th scope="col">ID</th>
+                                <th scope="col">CTĐT</th>
                                 <th scope="col">Email</th>
                                 <th scope="col">Sinh Viên</th>
                                 <th scope="col">Thời gian thực hiện</th>
@@ -118,17 +119,23 @@
                         html += "<tr>";
                         html += "<td>" + index + "</td>";
                         html += "<td>" + "#" + items[i].MaKQ + "</td>";
-                        if (items[i].email == null) {
+                        if (items[i].CTDT == null) {
                             html += "<td>Không có dữ liệu</td>";
                         }
                         else {
-                            html += "<td>" + items[i].email + "</td>";
+                            html += "<td>" + items[i].CTDT + "</td>";
                         }
-                        if (items[i].sinhvien == null) {
+                        if (items[i].Email == null) {
                             html += "<td>Không có dữ liệu</td>";
                         }
                         else {
-                            html += "<td>" + items[i].sinhvien + "</td>";
+                            html += "<td>" + items[i].Email + "</td>";
+                        }
+                        if (items[i].SinhVien == null) {
+                            html += "<td>Không có dữ liệu</td>";
+                        }
+                        else {
+                            html += "<td>" + items[i].SinhVien + "</td>";
                         }
                         html += "<td>" + formattedThoiGianThucHien + "</td>";
                         html += "<td><button class='btn btn-icon btn-hover btn-sm btn-rounded pull-right btnEdit' onclick=\"window.location.href='/Admin/PhieuKhaoSat/AnswerPKS?id=" + items[i].MaAnswer +"'\"> <i class='fas fa-chalkboard-teacher'></i></button></td>";

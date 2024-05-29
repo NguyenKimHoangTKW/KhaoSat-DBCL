@@ -55,7 +55,8 @@
                 <p class="survey-p">@Model["description"]</p>
             </div>
         </div>
-
+        <p>@Session["XTCTDT"]</p>
+        <p>@Session["XTSV"]</p>
         @foreach (var pages in Model["pages"])
         {
             var visible = pages["visible"] != null ? (bool)pages["visible"] : true;
