@@ -50,6 +50,7 @@ namespace CTDT.Areas.Admin.Controllers
         {
             ViewBag.id = id;
             var litsKQ = db.answer_response.Where(kq => kq.surveyID == id).ToList();
+            ViewBag.CTDTList = new SelectList(db.ctdt.OrderBy(l => l.id_ctdt), "id_ctdt", "ten_ctdt");
             return View(litsKQ);
         }
         public ActionResult AnswerPKS(int id)
@@ -135,9 +136,14 @@ namespace CTDT.Areas.Admin.Controllers
 
             return Content(JsonConvert.SerializeObject(surveyData), "application/json");
         }
-        public ActionResult ExportExcelSurvey(int id)
+        public ActionResult ExportExcelSurvey(int id, int cttdt = 0)
         {
-            var answers = db.answer_response.Where(d => d.surveyID == id)
+            var query = db.answer_response.AsQueryable();
+            if (cttdt != 0)
+            {
+                query = query.Where(p => p.id_ctdt == cttdt);
+            }
+            var answers = query.Where(d => d.surveyID == id && d.id_ctdt == cttdt)
                             .Select(x => new
                             {
                                 DauThoiGian = x.time,
@@ -145,12 +151,11 @@ namespace CTDT.Areas.Admin.Controllers
                                 MSSV = x.sinhvien.ma_sv,
                                 HoTen = x.sinhvien.hovaten,
                                 Email = x.users.email,
-                                NgaySinh = x.sinhvien.ngaysinh,
+                                NgaySinh = (DateTime?)x.sinhvien.ngaysinh,
                                 Lop = x.sinhvien.lop.ma_lop,
                                 CTDT = x.ctdt.ten_ctdt,
                                 SDT = x.sinhvien.sodienthoai,
                             }).ToList();
-
             List<JObject> surveyData = new List<JObject>();
 
             foreach (var answer in answers)
@@ -160,13 +165,12 @@ namespace CTDT.Areas.Admin.Controllers
                 answerObject["MSSV"] = answer.MSSV;
                 answerObject["HoTen"] = answer.HoTen;
                 answerObject["Email"] = answer.Email;
-                answerObject["NgaySinh"] = answer.NgaySinh.ToString("yyyy-MM-dd");
+                answerObject["NgaySinh"] = answer.NgaySinh?.ToString("yyyy-MM-dd");
                 answerObject["Lop"] = answer.Lop;
                 answerObject["CTDT"] = answer.CTDT;
                 answerObject["SDT"] = answer.SDT;
                 surveyData.Add(answerObject);
             }
-
             return Content(JsonConvert.SerializeObject(surveyData), "application/json");
         }
     }
