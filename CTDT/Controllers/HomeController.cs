@@ -112,6 +112,19 @@ namespace CTDT.Controllers
             }
         }
         [HttpPost]
+        public ActionResult GetSvIdByMssv(string mssv)
+        {
+            var student = db.sinhvien.SingleOrDefault(s => s.ma_sv == mssv);
+            if (student != null)
+            {
+                return Json(new { success = true, svId = student.id_sv, ctdt = student.lop.ctdt.id_ctdt });
+            }
+            else
+            {
+                return Json(new { success = false, message = "MSSV không tồn tại." });
+            }
+        }
+        [HttpPost]
         public ActionResult ClearSession()
         {
             Session.Remove("SelectedSvByXT");

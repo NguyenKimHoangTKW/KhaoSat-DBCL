@@ -126,11 +126,64 @@
         var isCTDTSelected = false;
         var isLopSelected = false;
         var isSVSelected = false;
+        $("#btnCheckMSSV").click(function () {
+            var mssv = $("#mssv").val();
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GetSvIdByMssv", "Home")",
+                data: { mssv: mssv },
+                success: function (response) {
+                    if (response.success) {
+                        var idsv = response.svId;
+                        var idctdt = response.ctdt;
+                        $.ajax({
+                            type: "POST",
+                            url: "@Url.Action("SaveDataXacThucCTDT", "Home")",
+                            data: { ctdt: idctdt, sv: idsv },
+                            success: function (response) {
+                                if (response.success) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Xác thực thành công!',
+                                        width: 600,
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    }).then(function () {
+                                        window.location.href = "@Url.Action("Survey", "Survey")" + "?id=" + response.idPhieu;
+                                    });
+                                }
+                            },
+                            error: function () {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: 'Có lỗi xảy ra khi gửi dữ liệu lên server!'
+                                });
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            width: 600,
+                            text: response.message
+                        });
+                    }
+                },
+                error: function () {
+                    alert("Có lỗi xảy ra khi gửi dữ liệu lên server!");
+                }
+            });
+        });
+
+
+
         $("#forget_mssv_button").click(function () {
             if (!isKhoaSelected) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
+                    width: 600,
                     text: 'Vui lòng chọn khoa trước khi xác thực!'
                 });
                 return;
@@ -139,6 +192,7 @@
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
+                    width: 600,
                     text: 'Vui lòng chọn chọn chương trình đào tạo trước khi xác thực!'
                 });
                 return;
@@ -147,6 +201,7 @@
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
+                    width: 600,
                     text: 'Vui lòng chọn chọn lớp trước khi xác thực!'
                 });
                 return;
@@ -155,6 +210,7 @@
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
+                    width: 600,
                     text: 'Vui lòng chọn chọn tên của bạn trước khi xác thực!'
                 });
                 return;
@@ -175,12 +231,6 @@
                         }).then(function () {
                             window.location.href = "@Url.Action("Survey", "Survey")" + "?id=" + response.idPhieu;
                         });
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: 'Có lỗi xảy ra khi lưu dữ liệu vào session: ' + response.message
-                        });
                     }
                 },
                 error: function () {
@@ -190,10 +240,6 @@
                         text: 'Có lỗi xảy ra khi gửi dữ liệu lên server!'
                     });
                 }
-            });
-
-            $("#btnCheckMSSV").click(function () {
-                
             });
     });
 

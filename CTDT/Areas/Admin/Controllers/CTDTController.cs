@@ -37,11 +37,16 @@ namespace CTDT.Areas.Admin.Controllers
 
 
         [HttpGet]
-        public ActionResult LoadDataCTDT(int pageNumber = 1, int pageSize = 10)
+        public ActionResult LoadDataCTDT(int pageNumber = 1, int pageSize = 10, string keyword = "")
         {
             try
             {
-                var ctdt = db.ctdt
+                IQueryable<ctdt> query = db.ctdt;
+                if (!string.IsNullOrEmpty(keyword))
+                {
+                    query = query.Where(l => l.ten_ctdt.ToLower().Contains(keyword.ToLower()));
+                }
+                var ctdt = query
                     .OrderBy(l => l.id_ctdt)
                     .Skip((pageNumber - 1) * pageSize)
                     .Take(pageSize)

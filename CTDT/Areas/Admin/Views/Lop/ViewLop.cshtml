@@ -19,6 +19,11 @@
             <div>
                 <button class="btn btn-primary btn-tone m-r-5" data-toggle="modal" data-target="#bd-example-modal-lg">Thêm mới</button>
             </div>
+            <div class="row justify-content-end m-b-20">
+                <div class="col-auto">
+                    <input type="text" id="searchInput" class="form-control" placeholder="Nhập từ khóa tìm kiếm...">
+                </div>
+            </div>
             <!--Modal Thêm mới Lớp-->
             <div class="modal fade" id="bd-example-modal-lg">
                 <div class="modal-dialog modal-lg">
@@ -70,7 +75,7 @@
                         <div class="modal-body">
                             <form id="form-validation" method="post" action="/Lop/Add">
                                 <div class="form-group row">
-                                    <input type="hidden" id="Edit_MaLop"/>
+                                    <input type="hidden" id="Edit_MaLop" />
                                     <input type="hidden" id="change_Ngay_Tao" name="change_Ngay_Tao" />
                                     <input type="hidden" id="change_Ngay_Cap_Nhat" name="change_Ngay_Cap_Nhat" />
                                     <label class="col-sm-2 col-form-label control-label">Tên Lớp *</label>
@@ -132,6 +137,10 @@
         $(document).ready(function () {
             LoadData(currentPage);
 
+            $(document).on('keyup', "#searchInput", debounce(function () {
+                var keyword = $(this).val().toLowerCase();
+                LoadData(currentPage, keyword);
+            }, 1000));
             $(document).on("click", "#btnSave", function () {
                 AddLop();
             });
@@ -144,7 +153,12 @@
                 }
             });
         });
-
+        function search() {
+            var keyword = $('#searchInput').val().toLowerCase();
+            $('#showdata tr').filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(keyword) > -1)
+            });
+        }
         function AddLop() {
             var TenLop = $("#TenLop").val().trim();
             var MaCTDT = $("#MaCTDT").val().trim();
@@ -167,11 +181,11 @@
             });
         }
 
-        function LoadData(pageNumber) {
+        function LoadData(pageNumber, keyword) {
             $.ajax({
                 url: '/Lop/LoadDataLop',
                 type: 'GET',
-                data: { pageNumber: pageNumber, pageSize: 10 },
+                data: { pageNumber: pageNumber, pageSize: 10, keyword: keyword },
                 success: function (res) {
                     var items = res.data;
                     totalPages = res.totalPages;
@@ -205,6 +219,15 @@
             });
         }
 
+        function debounce(func, delay) {
+            let timeoutId;
+            return function () {
+                const context = this;
+                const args = arguments;
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => func.apply(context, args), delay);
+            };
+        }
         function renderPagination(currentPage, totalPages) {
             var html = '<nav aria-label="Page navigation example"><ul class="pagination justify-content-end">';
 

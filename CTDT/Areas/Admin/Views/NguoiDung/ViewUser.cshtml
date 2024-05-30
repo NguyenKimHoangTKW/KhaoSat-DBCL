@@ -16,11 +16,12 @@
     <div class="card">
         <div class="card-body">
             <h4>Quản Lý Danh Tài Khoản</h4>
-            @*<div>
-            <button class="btn btn-primary btn-tone m-r-5" data-toggle="modal" data-target="#bd-example-modal-lg">Thêm mới</button>
-        </div>*@
+            <div class="row justify-content-end m-b-20">
+                <div class="col-auto">
+                    <input type="text" id="searchInput" class="form-control" placeholder="Nhập từ khóa tìm kiếm...">
+                </div>
+            </div>
             <!-- Modal Sửa Lớp -->
-            
             <div class="modal fade" id="ModalEditLop">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
@@ -103,7 +104,10 @@
 
     $(document).ready(function () {
         LoadData(currentPage);
-
+        $(document).on('keyup', "#searchInput", debounce(function () {
+            var keyword = $(this).val().toLowerCase();
+            LoadData(currentPage, keyword);
+        }, 1000));
         toggleCTDTDropdown();
         $('#Edit_ChucVu').change(function () {
             toggleCTDTDropdown();
@@ -158,6 +162,12 @@
         } else {
             $('#ctdtContainer').hide();
         }
+    }
+    function search() {
+        var keyword = $('#searchInput').val().toLowerCase();
+        $('#showdata tr').filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(keyword) > -1)
+        });
     }
 
     function EditUser() {
@@ -251,11 +261,11 @@
         });
     }
 
-    function LoadData(pageNumber) {
+    function LoadData(pageNumber, keyword) {
         $.ajax({
             url: '/Admin/NguoiDung/LoadUser',
             type: 'GET',
-            data: { pageNumber: pageNumber, pageSize: 10 },
+            data: { pageNumber: pageNumber, pageSize: 10, keyword: keyword },
             success: function (res) {
                 var items = res.data;
                 totalPages = res.totalPages;
@@ -290,7 +300,15 @@
             }
         });
     }
-
+    function debounce(func, delay) {
+        let timeoutId;
+        return function () {
+            const context = this;
+            const args = arguments;
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => func.apply(context, args), delay);
+        };
+    }
     function renderPagination(currentPage, totalPages) {
         var html = '<nav aria-label="Page navigation example"><ul class="pagination justify-content-end">';
 

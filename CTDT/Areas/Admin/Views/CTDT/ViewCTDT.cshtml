@@ -18,6 +18,11 @@
     <div class="card">
         <div class="card-body">
             <h4>Quản Lý Danh Sách Chương Trình Đào Tạo</h4>
+            <div class="row justify-content-end m-b-20">
+                <div class="col-auto">
+                    <input type="text" id="searchInput" class="form-control" placeholder="Nhập từ khóa tìm kiếm...">
+                </div>
+            </div>
             <div>
                 <button class="btn btn-primary btn-tone m-r-5" data-toggle="modal" data-target="#bd-example-modal-lg">Thêm mới</button>
             </div>
@@ -40,14 +45,14 @@
                                     </div>
                                     <label class="col-sm-2 col-form-label control-label" style="margin-top: 10px;">Chọn Khoa *</label>
                                     <div class="col-sm-10" style="margin-top: 10px;">
-                                    <select id="MaKhoa" name="id_khoa" class="form-control">
-                                        <option value="">-- Chọn Khoa --</option>
-                                        @foreach (var item in ViewBag.KhoaList)
-                                        {
-                                            <option value="@item.Value">@item.Text</option>
-                                        }
-                                    </select>
-                                     </div>
+                                        <select id="MaKhoa" name="id_khoa" class="form-control">
+                                            <option value="">-- Chọn Khoa --</option>
+                                            @foreach (var item in ViewBag.KhoaList)
+                                            {
+                                                <option value="@item.Value">@item.Text</option>
+                                            }
+                                        </select>
+                                    </div>
                                 </div>
                             </form>
                             <div class="modal-footer">
@@ -79,15 +84,15 @@
                                     <div class="col-sm-10">
                                         <input type="text" class="form-control" id="Edit_TenCTDT" name="Edit_TenCTDT">
                                     </div>
-                                        <label class="col-sm-2 col-form-label control-label" style="margin-top: 10px;">Chọn Khoa *</label>
-                                        <div class="col-sm-10" style="margin-top: 10px;">
-                                            <select id="Edit_Ma_Khoa" name="Edit_Ma_Khoa" class="form-control select2">
-                                                @foreach (var item in ViewBag.KhoaList)
-                                                {
-                                                    <option value="@item.Value">@item.Text</option>
-                                                }
-                                            </select>
-                                        </div>
+                                    <label class="col-sm-2 col-form-label control-label" style="margin-top: 10px;">Chọn Khoa *</label>
+                                    <div class="col-sm-10" style="margin-top: 10px;">
+                                        <select id="Edit_Ma_Khoa" name="Edit_Ma_Khoa" class="form-control select2">
+                                            @foreach (var item in ViewBag.KhoaList)
+                                            {
+                                                <option value="@item.Value">@item.Text</option>
+                                            }
+                                        </select>
+                                    </div>
                                 </div>
                             </form>
                             <div class="modal-footer">
@@ -140,9 +145,12 @@
         $(document).on("click", "#btnSave", function () {
             AddCTDT();
         });
-
+        $(document).on('keyup', "#searchInput", debounce(function () {
+            var keyword = $(this).val().toLowerCase();
+            LoadData(currentPage, keyword);
+        }, 1000));
         $(document).on("click", "#btnEdit", function () {
-            var MaCTDT = $(this).closest("tr").find("td:eq(1)").text().substring(1); // Remove #
+            var MaCTDT = $(this).closest("tr").find("td:eq(1)").text().substring(1);
             GetByID(MaCTDT);
         });
 
@@ -151,7 +159,7 @@
         });
 
         $(document).on("click", "#btnDelete", function () {
-            var MaCTDT = $(this).closest("tr").find("td:eq(1)").text().substring(1); // Remove #
+            var MaCTDT = $(this).closest("tr").find("td:eq(1)").text().substring(1);
             var TenCTDT = $(this).closest("tr").find("td:eq(3)").text();
             if (confirm("Bạn có chắc muốn xóa khoa '" + TenCTDT + "' không?")) {
                 DelCTDT(MaCTDT);
@@ -166,7 +174,12 @@
             }
         });
     });
-
+    function search() {
+        var keyword = $('#searchInput').val().toLowerCase();
+        $('#showdata tr').filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(keyword) > -1)
+        });
+    }
     function GetByID(id) {
         $.ajax({
             url: '/CTDT/GetByID',
@@ -182,11 +195,11 @@
         });
     }
 
-    function LoadData(pageNumber) {
+    function LoadData(pageNumber, keyword) {
         $.ajax({
             url: '/CTDT/LoadDataCTDT',
             type: 'GET',
-            data: { pageNumber: pageNumber, pageSize: 10 },
+            data: { pageNumber: pageNumber, pageSize: 10, keyword: keyword },
             success: function (res) {
                 var items = res.data;
                 totalPages = res.totalPages;
@@ -315,7 +328,15 @@
             },
         });
     };
-
+    function debounce(func, delay) {
+        let timeoutId;
+        return function () {
+            const context = this;
+            const args = arguments;
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => func.apply(context, args), delay);
+        };
+    }
     function unixTimestampToDate(unixTimestamp) {
         var date = new Date(unixTimestamp * 1000);
         var weekdays = ['Chủ Nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];

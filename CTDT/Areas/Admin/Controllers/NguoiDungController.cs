@@ -43,11 +43,18 @@ namespace CTDT.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public ActionResult LoadUser(int pageNumber = 1, int pageSize = 10)
+        public ActionResult LoadUser(int pageNumber = 1, int pageSize = 10, string keyword = "")
         {
             try
             {
-                var Listuser = db.users
+                IQueryable<users> query = db.users;
+                if (!string.IsNullOrEmpty(keyword))
+                {
+                    query = query.Where(l => l.email.ToLower().Contains(keyword.ToLower())
+                                          || l.name.ToLower().Contains(keyword.ToLower()));
+                }
+
+                var Listuser = query
                 .OrderBy(l => l.id_users)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)

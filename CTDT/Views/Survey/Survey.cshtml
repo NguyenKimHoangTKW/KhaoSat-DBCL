@@ -55,8 +55,6 @@
                 <p class="survey-p">@Model["description"]</p>
             </div>
         </div>
-        <p>@Session["XTCTDT"]</p>
-        <p>@Session["XTSV"]</p>
         @foreach (var pages in Model["pages"])
         {
             var visible = pages["visible"] != null ? (bool)pages["visible"] : true;
@@ -330,7 +328,7 @@ function saveFormData() {
                     var otherInput = $(this).find('input[type="text"]').val();
                     if (isRequired && checkedValues.length === 0) {
                         valid = false;
-                        alertElement.text("Trường " + questionTitle + " là bắt buộc.").show();
+                        alertElement.text(questionTitle + " là bắt buộc.").show();
                     } else {
                         alertElement.hide();
                     }
@@ -344,7 +342,7 @@ function saveFormData() {
                     var inputValue = $(this).find('textarea').val();
                     if (isRequired && !inputValue) {
                         valid = false;
-                        alertElement.text("Trường " + questionTitle + " là bắt buộc.").show();
+                        alertElement.text(questionTitle + " là bắt buộc.").show();
                     } else {
                         alertElement.hide();
                     }
@@ -357,7 +355,7 @@ function saveFormData() {
                     var inputValue = $(this).find('input[type="text"], input[type="number"], input[type="email"]').val();
                     if (isRequired && !inputValue) {
                         valid = false;
-                        alertElement.text("Trường " + questionTitle + " là bắt buộc.").show();
+                        alertElement.text(questionTitle + " là bắt buộc.").show();
                     } else {
                         alertElement.hide();
                     }
@@ -374,7 +372,6 @@ function saveFormData() {
     });
 
     if (valid) {
-        // Kiểm tra xem dữ liệu đã được lưu trước đó không
         if (!$(this).data('saved')) {
             $.ajax({
                 url: '/Survey/AddAnswer',
@@ -397,7 +394,6 @@ function saveFormData() {
                     alert(response.status);
                 },
             });
-            // Đánh dấu rằng dữ liệu đã được lưu
             $(this).data('saved', true);
         }
     } else {

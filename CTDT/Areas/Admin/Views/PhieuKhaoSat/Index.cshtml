@@ -146,13 +146,13 @@
         $("#btnFilter").click(function () {
             var selectHdt = $("#surveyTypeTS").val();
             var selectLKS = $("#surveyType").val();
-            LoadData(selectHdt, selectLKS);
+            LoadData(1, selectHdt, selectLKS);
         });
+
         $(document).on("click", ".page-link", function () {
             var page = $(this).data("page");
             if (page > 0 && page <= totalPages) {
-                currentPage = page;
-                LoadData(currentPage);
+                LoadData(page);
             }
         });
     });

@@ -33,11 +33,19 @@ namespace CTDT.Areas.Admin.Controllers
             return Json(new { status = status }, JsonRequestBehavior.AllowGet);
         }
         [HttpGet]
-        public ActionResult LoadDataLop(int pageNumber = 1, int pageSize = 10)
+        public ActionResult LoadDataLop(int pageNumber = 1, int pageSize = 10, string keyword = "")
         {
             try
             {
-                var lop = db.lop.OrderBy(l => l.id_lop)
+                IQueryable<lop> query = db.lop;
+                if (!string.IsNullOrEmpty(keyword))
+                {
+                    query = query.Where(l => l.ma_lop.ToLower().Contains(keyword.ToLower())
+                                          || l.ctdt.ten_ctdt.ToLower().Contains(keyword.ToLower()));
+                }
+
+                var lop = query
+                    .OrderBy(l => l.id_lop)
                     .Skip((pageNumber - 1) * pageSize)
                     .Take(pageSize)
                     .Select(l => new
@@ -49,7 +57,7 @@ namespace CTDT.Areas.Admin.Controllers
                         NgayTao = l.ngaytao,
                     }).ToList();
 
-                var totalRecords = db.lop.Count();
+                var totalRecords = query.Count();
                 var totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
 
                 return Json(new { data = lop, totalPages = totalPages, status = "Load dữ liệu thành công" }, JsonRequestBehavior.AllowGet);
@@ -59,5 +67,6 @@ namespace CTDT.Areas.Admin.Controllers
                 return Json(new { status = "Load dữ liệu thất bại" }, JsonRequestBehavior.AllowGet);
             }
         }
+
     }
 }
