@@ -30,6 +30,7 @@
                                 <th scope="col">CTĐT</th>
                                 <th scope="col">Email</th>
                                 <th scope="col">Sinh Viên</th>
+                                <th scope="col">MSSV</th>
                                 <th scope="col">Thời gian thực hiện</th>
                                 <th scope="col">Chức năng</th>
                             </tr>
@@ -55,32 +56,68 @@
         LoadData();
 
     });
-    function XuatExcel() {
+        function XuatExcel() {
         $.ajax({
             url: '/Admin/PhieuKhaoSat/ExportExcelSurvey?id=' + @ViewBag.id,
             type: 'GET',
             success: function (data) {
-                exportToExcel(data);
+                let timerInterval;
+                Swal.fire({
+                    title: "Đang xuất dữ liệu ra Excel!",
+                    html: "Vui lòng đợi trong <b></b> giây.",
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: () => {
+                        Swal.showLoading();
+                        const timer = Swal.getPopup().querySelector("b");
+                        timerInterval = setInterval(() => {
+                            timer.textContent = `${Swal.getTimerLeft()}`;
+                        }, 100);
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval);
+                        exportToExcel(data);
+                    }
+                }).then((result) => {
+                    if (result.dismiss === Swal.DismissReason.timer) {
+                        console.log("I was closed by the timer");
+                    }
+                });
             },
             error: function () {
                 console.error('Failed to fetch survey data.');
             }
         });
     };
+
     function exportToExcel(data) {
         var workbook = XLSX.utils.book_new();
         var worksheet = XLSX.utils.aoa_to_sheet([]);
 
         var excelData = [];
-        var titleRow = []; 
-        data[0].pages.forEach(function (page) {
-            page.elements.forEach(function (element) {
-                titleRow.push(element.title);
+        var titleRow = ["Dấu thời gian", "MSSV", "Họ và tên", "Email", "Ngày sinh", "Thuộc lớp", "Thuộc CTĐT", "Số điện thoại"];
+
+        if (data.length > 0 && data[0].pages && data[0].pages.length > 0) {
+            data[0].pages.forEach(function (page) {
+                page.elements.forEach(function (element) {
+                    titleRow.push(element.title);
+                });
             });
-        });
+        }
         excelData.push(titleRow);
+
         data.forEach(function (survey) {
-            var rowData = []; 
+            var rowData = [
+                unixTimestampToDate(survey.DauThoiGian) || "",
+                survey.MSSV || "",
+                survey.HoTen || "",
+                survey.Email || "",
+                survey.NgaySinh || "",
+                survey.Lop || "",
+                survey.CTDT || "",
+                survey.SDT || ""
+            ];
+
             survey.pages.forEach(function (page) {
                 page.elements.forEach(function (element) {
                     if (element.type === "text") {
@@ -92,10 +129,10 @@
                     }
                 });
             });
-            excelData.push(rowData); 
+            excelData.push(rowData);
         });
 
-        excelData.forEach(function (row, rowIndex) {
+        excelData.forEach(function (row) {
             XLSX.utils.sheet_add_aoa(worksheet, [row], { origin: -1 });
         });
 
@@ -136,6 +173,12 @@
                         }
                         else {
                             html += "<td>" + items[i].SinhVien + "</td>";
+                        }
+                        if (items[i].MSSV == null) {
+                            html += "<td>Không có dữ liệu</td>";
+                        }
+                        else {
+                            html += "<td>" + items[i].MSSV + "</td>";
                         }
                         html += "<td>" + formattedThoiGianThucHien + "</td>";
                         html += "<td><button class='btn btn-icon btn-hover btn-sm btn-rounded pull-right btnEdit' onclick=\"window.location.href='/Admin/PhieuKhaoSat/AnswerPKS?id=" + items[i].MaAnswer +"'\"> <i class='fas fa-chalkboard-teacher'></i></button></td>";

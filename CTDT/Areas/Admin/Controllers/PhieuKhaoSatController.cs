@@ -117,6 +117,7 @@ namespace CTDT.Areas.Admin.Controllers
                 ThoiGianThucHien = kq.time,
                 CTDT = kq.ctdt.ten_ctdt,
                 MaAnswer = kq.id,
+                MSSV = kq.sinhvien.ma_sv,
             }).ToList();
             return Json(new {status= "Load dữ liệu thành công" , data = ListKQPKS }, JsonRequestBehavior.AllowGet);
         }
@@ -136,12 +137,33 @@ namespace CTDT.Areas.Admin.Controllers
         }
         public ActionResult ExportExcelSurvey(int id)
         {
-            var answers = db.answer_response.Where(d => d.surveyID == id).Select(x => x.json_answer).ToList();
+            var answers = db.answer_response.Where(d => d.surveyID == id)
+                            .Select(x => new
+                            {
+                                DauThoiGian = x.time,
+                                x.json_answer,
+                                MSSV = x.sinhvien.ma_sv,
+                                HoTen = x.sinhvien.hovaten,
+                                Email = x.users.email,
+                                NgaySinh = x.sinhvien.ngaysinh,
+                                Lop = x.sinhvien.lop.ma_lop,
+                                CTDT = x.ctdt.ten_ctdt,
+                                SDT = x.sinhvien.sodienthoai,
+                            }).ToList();
+
             List<JObject> surveyData = new List<JObject>();
 
             foreach (var answer in answers)
             {
-                JObject answerObject = JObject.Parse(answer);
+                JObject answerObject = JObject.Parse(answer.json_answer);
+                answerObject["DauThoiGian"] = answer.DauThoiGian;
+                answerObject["MSSV"] = answer.MSSV;
+                answerObject["HoTen"] = answer.HoTen;
+                answerObject["Email"] = answer.Email;
+                answerObject["NgaySinh"] = answer.NgaySinh.ToString("yyyy-MM-dd");
+                answerObject["Lop"] = answer.Lop;
+                answerObject["CTDT"] = answer.CTDT;
+                answerObject["SDT"] = answer.SDT;
                 surveyData.Add(answerObject);
             }
 
