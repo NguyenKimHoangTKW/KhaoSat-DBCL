@@ -98,6 +98,7 @@ namespace CTDT.Areas.Admin.Controllers
                         NgayChinhSua = p.surveyTimeMake,
                         LoaiKhaoSat = p.LoaiKhaoSat.name_loaikhaosat,
                         MaLKS = p.id_loaikhaosat,
+                        TrangThai = p.surveyStatus,
                     }).ToList();
 
                 return Json(new { data = ListPhieu, totalPages = totalPages, status = "Load dữ liệu thành công" }, JsonRequestBehavior.AllowGet);

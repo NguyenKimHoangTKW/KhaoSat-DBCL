@@ -166,12 +166,14 @@
                 var items = res.data;
                 totalPages = res.totalPages;
                 var html = "";
+                var logoUrl = '@Url.Content("~/Areas/assets/images/logo/logo_test_2.png")';
                 if (items.length === 0) {
                     html += "<tr><td colspan='7' class='text-center'>Không có dữ liệu</td></tr>";
                 } else {
                     for (let i = 0; i < items.length; i++) {
                         var formattedNgayTao = unixTimestampToDate(items[i].NgayTao);
                         var formattedNgayChinhSua = unixTimestampToDate(items[i].NgayChinhSua);
+                        var trangThaiText = items[i].TrangThai == 0 ? 'ĐANG ĐÓNG' : 'ĐANG MỞ';
                         html += "<div class='col-lg-3 col-sm-12'>";
                         html += "    <div class='card bg-white m-b-30' style='align-self: center; text-align: center'>";
                         html += "        <div class='card-header'>";
@@ -179,9 +181,9 @@
                         html += "            -";
                         html += "            <span style='color: #333;font-weight: bold;font-size: 15px'>DÀNH CHO " + items[i].LoaiKhaoSat + "</span>";
                         html += "            -";
-                        html += "            <span style='color: #333; font-weight: bold; font-size: 15px'>ĐANG MỞ</span>";
+                        html += "            <span style='color: #333; font-weight: bold; font-size: 15px'>" + trangThaiText + "</span>";
                         html += "        </div>";
-                        html += "        <img src='' />";
+                        html += "        <img src='" + logoUrl + "' />";
                         html += "        <div class='card-body'>";
                         html += "            <div class='card-title mb-4' style='font-size: 14px; font-family: \'Inter\';font-style: normal;font-weight: 600;line-height: 150%;overflow: hidden'>";
                         html += "                <a href='#' style='color: #333'>" + items[i].TieuDePhieu + "</a>";

@@ -42,6 +42,9 @@
                     <li class="@((ViewBag.CurrentController == "Lop" && ViewBag.CurrentAction == "ViewLop") ? "active" : "")">
                         <a href="@Url.Action("ViewLop", "Lop")">Danh sách Lớp</a>
                     </li>
+                    <li class="@((ViewBag.CurrentController == "SinhVien" && ViewBag.CurrentAction == "ViewSinhVien") ? "active" : "")">
+                        <a href="@Url.Action("ViewSinhVien", "SinhVien")">Danh sách Sinh viên</a>
+                    </li>
                 </ul>
             </li>
 
