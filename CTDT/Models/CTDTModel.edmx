@@ -91,6 +91,7 @@
           <Property Name="surveyTimeUpdate" Type="int" />
           <Property Name="surveyStatus" Type="tinyint" />
           <Property Name="id_loaikhaosat" Type="int" Nullable="false" />
+          <Property Name="creator" Type="int" />
         </EntityType>
         <EntityType Name="sysdiagrams">
           <Key>
@@ -122,6 +123,7 @@
           <Property Name="ngaycapnhat" Type="int" Nullable="false" />
           <Property Name="ngaytao" Type="int" Nullable="false" />
           <Property Name="id_ctdt" Type="int" />
+          <Property Name="userIpAddress" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <Association Name="FK_answer_response_ctdt">
           <End Role="ctdt" Type="Self.ctdt" Multiplicity="0..1" />
@@ -231,6 +233,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_survey_users">
+          <End Role="users" Type="Self.users" Multiplicity="0..1" />
+          <End Role="survey" Type="Self.survey" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="id_users" />
+            </Principal>
+            <Dependent Role="survey">
+              <PropertyRef Name="creator" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_users_ctdt">
           <End Role="ctdt" Type="Self.ctdt" Multiplicity="0..1" />
           <End Role="users" Type="Self.users" Multiplicity="*" />
@@ -303,6 +317,10 @@
             <End Role="LoaiKhaoSat" EntitySet="LoaiKhaoSat" />
             <End Role="survey" EntitySet="survey" />
           </AssociationSet>
+          <AssociationSet Name="FK_survey_users" Association="Self.FK_survey_users">
+            <End Role="users" EntitySet="users" />
+            <End Role="survey" EntitySet="survey" />
+          </AssociationSet>
           <AssociationSet Name="FK_users_ctdt" Association="Self.FK_users_ctdt">
             <End Role="ctdt" EntitySet="ctdt" />
             <End Role="users" EntitySet="users" />
@@ -367,6 +385,10 @@
           <AssociationSet Name="FK_sinhvien_lop" Association="dbSurveyModel.FK_sinhvien_lop">
             <End Role="lop" EntitySet="lop" />
             <End Role="sinhvien" EntitySet="sinhvien" />
+          </AssociationSet>
+          <AssociationSet Name="FK_survey_users" Association="dbSurveyModel.FK_survey_users">
+            <End Role="users" EntitySet="users" />
+            <End Role="survey" EntitySet="survey" />
           </AssociationSet>
           <AssociationSet Name="FK_users_typeusers" Association="dbSurveyModel.FK_users_typeusers">
             <End Role="typeusers" EntitySet="typeusers" />
@@ -474,9 +496,11 @@
           <Property Name="surveyTimeUpdate" Type="Int32" />
           <Property Name="surveyStatus" Type="Byte" />
           <Property Name="id_loaikhaosat" Type="Int32" Nullable="false" />
+          <Property Name="creator" Type="Int32" />
           <NavigationProperty Name="answer_response" Relationship="dbSurveyModel.FK_answer_response_survey" FromRole="survey" ToRole="answer_response" />
           <NavigationProperty Name="hedaotao" Relationship="dbSurveyModel.FK_survey_hedaotao" FromRole="survey" ToRole="hedaotao" />
           <NavigationProperty Name="LoaiKhaoSat" Relationship="dbSurveyModel.FK_survey_LoaiKhaoSat" FromRole="survey" ToRole="LoaiKhaoSat" />
+          <NavigationProperty Name="users" Relationship="dbSurveyModel.FK_survey_users" FromRole="survey" ToRole="users" />
         </EntityType>
         <EntityType Name="sysdiagrams">
           <Key>
@@ -509,8 +533,10 @@
           <Property Name="ngaycapnhat" Type="Int32" Nullable="false" />
           <Property Name="ngaytao" Type="Int32" Nullable="false" />
           <Property Name="id_ctdt" Type="Int32" />
+          <Property Name="userIpAddress" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="answer_response" Relationship="dbSurveyModel.FK_answer_response_users" FromRole="users" ToRole="answer_response" />
           <NavigationProperty Name="ctdt" Relationship="dbSurveyModel.FK_users_ctdt" FromRole="users" ToRole="ctdt" />
+          <NavigationProperty Name="survey" Relationship="dbSurveyModel.FK_survey_users" FromRole="users" ToRole="survey" />
           <NavigationProperty Name="typeusers" Relationship="dbSurveyModel.FK_users_typeusers" FromRole="users" ToRole="typeusers" />
         </EntityType>
         <Association Name="FK_answer_response_ctdt">
@@ -633,6 +659,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_survey_users">
+          <End Type="dbSurveyModel.users" Role="users" Multiplicity="0..1" />
+          <End Type="dbSurveyModel.survey" Role="survey" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="id_users" />
+            </Principal>
+            <Dependent Role="survey">
+              <PropertyRef Name="creator" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_users_typeusers">
           <End Type="dbSurveyModel.typeusers" Role="typeusers" Multiplicity="1" />
           <End Type="dbSurveyModel.users" Role="users" Multiplicity="*" />
@@ -732,6 +770,7 @@
           <EntitySetMapping Name="survey">
             <EntityTypeMapping TypeName="dbSurveyModel.survey">
               <MappingFragment StoreEntitySet="survey">
+                <ScalarProperty Name="creator" ColumnName="creator" />
                 <ScalarProperty Name="id_loaikhaosat" ColumnName="id_loaikhaosat" />
                 <ScalarProperty Name="surveyStatus" ColumnName="surveyStatus" />
                 <ScalarProperty Name="surveyTimeUpdate" ColumnName="surveyTimeUpdate" />
@@ -768,6 +807,7 @@
           <EntitySetMapping Name="users">
             <EntityTypeMapping TypeName="dbSurveyModel.users">
               <MappingFragment StoreEntitySet="users">
+                <ScalarProperty Name="userIpAddress" ColumnName="userIpAddress" />
                 <ScalarProperty Name="id_ctdt" ColumnName="id_ctdt" />
                 <ScalarProperty Name="ngaytao" ColumnName="ngaytao" />
                 <ScalarProperty Name="ngaycapnhat" ColumnName="ngaycapnhat" />

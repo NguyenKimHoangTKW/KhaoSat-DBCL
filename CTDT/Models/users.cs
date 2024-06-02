@@ -18,6 +18,7 @@ namespace CTDT.Models
         public users()
         {
             this.answer_response = new HashSet<answer_response>();
+            this.survey = new HashSet<survey>();
         }
     
         public int id_users { get; set; }
@@ -29,10 +30,13 @@ namespace CTDT.Models
         public int ngaycapnhat { get; set; }
         public int ngaytao { get; set; }
         public Nullable<int> id_ctdt { get; set; }
+        public string userIpAddress { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<answer_response> answer_response { get; set; }
         public virtual ctdt ctdt { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<survey> survey { get; set; }
         public virtual typeusers typeusers { get; set; }
     }
 }

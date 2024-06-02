@@ -86,6 +86,7 @@
     <Property Name="surveyTimeUpdate" Type="int" />
     <Property Name="surveyStatus" Type="tinyint" />
     <Property Name="id_loaikhaosat" Type="int" Nullable="false" />
+    <Property Name="creator" Type="int" />
   </EntityType>
   <EntityType Name="sysdiagrams">
     <Key>
@@ -117,6 +118,7 @@
     <Property Name="ngaycapnhat" Type="int" Nullable="false" />
     <Property Name="ngaytao" Type="int" Nullable="false" />
     <Property Name="id_ctdt" Type="int" />
+    <Property Name="userIpAddress" Type="nvarchar" MaxLength="50" />
   </EntityType>
   <Association Name="FK_answer_response_ctdt">
     <End Role="ctdt" Type="Self.ctdt" Multiplicity="0..1" />
@@ -226,6 +228,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_survey_users">
+    <End Role="users" Type="Self.users" Multiplicity="0..1" />
+    <End Role="survey" Type="Self.survey" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="users">
+        <PropertyRef Name="id_users" />
+      </Principal>
+      <Dependent Role="survey">
+        <PropertyRef Name="creator" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_users_ctdt">
     <End Role="ctdt" Type="Self.ctdt" Multiplicity="0..1" />
     <End Role="users" Type="Self.users" Multiplicity="*" />
@@ -296,6 +310,10 @@
     </AssociationSet>
     <AssociationSet Name="FK_survey_LoaiKhaoSat" Association="Self.FK_survey_LoaiKhaoSat">
       <End Role="LoaiKhaoSat" EntitySet="LoaiKhaoSat" />
+      <End Role="survey" EntitySet="survey" />
+    </AssociationSet>
+    <AssociationSet Name="FK_survey_users" Association="Self.FK_survey_users">
+      <End Role="users" EntitySet="users" />
       <End Role="survey" EntitySet="survey" />
     </AssociationSet>
     <AssociationSet Name="FK_users_ctdt" Association="Self.FK_users_ctdt">

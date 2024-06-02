@@ -45,6 +45,9 @@ public class LoginController : Controller
         // Extract user information from loginInfo
         var email = loginInfo.ExternalIdentity.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
 
+        // Get the user's IP address
+        string userIpAddress = GetClientIpAddress();
+
         // Check if the user already exists in the database
         var user = db.users.FirstOrDefault(u => u.email == email);
         if (user == null)
@@ -55,13 +58,23 @@ public class LoginController : Controller
                 name = loginInfo.ExternalIdentity.Name,
                 email = email,
                 username = null,
-                password = null, 
+                password = null,
                 id_typeusers = 1,
                 ngaycapnhat = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds,
-                ngaytao = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds
+                ngaytao = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds,
+                userIpAddress = userIpAddress
             };
 
             db.users.Add(user);
+            db.SaveChanges();
+        }
+        else
+        {
+            // Update the user's last login IP address
+            user.userIpAddress = userIpAddress;
+            user.ngaycapnhat = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+
+            db.Entry(user).State = System.Data.Entity.EntityState.Modified;
             db.SaveChanges();
         }
 
@@ -70,6 +83,23 @@ public class LoginController : Controller
 
         return RedirectToLocal(returnUrl);
     }
+
+    private string GetClientIpAddress()
+    {
+        string ipAddress = Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
+
+        if (!string.IsNullOrEmpty(ipAddress))
+        {
+            string[] addresses = ipAddress.Split(',');
+            if (addresses.Length > 0)
+            {
+                return addresses[0].Trim();
+            }
+        }
+        return Request.ServerVariables["REMOTE_ADDR"];
+    }
+
+
 
     // GET: /Login/ExternalLoginFailure
     [HttpGet]

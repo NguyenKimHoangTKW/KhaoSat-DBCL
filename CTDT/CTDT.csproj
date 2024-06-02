@@ -187,6 +187,7 @@
     <Compile Include="Areas\Admin\Controllers\LopController.cs" />
     <Compile Include="Areas\Admin\Controllers\NguoiDungController.cs" />
     <Compile Include="Areas\Admin\Controllers\PhieuKhaoSatController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ThongKeKhaoSatController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\SurveyController.cs" />
@@ -1076,6 +1077,7 @@
     <Content Include="Areas\Admin\Views\PhieuKhaoSat\AnswerPKS.cshtml" />
     <Content Include="Areas\Admin\Views\PhieuKhaoSat\AddSurvey.cshtml" />
     <Content Include="Areas\Admin\Views\NguoiDung\ViewUser.cshtml" />
+    <Content Include="Areas\Admin\Views\ThongKeKhaoSat\ThongKeSVChuaKhaoSat.cshtml" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.1.js" />
     <Content Include="Scripts\jquery-3.7.1.min.js" />

@@ -31,10 +31,12 @@ namespace CTDT.Models
         public Nullable<int> surveyTimeUpdate { get; set; }
         public Nullable<byte> surveyStatus { get; set; }
         public int id_loaikhaosat { get; set; }
+        public Nullable<int> creator { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<answer_response> answer_response { get; set; }
         public virtual hedaotao hedaotao { get; set; }
         public virtual LoaiKhaoSat LoaiKhaoSat { get; set; }
+        public virtual users users { get; set; }
     }
 }
