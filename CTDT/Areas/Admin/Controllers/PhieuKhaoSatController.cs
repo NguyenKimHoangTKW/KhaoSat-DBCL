@@ -173,5 +173,33 @@ namespace CTDT.Areas.Admin.Controllers
             }
             return Content(JsonConvert.SerializeObject(surveyData), "application/json");
         }
+        [HttpPost]
+        public ActionResult SaveExcelFile()
+        {
+            try
+            {
+                HttpPostedFileBase file = Request.Files["file"];
+
+                if (file != null && file.ContentLength > 0)
+                {
+                    string timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
+                    string fileName = $"KetQuaKhaoSat_{timestamp}.xlsx";
+                    string directoryPath = Server.MapPath("~/App_Data/KetQuaPKS");
+                    string filePath = Path.Combine(directoryPath, fileName);
+                    Directory.CreateDirectory(directoryPath);
+                    file.SaveAs(filePath);
+                    return Json(new { success = true, message = "File saved successfully." });
+                }
+                else
+                {
+                    return Json(new { success = false, message = "No file found." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error saving file: " + ex.Message });
+            }
+        }
+
     }
 }

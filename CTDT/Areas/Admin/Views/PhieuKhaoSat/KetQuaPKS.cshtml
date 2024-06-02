@@ -193,8 +193,39 @@
         });
 
         XLSX.utils.book_append_sheet(workbook, worksheet, 'SurveyData');
-        XLSX.writeFile(workbook, 'SurveyData.xlsx');
+        var now = new Date();
+        var timestamp = now.getFullYear().toString() +
+            ('0' + (now.getMonth() + 1)).slice(-2) +
+            ('0' + now.getDate()).slice(-2) +
+            ('0' + now.getHours()).slice(-2) +
+            ('0' + now.getMinutes()).slice(-2) +
+            ('0' + now.getSeconds()).slice(-2);
+
+        var fileName = 'KetQuaKhaoSat_' + timestamp + '.xlsx';
+
+        XLSX.writeFile(workbook, fileName);
+        var excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+
+        var blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+        var formData = new FormData();
+        formData.append('file', blob, 'KetQuaKhaoSat.xlsx');
+
+        $.ajax({
+            url: '/Admin/PhieuKhaoSat/SaveExcelFile',
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                console.log('File saved successfully.');
+            },
+            error: function (xhr, status, error) {
+                console.error('Failed to save file:', error);
+            }
+        });
     }
+
     // End Xuất Excel
 
     // Load dữ liệu Data

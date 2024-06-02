@@ -35,7 +35,7 @@
             </div>
             <div class="col-sm-10" style="margin-top: 10px;">
                 <button type="button" class="btn btn-info btn-tone m-r-5" id="FilterSV">Tìm kiếm</button>
-                <button type="button" class="btn btn-success btn-tone m-r-5">Xuất Excel</button>
+                <button type="button" class="btn btn-success btn-tone m-r-5" id="ExportExcel">Xuất Excel</button>
             </div>
             <div id="data-table-section" class="m-t-25" style="display: none;">
                 <div class="table-responsive">
@@ -66,27 +66,67 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
+    var currentPage = 1;
+    var totalPages = 0;
+
     $(document).ready(function () {
         $("#FilterSV").click(function () {
             var selectCtdt = $("#MaCTDT").val();
-            LoadData(selectCtdt);
+            var selectPks = $("#MaPKS").val();
+            LoadData(1, selectCtdt, selectPks);
+        });
+
+        $("#ExportExcel").click(function () {
+            Swal.fire({
+                title: "Đang xuất dữ liệu...",
+                html: "Vui lòng chờ trong <b></b> giây.",
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: () => {
+                    Swal.showLoading();
+                    const timer = Swal.getHtmlContainer().querySelector("b");
+                    timerInterval = setInterval(() => {
+                        timer.textContent = `${Swal.getTimerLeft()}`;
+                    }, 100);
+                },
+                willClose: () => {
+                    clearInterval(timerInterval);
+                }
+            }).then((result) => {
+                if (result.dismiss === Swal.DismissReason.timer) {
+                    var selectCtdt = $("#MaCTDT").val();
+                    var selectPks = $("#MaPKS").val();
+                    window.location = '/ThongKeKhaoSat/ExportToExcel?ctdt=' + selectCtdt + '&survey=' + selectPks;
+                }
+            });
+        });
+
+        $(document).on("click", ".page-link", function () {
+            var page = $(this).data("page");
+            if (page > 0 && page <= totalPages) {
+                currentPage = page;
+                var selectCtdt = $("#MaCTDT").val();
+                var selectPks = $("#MaPKS").val();
+                LoadData(currentPage, selectCtdt, selectPks);
+            }
         });
     });
 
-    function LoadData(ctdt) {
+    function LoadData(pageNumber, ctdt, survey) {
         $.ajax({
             url: '/ThongKeKhaoSat/LoadSVChuaKhaoSat',
             type: 'GET',
-            data: { ctdt: ctdt },
+            data: { pageNumber: pageNumber, pageSize: 10, ctdt: ctdt, survey: survey },
             success: function (res) {
                 var items = res.data;
+                totalPages = res.totalPages;
                 var html = "";
 
                 if (items.length === 0) {
                     html += "<tr><td colspan='7' class='text-center'>Không có dữ liệu</td></tr>";
                 } else {
                     for (let i = 0; i < items.length; i++) {
-                        var index = i + 1;
+                        var index = (pageNumber - 1) * 10 + i + 1;
                         html += "<tr>";
                         html += "<td>" + index + "</td>";
                         html += "<td>" + items[i].MSSV + "</td>";
@@ -100,6 +140,7 @@
                 }
                 $('#showdata').html(html);
                 $('#data-table-section').show();
+                renderPagination(pageNumber, totalPages);
             },
             error: function () {
                 var html = "<tr><td colspan='7' class='text-center'>Không thể tải dữ liệu</td></tr>";
@@ -107,5 +148,37 @@
                 $('#data-table-section').show();
             }
         });
+    }
+
+    function renderPagination(currentPage, totalPages) {
+        var html = '<nav aria-label="Page navigation example"><ul class="pagination justify-content-end">';
+
+        var startPage = currentPage - 2;
+        var endPage = currentPage + 2;
+
+        if (startPage < 1) {
+            startPage = 1;
+            endPage = 5;
+        }
+
+        if (endPage > totalPages) {
+            endPage = totalPages;
+            startPage = totalPages - 4;
+        }
+
+        if (startPage < 1) {
+            startPage = 1;
+        }
+
+        html += '<li class="page-item ' + (currentPage == 1 ? 'disabled' : '') + '"><a class="page-link" href="#" data-page="' + (currentPage - 1) + '">Trước</a></li>';
+
+        for (var i = startPage; i <= endPage; i++) {
+            html += '<li class="page-item ' + (currentPage == i ? 'active' : '') + '"><a class="page-link" href="#" data-page="' + i + '">' + i + '</a></li>';
+        }
+
+        html += '<li class="page-item ' + (currentPage == totalPages ? 'disabled' : '') + '"><a class="page-link" href="#" data-page="' + (currentPage + 1) + '">Tiếp</a></li>';
+        html += '</ul></nav>';
+
+        $('#pagination').html(html);
     }
 </script>

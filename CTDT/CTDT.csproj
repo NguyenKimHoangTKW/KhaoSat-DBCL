@@ -1078,6 +1078,11 @@
     <Content Include="Areas\Admin\Views\PhieuKhaoSat\AddSurvey.cshtml" />
     <Content Include="Areas\Admin\Views\NguoiDung\ViewUser.cshtml" />
     <Content Include="Areas\Admin\Views\ThongKeKhaoSat\ThongKeSVChuaKhaoSat.cshtml" />
+    <Content Include="App_Data\SinhVienChuaKhaoSat\SinhVienChuaKhaoSat_20240602160205.xlsx" />
+    <Content Include="App_Data\SinhVienChuaKhaoSat\SinhVienChuaKhaoSat_20240602160251.xlsx" />
+    <Content Include="App_Data\SinhVienChuaKhaoSat\SinhVienChuaKhaoSat_20240602160552.xlsx" />
+    <Content Include="App_Data\KetQuaPKS\KetQuaKhaoSat_20240602163618.xlsx" />
+    <Content Include="App_Data\KetQuaPKS\KetQuaKhaoSat_20240602163857.xlsx" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.1.js" />
     <Content Include="Scripts\jquery-3.7.1.min.js" />
@@ -1268,7 +1273,6 @@
     <Content Include="Views\Login\Login.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Content\Exports\" />
   </ItemGroup>
