@@ -60,13 +60,33 @@ namespace CTDT.Controllers
 
             return Json(new { status = status }, JsonRequestBehavior.AllowGet);
         }
-
+        // Load Biễu mẫu đã khảo sát
         public ActionResult SurveyForm(int iduser)
         {
             var listsurvey = db.answer_response.Where(x => x.id_users == iduser).ToList();
             return View(listsurvey);
         }
-
+        public ActionResult ListAnswerSurvey(int id)
+        {
+            ViewBag.id = id;
+            var listsurvey = db.answer_response.Where(x => x.surveyID == id).ToList();
+            return View(listsurvey);
+        }
+        [HttpGet]
+        public ActionResult LoadListAnswerSurvey(int id)
+        {
+            var query = db.answer_response.AsQueryable();
+            var listsurvey = query
+                .Where(x => x.surveyID == id)
+                .Select(f => new
+                {
+                    TenCTDT = f.ctdt.ten_ctdt,
+                    TenSV = f.sinhvien.hovaten,
+                })
+                .ToList();
+            return Json(new { data = listsurvey }, JsonRequestBehavior.AllowGet);
+        }
+        //
         [HttpGet]
         public ActionResult LoadSurveyForm(int iduser)
         {
@@ -76,12 +96,14 @@ namespace CTDT.Controllers
                 .Where(x => x.id_users == iduser)
                 .Select(f => new
                 {
-                    MaPhieu = f.id,
+                    MaPhieu = f.surveyID,
                     TieuDePhieu = f.survey.surveyTitle,
                     MoTaPhieu = f.survey.surveyDescription,
                 }).ToList();
             return Json(new { data = ListSurveyForm, status = "Load dữ liệu thành công" }, JsonRequestBehavior.AllowGet);
         }
+
+        // Kết quả phiếu khảo sát Client
         public ActionResult AnswerPKS(int id)
         {
             ViewBag.id = id;

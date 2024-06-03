@@ -1324,6 +1324,7 @@
     <Content Include="Views\Home\XacThuc.cshtml" />
     <Content Include="Views\Survey\SurveyForm.cshtml" />
     <Content Include="Views\Survey\AnswerPKS.cshtml" />
+    <Content Include="Views\Survey\ListAnswerSurvey.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />

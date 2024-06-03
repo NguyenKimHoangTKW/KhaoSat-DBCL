@@ -30,7 +30,9 @@
         {
             <div class="dropdown">
                 <a href="#" class="nav-link" style="text-decoration: none; color: white; font-size: 1.7rem;">
-                    <i class="fa-solid fa-user" style="padding-right: 10px; font-size:2rem;"></i>Xin chào - @user.name
+
+                    Xin chào - @user.name
+                    <img src="@user.avatarUrl" style="width: 50px; border-radius: 100%;" />
                 </a>
                 <ul class="dropdown-content" style="list-style: none">
                     <li><a href="/Survey/SurveyForm?iduser=@user.id_users"><i class="fa fa-note-sticky"></i>Biểu mẫu đã khảo sát</a></li>
