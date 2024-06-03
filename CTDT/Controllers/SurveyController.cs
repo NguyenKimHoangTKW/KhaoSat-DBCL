@@ -66,42 +66,46 @@ namespace CTDT.Controllers
             var listsurvey = db.answer_response.Where(x => x.id_users == iduser).ToList();
             return View(listsurvey);
         }
+        [HttpGet]
+        public ActionResult LoadSurveyForm(int iduser)
+        {
+            var query = db.survey.AsQueryable();
+
+            var ListSurveyForm = query
+                .Where(sr => db.answer_response.Any(x =>x.id_users == iduser))
+                .Select(f => new
+                {
+                    MaPhieu = f.surveyID,
+                    TieuDePhieu = f.surveyTitle,
+                    MoTaPhieu = f.surveyDescription,
+                }).ToList();
+            return Json(new { data = ListSurveyForm, status = "Load dữ liệu thành công" }, JsonRequestBehavior.AllowGet);
+        }
         public ActionResult ListAnswerSurvey(int id)
         {
             ViewBag.id = id;
-            var listsurvey = db.answer_response.Where(x => x.surveyID == id).ToList();
-            return View(listsurvey);
+            return View();
         }
+
         [HttpGet]
         public ActionResult LoadListAnswerSurvey(int id)
         {
-            var query = db.answer_response.AsQueryable();
-            var listsurvey = query
+            var listsurvey = db.answer_response
                 .Where(x => x.surveyID == id)
                 .Select(f => new
                 {
                     TenCTDT = f.ctdt.ten_ctdt,
                     TenSV = f.sinhvien.hovaten,
+                    MSSV = f.sinhvien.ma_sv,
+                    ThoiGianKhaoSat = f.time,
                 })
                 .ToList();
+
             return Json(new { data = listsurvey }, JsonRequestBehavior.AllowGet);
         }
-        //
-        [HttpGet]
-        public ActionResult LoadSurveyForm(int iduser)
-        {
-            var query = db.answer_response.AsQueryable();
 
-            var ListSurveyForm = query
-                .Where(x => x.id_users == iduser)
-                .Select(f => new
-                {
-                    MaPhieu = f.surveyID,
-                    TieuDePhieu = f.survey.surveyTitle,
-                    MoTaPhieu = f.survey.surveyDescription,
-                }).ToList();
-            return Json(new { data = ListSurveyForm, status = "Load dữ liệu thành công" }, JsonRequestBehavior.AllowGet);
-        }
+        //
+
 
         // Kết quả phiếu khảo sát Client
         public ActionResult AnswerPKS(int id)

@@ -1,6 +1,5 @@
-﻿
-@{
-    ViewBag.Title = "ListAnswerSurvey";
+﻿@{
+    ViewBag.Title = "Danh sách chi tiết phiếu khảo sát - TDMU";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -14,14 +13,52 @@
                             DANH SÁCH CHI TIẾT PHIẾU KHẢO SÁT
                         </h2>
                     </div>
-                    <div id="showdata" class="row justify-content-center">
-                        <!--Load Dữ liệu-->
+                    <div class="row justify-content-center">
+                        <div class="table-responsive">
+                            <table class="table table-striped align-middle mb-0 bg-white custom-table">
+                                <thead class="bg-primary text-white">
+                                    <tr>
+                                        <th>STT</th>
+                                        <th>CTĐT</th>
+                                        <th>Sinh Viên</th>
+                                        <th>MSSV</th>
+                                        <th>Thời gian khảo sát</th>
+                                        <th>Chức năng</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="showdata">
+                                    <!-- Data will be loaded here dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    .custom-table {
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        margin-bottom: 20px;
+    }
+    .custom-table thead {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .custom-table th, .custom-table td {
+        padding: 12px 15px;
+    }
+
+    .custom-table tbody tr {
+        transition: background-color 0.3s, font-weight 0.3s;
+    }
+</style>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
     $(document).ready(function () {
@@ -30,34 +67,40 @@
 
     function LoadData() {
         $.ajax({
-            url: '/Survey/LoadListAnswerSurvey?id=' + @ViewBag.id,
+            url: '/Survey/LoadListAnswerSurvey?id=' + @Html.Raw(ViewBag.id),
             type: 'GET',
             success: function (res) {
                 var items = res.data;
                 var html = "";
 
                 if (items.length === 0) {
-                    html += "<div class='col-lg-12 survey-item'>";
-                    html += "<div class='card survey-card border-0'>";
-                    html += "<div class='card-body'>";
-                    html += "<h5 class='card-title text-center'>Không có dữ liệu.</h5>";
-                    html += "</div>";
-                    html += "</div>";
-                    html += "</div>";
+                    html += "<tr><td colspan='6' class='text-center'>Không có dữ liệu.</td></tr>";
                 } else {
                     for (let i = 0; i < items.length; i++) {
-                        html += "<div class='col-sm-6 mb-4'>";
-                        html += "<div class='card feature-card'>";
-                        html += "<div class='card-body'>";
-                        html += "<a href='#' class='feature-icon'>";
-                        html += "<i class='fa fa-check-square-o' aria-hidden='true'></i>";
-                        html += "</a>";
-                        html += "<h5 class='card-title'>" + items[i].TenCTDT + "</h5>";
-                        html += "<p class='card-text'>" + TenSV + "</p>";
-                        //html += "<button onclick=\"window.location.href='/Survey/AnswerPKS?id=" + items[i].MaPhieu + "'\" class='btn btn-primary'>Xem chi tiết</button>";
-                        html += "</div>";
-                        html += "</div>";
-                        html += "</div>";
+                        var index = i + 1;
+                        var formattedDate1 = unixTimestampToDate(items[i].ThoiGianKhaoSat);
+                        html += "<tr>";
+                        html += "    <td>" + index + "</td>";
+                        html += "    <td>";
+                        html += "        <div class='d-flex align-items-center'>";
+                        html += "            <div class='ms-3'>";
+                        html += "                <p class='fw-bold mb-1'>" + items[i].TenCTDT + "</p>";
+                        html += "            </div>";
+                        html += "        </div>";
+                        html += "    </td>";
+                        html += "    <td>";
+                        html += "        <p class='fw-normal mb-1'>" + (items[i].TenSV == null ? "Không có dữ liệu" : items[i].TenSV) + "</p>";
+                        html += "    </td>";
+                        html += "    <td>";
+                        html += "        <span class='badge badge-success rounded-pill d-inline'>" + (items[i].MSSV == null ? "Không có dữ liệu" : items[i].MSSV) + "</span>";
+                        html += "    </td>";
+                        html += "    <td>" + formattedDate1 + "</td>";
+                        html += "    <td>";
+                        html += "        <button type='button' class='btn btn-link btn-sm btn-rounded'>";
+                        html += "            Xem chi tiết câu hỏi";
+                        html += "        </button>";
+                        html += "    </td>";
+                        html += "</tr>";
                     }
                 }
                 $('#showdata').html(html);
@@ -68,5 +111,21 @@
             }
         });
     }
-</script>
 
+    function unixTimestampToDate(unixTimestamp) {
+        var date = new Date(unixTimestamp * 1000);
+
+        var weekdays = ['Chủ Nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
+
+        var dayOfWeek = weekdays[date.getDay()];
+
+        var month = ("0" + (date.getMonth() + 1)).slice(-2);
+        var day = ("0" + date.getDate()).slice(-2);
+        var year = date.getFullYear();
+        var hours = ("0" + date.getHours()).slice(-2);
+        var minutes = ("0" + date.getMinutes()).slice(-2);
+        var seconds = ("0" + date.getSeconds()).slice(-2);
+        var formattedDate = dayOfWeek + ', ' + day + "-" + month + "-" + year + " " + hours + ":" + minutes + ":" + seconds;
+        return formattedDate;
+    }
+</script>
