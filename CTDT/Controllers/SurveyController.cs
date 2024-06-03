@@ -60,5 +60,48 @@ namespace CTDT.Controllers
 
             return Json(new { status = status }, JsonRequestBehavior.AllowGet);
         }
+
+        public ActionResult SurveyForm(int iduser)
+        {
+            var listsurvey = db.answer_response.Where(x => x.id_users == iduser).ToList();
+            return View(listsurvey);
+        }
+
+        [HttpGet]
+        public ActionResult LoadSurveyForm(int iduser)
+        {
+            var query = db.answer_response.AsQueryable();
+
+            var ListSurveyForm = query
+                .Where(x => x.id_users == iduser)
+                .Select(f => new
+                {
+                    MaPhieu = f.id,
+                    TieuDePhieu = f.survey.surveyTitle,
+                    MoTaPhieu = f.survey.surveyDescription,
+                }).ToList();
+            return Json(new { data = ListSurveyForm, status = "Load dữ liệu thành công" }, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult AnswerPKS(int id)
+        {
+            ViewBag.id = id;
+            var litsKQ = db.answer_response.Where(kq => kq.id == id).ToList();
+            foreach (var item in litsKQ)
+            {
+                ViewBag.IDPhieu = item.surveyID;
+            }
+            return View(litsKQ);
+        }
+        public ActionResult AnswerSurvey(int id)
+        {
+            var answers = db.answer_response.Where(d => d.id == id).Select(x => x.json_answer).ToList();
+            List<JObject> surveyData = new List<JObject>();
+            foreach (var answer in answers)
+            {
+                JObject answerObject = JObject.Parse(answer);
+                surveyData.Add(answerObject);
+            }
+            return Content(JsonConvert.SerializeObject(surveyData), "application/json");
+        }
     }
 }

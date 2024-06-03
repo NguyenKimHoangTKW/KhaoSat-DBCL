@@ -119,6 +119,7 @@
     <Property Name="ngaytao" Type="int" Nullable="false" />
     <Property Name="id_ctdt" Type="int" />
     <Property Name="userIpAddress" Type="nvarchar" MaxLength="50" />
+    <Property Name="avatarUrl" Type="nvarchar" MaxLength="150" />
   </EntityType>
   <Association Name="FK_answer_response_ctdt">
     <End Role="ctdt" Type="Self.ctdt" Multiplicity="0..1" />

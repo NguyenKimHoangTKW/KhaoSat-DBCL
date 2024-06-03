@@ -1,0 +1,122 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css" />
+    <link rel="icon" type="image/x-icon" href="https://tdmu.edu.vn/hinh/Icon.png" />
+    <title>TDMU | KHẢO SÁT 2023-2024</title>
+    <link rel="stylesheet" href="public/assets/user/css/sweetalert2.min.css">
+    <link rel="stylesheet" href="public/assets/user/css/surveyStyle3.css" />
+    <link rel="stylesheet" href="public/assets/user/css/loading.css" />
+</head>
+
+
+
+<body>
+    <style>
+        #spinner-div {
+            position: fixed;
+            display: none;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.8);
+            z-index: 2;
+        }
+    </style>
+    <div id="spinner-div" class="pt-5">
+        <div class="spinner-border text-primary" role="status"></div>
+    </div>
+    <div id="form">
+        <div class="banner">
+            <div class="form-banner d-none d-lg-flex row p-4 container-fluid" style="background-image: url('https://dbcl.tdmu.edu.vn/img/ckeditor/Images/af169f03-90b1-46d1-a7b4-99a9cc7ee909.png'); background-position: center; background-size: contain; background-repeat: no-repeat;"></div>
+        </div>
+        <div class="header-title-section">
+            <div class="lineUp">
+                <h1 class="survey-title">Survey Title Here</h1>
+                <h3 class="survey-title2" id="sur-title"></h3>
+                <p class="survey-p">Survey Description Here</p>
+                <input style="background-color: #919192" type="button" value="Trở về trang chủ" class="btn solid open">
+            </div>
+        </div>
+        <input type="hidden" class="form-control" name="base_url" id="base_url" value="">
+        <input type="hidden" class="form-control" name="surveyID" id="surveyID" value="">
+        <form id="form_survey" name="form_survey" style="display: none">
+            <div class="item-ques" name="pages_page1" style="background-color: #D9ECF1">
+                <label class="ques-header" for="join" style="margin-bottom: 0;">
+                    <strong>Page Title Here</strong>
+                </label>
+                <br>
+                <label class="ques-text" for="usedLib" style="font-weight: 400">Page Description Here</label>
+            </div>
+            <div class="item-ques" name="questions_question1" style="margin-bottom: 15px; margin-top: 15px">
+                <label class="ques-text required-ques clear-margin" for="major"><strong>Question Title Here</strong> (Bắt buộc)</label>
+                <input type="text" class="inputVal2" name="question1" placeholder="Nhập thông tin tại đây...">
+                <p style="color: red; display: none;" id="alert_question1" name="tag_p_error"></p>
+            </div>
+            <div class="actionDiv">
+                <span class="needHelp" title="Gửi Email hỗ trợ tới: #">
+                    <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i><a class="needHelpText" href="#"> Báo cáo hỗ trợ.</a>
+                </span>
+                <input type="button" id="submit_phieu" data-loading-text="Đang xử lý...." value="Gửi" class="btn solid open">
+            </div>
+        </form>
+        <div class="alertDiv">
+            <div class="message">
+                <p id="mess-alert">
+                    <br>
+                </p>
+                - Xin cảm ơn -
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="exampleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="loading-spinner">
+                        <div class="loading-spinner-inner">
+                            <div class="loading-spinner-circle"></div>
+                            <div class="loading-spinner-circle"></div>
+                            <div class="loading-spinner-circle"></div>
+                            <div class="loading-spinner-circle"></div>
+                            <div class="loading-spinner-circle"></div>
+                        </div>
+                    </div>
+                    <p class="text-center">Đang gửi</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="err-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Lỗi</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h4>Gửi dữ liệu không thành công</h4>
+                    <p>Vui lòng gửi lại hoặc chụp màn hình lỗi gửi tới email <a href="#">#</a>
+                    <p id="mess-err"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <p class="p_copyright" style="text-align: center">
+        Copyright &copy <span id="copyright_year"></span>
+        <a href="#" style="font-style: italic; text-decoration: none; color: #0139a6">ĐẢM BẢO CHẤT LƯỢNG - TDMU</a>
+    </p>
+</body>
+</html>

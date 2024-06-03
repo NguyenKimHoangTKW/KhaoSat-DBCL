@@ -119,6 +119,7 @@
     <EntitySetMapping Name="users">
       <EntityTypeMapping TypeName="dbSurveyModel.users">
         <MappingFragment StoreEntitySet="users">
+          <ScalarProperty Name="avatarUrl" ColumnName="avatarUrl" />
           <ScalarProperty Name="userIpAddress" ColumnName="userIpAddress" />
           <ScalarProperty Name="id_ctdt" ColumnName="id_ctdt" />
           <ScalarProperty Name="ngaytao" ColumnName="ngaytao" />

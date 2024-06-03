@@ -226,6 +226,8 @@
     <Compile Include="Areas\Admin\Controllers\PhieuKhaoSatController.cs" />
     <Compile Include="Areas\Admin\Controllers\SinhVienController.cs" />
     <Compile Include="Areas\Admin\Controllers\ThongKeKhaoSatController.cs" />
+    <Compile Include="Areas\CTDT\Controllers\ThongKeKhaoSatController.cs" />
+    <Compile Include="Areas\CTDT\CTDTAreaRegistration.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\SurveyController.cs" />
@@ -1123,6 +1125,16 @@
     <Content Include="App_Data\KetQuaPKS\KetQuaKhaoSat_20240602163857.xlsx" />
     <Content Include="App_Data\SinhVienChuaKhaoSat\SinhVienChuaKhaoSat_20240602211041.xlsx" />
     <Content Include="Areas\Admin\Views\SinhVien\ViewSinhVien.cshtml" />
+    <Content Include="Areas\CTDT\Views\web.config" />
+    <Content Include="Areas\CTDT\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\CTDT\Views\Shared\Error.cshtml" />
+    <Content Include="Areas\CTDT\Views\Shared\_CTDTFooterPartial.cshtml" />
+    <Content Include="Areas\CTDT\Views\Shared\_CTDTHeaderPartial.cshtml" />
+    <Content Include="Areas\CTDT\Views\Shared\_CTDTLayout.cshtml" />
+    <Content Include="Areas\CTDT\Views\Shared\_CTDTNavPartial.cshtml" />
+    <Content Include="Areas\CTDT\Views\ThongKeKhaoSat\TKSVCKS.cshtml" />
+    <Content Include="App_Data\SinhVienChuaKhaoSat-CTDT\SinhVienChuaKhaoSat_20240603141658.xlsx" />
+    <Content Include="Areas\CTDT\Views\ThongKeKhaoSat\Index.cshtml" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.1.js" />
     <Content Include="Scripts\jquery-3.7.1.min.js" />
@@ -1310,9 +1322,12 @@
     <Content Include="Views\Home\PhieuKhaoSat.cshtml" />
     <Content Include="Views\Home\XacThucCTDT.cshtml" />
     <Content Include="Views\Home\XacThuc.cshtml" />
+    <Content Include="Views\Survey\SurveyForm.cshtml" />
+    <Content Include="Views\Survey\AnswerPKS.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
+    <Folder Include="Areas\CTDT\Data\" />
     <Folder Include="Content\Exports\" />
   </ItemGroup>
   <ItemGroup>

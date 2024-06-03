@@ -200,6 +200,7 @@
     <Property Name="ngaytao" Type="Int32" Nullable="false" />
     <Property Name="id_ctdt" Type="Int32" />
     <Property Name="userIpAddress" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="avatarUrl" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
     <NavigationProperty Name="answer_response" Relationship="dbSurveyModel.FK_answer_response_users" FromRole="users" ToRole="answer_response" />
     <NavigationProperty Name="ctdt" Relationship="dbSurveyModel.FK_users_ctdt" FromRole="users" ToRole="ctdt" />
     <NavigationProperty Name="survey" Relationship="dbSurveyModel.FK_survey_users" FromRole="users" ToRole="survey" />

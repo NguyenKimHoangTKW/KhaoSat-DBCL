@@ -44,6 +44,7 @@ public class LoginController : Controller
 
         // Extract user information from loginInfo
         var email = loginInfo.ExternalIdentity.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+        var avatarUrl = loginInfo.ExternalIdentity.Claims.FirstOrDefault(c => c.Type == "urn:google:picture")?.Value;
 
         // Get the user's IP address
         string userIpAddress = GetClientIpAddress();
@@ -62,7 +63,8 @@ public class LoginController : Controller
                 id_typeusers = 1,
                 ngaycapnhat = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds,
                 ngaytao = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds,
-                userIpAddress = userIpAddress
+                userIpAddress = userIpAddress,
+                avatarUrl = avatarUrl
             };
 
             db.users.Add(user);
@@ -70,17 +72,25 @@ public class LoginController : Controller
         }
         else
         {
-            // Update the user's last login IP address
+            // Update the user's last login IP address and avatar URL
             user.userIpAddress = userIpAddress;
             user.ngaycapnhat = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
-
+            user.avatarUrl = avatarUrl;
             db.Entry(user).State = System.Data.Entity.EntityState.Modified;
             db.SaveChanges();
         }
 
         // Store user information in session
         SessionHelper.SetUser(user);
+        if (user.id_typeusers == 3)
+        {
+            return RedirectToAction("TKSVCKS", "ThongKeKhaoSat", new { area = "CTDT" });
+        }
 
+        if (user.id_typeusers == 2)
+        {
+            return RedirectToAction("Index", "PhieuKhaoSat", new { area = "Admin" });
+        }
         return RedirectToLocal(returnUrl);
     }
 
@@ -98,8 +108,6 @@ public class LoginController : Controller
         }
         return Request.ServerVariables["REMOTE_ADDR"];
     }
-
-
 
     // GET: /Login/ExternalLoginFailure
     [HttpGet]
@@ -163,4 +171,4 @@ public class LoginController : Controller
             context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
         }
     }
-}
+}   

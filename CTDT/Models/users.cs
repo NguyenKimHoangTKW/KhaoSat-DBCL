@@ -31,6 +31,7 @@ namespace CTDT.Models
         public int ngaytao { get; set; }
         public Nullable<int> id_ctdt { get; set; }
         public string userIpAddress { get; set; }
+        public string avatarUrl { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<answer_response> answer_response { get; set; }
