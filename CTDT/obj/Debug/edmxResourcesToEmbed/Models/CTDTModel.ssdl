@@ -110,7 +110,7 @@
       <PropertyRef Name="id_users" />
     </Key>
     <Property Name="id_users" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="name" Type="nvarchar" MaxLength="50" />
     <Property Name="email" Type="nvarchar" MaxLength="100" Nullable="false" />
     <Property Name="username" Type="nvarchar" MaxLength="50" />
     <Property Name="password" Type="nvarchar" MaxLength="255" />

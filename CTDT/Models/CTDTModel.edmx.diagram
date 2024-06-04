@@ -5,13 +5,13 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="4bde84ba2e194664bf55980208618204" Name="Diagram1">
-        <EntityTypeShape EntityType="dbSurveyModel.answer_response" Width="1.5" PointX="9.75" PointY="10.125" />
+        <EntityTypeShape EntityType="dbSurveyModel.answer_response" Width="1.5" PointX="9.75" PointY="8.25" />
         <EntityTypeShape EntityType="dbSurveyModel.ctdt" Width="1.5" PointX="3" PointY="6.125" />
-        <EntityTypeShape EntityType="dbSurveyModel.hedaotao" Width="1.5" PointX="5.25" PointY="10.875" />
+        <EntityTypeShape EntityType="dbSurveyModel.hedaotao" Width="1.5" PointX="5.25" PointY="2.625" />
         <EntityTypeShape EntityType="dbSurveyModel.khoa" Width="1.5" PointX="0.75" PointY="6.625" />
-        <EntityTypeShape EntityType="dbSurveyModel.LoaiKhaoSat" Width="1.5" PointX="5.25" PointY="2.625" />
-        <EntityTypeShape EntityType="dbSurveyModel.lop" Width="1.5" PointX="5.25" PointY="14.875" />
-        <EntityTypeShape EntityType="dbSurveyModel.sinhvien" Width="1.5" PointX="7.5" PointY="14.375" />
+        <EntityTypeShape EntityType="dbSurveyModel.LoaiKhaoSat" Width="1.5" PointX="5.25" PointY="14.875" />
+        <EntityTypeShape EntityType="dbSurveyModel.lop" Width="1.5" PointX="5.25" PointY="11" />
+        <EntityTypeShape EntityType="dbSurveyModel.sinhvien" Width="1.5" PointX="7.5" PointY="10.5" />
         <EntityTypeShape EntityType="dbSurveyModel.survey" Width="1.5" PointX="7.5" PointY="5.5" />
         <EntityTypeShape EntityType="dbSurveyModel.sysdiagrams" Width="1.5" PointX="0.75" PointY="0.75" />
         <EntityTypeShape EntityType="dbSurveyModel.typeusers" Width="1.5" PointX="3" PointY="3.75" />

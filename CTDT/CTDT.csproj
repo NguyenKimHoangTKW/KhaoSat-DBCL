@@ -1118,12 +1118,6 @@
     <Content Include="Areas\Admin\Views\PhieuKhaoSat\AddSurvey.cshtml" />
     <Content Include="Areas\Admin\Views\NguoiDung\ViewUser.cshtml" />
     <Content Include="Areas\Admin\Views\ThongKeKhaoSat\ThongKeSVChuaKhaoSat.cshtml" />
-    <Content Include="App_Data\SinhVienChuaKhaoSat\SinhVienChuaKhaoSat_20240602160205.xlsx" />
-    <Content Include="App_Data\SinhVienChuaKhaoSat\SinhVienChuaKhaoSat_20240602160251.xlsx" />
-    <Content Include="App_Data\SinhVienChuaKhaoSat\SinhVienChuaKhaoSat_20240602160552.xlsx" />
-    <Content Include="App_Data\KetQuaPKS\KetQuaKhaoSat_20240602163618.xlsx" />
-    <Content Include="App_Data\KetQuaPKS\KetQuaKhaoSat_20240602163857.xlsx" />
-    <Content Include="App_Data\SinhVienChuaKhaoSat\SinhVienChuaKhaoSat_20240602211041.xlsx" />
     <Content Include="Areas\Admin\Views\SinhVien\ViewSinhVien.cshtml" />
     <Content Include="Areas\CTDT\Views\web.config" />
     <Content Include="Areas\CTDT\Views\_ViewStart.cshtml" />
@@ -1135,6 +1129,9 @@
     <Content Include="Areas\CTDT\Views\ThongKeKhaoSat\TKSVCKS.cshtml" />
     <Content Include="App_Data\SinhVienChuaKhaoSat-CTDT\SinhVienChuaKhaoSat_20240603141658.xlsx" />
     <Content Include="Areas\CTDT\Views\ThongKeKhaoSat\Index.cshtml" />
+    <Content Include="App_Data\DoiTuongKhaoSat-CTDT\DoiTuongChuaKhaoSat_20240604094317.xlsx" />
+    <Content Include="App_Data\DoiTuongKhaoSat-CTDT\DoiTuongChuaKhaoSat_20240604094434.xlsx" />
+    <Content Include="App_Data\DoiTuongKhaoSat\DoiTuongDaKhaoSat_20240604094653.xlsx" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.1.js" />
     <Content Include="Scripts\jquery-3.7.1.min.js" />
@@ -1327,6 +1324,7 @@
     <Content Include="Views\Survey\ListAnswerSurvey.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="App_Data\KetQuaPKS\" />
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\CTDT\Data\" />
     <Folder Include="Content\Exports\" />

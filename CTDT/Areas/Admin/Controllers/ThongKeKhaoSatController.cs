@@ -17,13 +17,11 @@ namespace CTDT.Areas.Admin.Controllers
         public ActionResult ThongKeSVChuaKhaoSat()
         {
             ViewBag.CTDTList = new SelectList(db.ctdt.OrderBy(l => l.id_ctdt), "id_ctdt", "ten_ctdt");
-            ViewBag.PKSList = new SelectList(db.survey
-                .Where(l => db.answer_response.Any(aw => aw.id_sv != null && aw.surveyID == l.surveyID))
-                .OrderBy(l => l.surveyID), "surveyID", "surveyTitle");
+            ViewBag.PKSList = new SelectList(db.survey.OrderBy(l => l.surveyID), "surveyID", "surveyTitle");
             return View();
         }
         [HttpGet]
-        public ActionResult LoadSVChuaKhaoSat(int pageNumber = 1, int pageSize = 10, int ctdt = 0, int survey = 0)
+        public ActionResult LoadSVChuaKhaoSat(int pageNumber = 1, int pageSize = 10, int ctdt = 0, int survey = 0, bool completed = false)
         {
             var query = db.sinhvien.AsQueryable();
 
@@ -31,9 +29,20 @@ namespace CTDT.Areas.Admin.Controllers
             {
                 query = query.Where(ct => ct.lop.ctdt.id_ctdt == ctdt);
             }
+
             var totalRecords = query.Count();
+
+            if (completed)
+            {
+                query = query.Where(sv => db.answer_response.Any(aw => aw.id_sv == sv.id_sv && (survey == 0 || aw.surveyID == survey)));
+            }
+            else
+            {
+                query = query.Where(sv => !db.answer_response.Any(aw => aw.id_sv == sv.id_sv && (survey == 0 || aw.surveyID == survey)));
+            }
+
+            var filteredRecords = query.Count();
             var GetSV = query
-                .Where(sv => !db.answer_response.Any(aw => aw.id_sv == sv.id_sv && (survey == 0 || aw.surveyID == survey)))
                 .OrderBy(l => l.id_sv)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
@@ -49,12 +58,11 @@ namespace CTDT.Areas.Admin.Controllers
                 })
                 .ToList();
 
-            var filteredRecords = query.Count(sv => !db.answer_response.Any(aw => aw.id_sv == sv.id_sv && (survey == 0 || aw.surveyID == survey)));
             var totalPages = (int)Math.Ceiling((double)filteredRecords / pageSize);
 
             return Json(new { data = GetSV, totalPages = totalPages }, JsonRequestBehavior.AllowGet);
         }
-        public ActionResult ExportToExcel(int ctdt = 0, int survey = 0)
+        public ActionResult ExportToExcel(int ctdt = 0, int survey = 0, bool completed = false)
         {
             var query = db.sinhvien.AsQueryable();
 
@@ -63,8 +71,16 @@ namespace CTDT.Areas.Admin.Controllers
                 query = query.Where(ct => ct.lop.ctdt.id_ctdt == ctdt);
             }
 
+            if (completed)
+            {
+                query = query.Where(sv => db.answer_response.Any(aw => aw.id_sv == sv.id_sv && (survey == 0 || aw.surveyID == survey)));
+            }
+            else
+            {
+                query = query.Where(sv => !db.answer_response.Any(aw => aw.id_sv == sv.id_sv && (survey == 0 || aw.surveyID == survey)));
+            }
+
             var GetSV = query
-                .Where(sv => !db.answer_response.Any(aw => aw.id_sv == sv.id_sv && (survey == 0 || aw.surveyID == survey)))
                 .OrderBy(l => l.id_sv)
                 .AsEnumerable()
                 .Select(x => new
@@ -117,10 +133,11 @@ namespace CTDT.Areas.Admin.Controllers
                 worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
 
                 string timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
-                string fileName = $"SinhVienChuaKhaoSat_{timestamp}.xlsx";
+                string status = completed ? "DoiTuongDaKhaoSat" : "DoiTuongChuaKhaoSat";
+                string fileName = $"{status}_{timestamp}.xlsx";
                 string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
-                string folderPath = Server.MapPath("~/App_Data/SinhVienChuaKhaoSat");
+                string folderPath = Server.MapPath("~/App_Data/DoiTuongKhaoSat");
                 if (!Directory.Exists(folderPath))
                 {
                     Directory.CreateDirectory(folderPath);
@@ -134,5 +151,6 @@ namespace CTDT.Areas.Admin.Controllers
                 return File(fileBytes, contentType, fileName);
             }
         }
+
     }
 }

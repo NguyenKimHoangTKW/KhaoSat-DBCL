@@ -97,6 +97,7 @@ namespace CTDT.Controllers
                     TenCTDT = f.ctdt.ten_ctdt,
                     TenSV = f.sinhvien.hovaten,
                     MSSV = f.sinhvien.ma_sv,
+                    MaPhieu = f.id,
                     ThoiGianKhaoSat = f.time,
                 })
                 .ToList();

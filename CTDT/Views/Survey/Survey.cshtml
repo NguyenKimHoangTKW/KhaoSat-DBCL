@@ -322,8 +322,10 @@ function saveFormData() {
 
                 case 'checkbox':
                     var checkedValues = [];
+                    var checkedTexts = [];
                     $(this).find('input[type="checkbox"]:checked').each(function () {
                         checkedValues.push($(this).val());
+                        checkedTexts.push($(this).closest('label').text().trim());
                     });
                     var otherInput = $(this).find('input[type="text"]').val();
                     if (isRequired && checkedValues.length === 0) {
@@ -333,7 +335,8 @@ function saveFormData() {
                         alertElement.hide();
                     }
                     questionData.response = {
-                        "text": checkedValues,
+                        "name": checkedValues,
+                        "text": checkedTexts,
                         "other": otherInput ? otherInput : null
                     };
                     break;
@@ -388,6 +391,8 @@ function saveFormData() {
                         title: response.status,
                         showConfirmButton: false,
                         timer: 2000
+                    }).then(() => {
+                        window.location.href = '@Url.Action("Index", "Home")';
                     });
                 },
                 error: function (response) {
@@ -400,52 +405,45 @@ function saveFormData() {
         Swal.fire({
             icon: 'error',
             title: 'Vui lòng hoàn thành tất cả các trường bắt buộc',
-            showConfirmButton:true
+            showConfirmButton: true
         });
     }
 }
-        function checkVisibility() {
-            $('.item-ques').each(function () {
-                var visibleIf = $(this).data('visibleif');
-                var isRequiredField = $(this).find('.inputVal2, input[type="text"], input[type="number"], input[type="email"], textarea').hasClass('required-ques');
 
-                if (visibleIf) {
-                    var isVisible = false;
-                    var conditions = visibleIf.split(',');
-                    for (var i = 0; i < conditions.length; i++) {
-                        var condition = conditions[i].trim();
-                        if ($('input[name=' + condition.split('_')[0] + ']:checked').val() === condition) {
-                            isVisible = true;
-                            break;
-                        }
-                    }
-                    if (isVisible) {
-                        $(this).show();
-                        if (isRequiredField) {
-                            $(this).find('.inputVal2, input[type="text"], input[type="number"], input[type="email"], textarea').addClass('required-ques');
-                        }
-                    } else {
-                        $(this).hide();
-                        if (isRequiredField) {
-                            $(this).find('.inputVal2, input[type="text"], input[type="number"], input[type="email"], textarea').removeClass('required-ques');
-                        }
-                    }
-                } else {
-                    $(this).show();
+function checkVisibility() {
+    $('.item-ques').each(function () {
+        var visibleIf = $(this).data('visibleif');
+        var isRequiredField = $(this).find('.inputVal2, input[type="text"], input[type="number"], input[type="email"], textarea').hasClass('required-ques');
+
+        if (visibleIf) {
+            var isVisible = false;
+            var conditions = visibleIf.split(',');
+            for (var i = 0; i < conditions.length; i++) {
+                var condition = conditions[i].trim();
+                if ($('input[name=' + condition.split('_')[0] + ']:checked').val() === condition) {
+                    isVisible = true;
+                    break;
                 }
-            });
+            }
+            if (isVisible) {
+                $(this).show();
+                if (isRequiredField) {
+                    $(this).find('.inputVal2, input[type="text"], input[type="number"], input[type="email"], textarea').addClass('required-ques');
+                }
+            } else {
+                $(this).hide();
+                if (isRequiredField) {
+                    $(this).find('.inputVal2, input[type="text"], input[type="number"], input[type="email"], textarea').removeClass('required-ques');
+                }
+            }
+        } else {
+            $(this).show();
         }
+    });
+}
 
-        $('input[type=radio], input[type=checkbox]').change(checkVisibility);
-
-        
+$('input[type=radio], input[type=checkbox]').change(checkVisibility);
     </script>
 
-
-    <script type="text/javascript">
-        $(document).ready(function () {
-            
-        });
-    </script>
 </body>
 </html>

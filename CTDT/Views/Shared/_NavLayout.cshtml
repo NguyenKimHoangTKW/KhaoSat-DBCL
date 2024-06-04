@@ -42,10 +42,10 @@
                 </ul>
             </div>
         }
-        <form id="logoutForm" action="@Url.Action("Logout", "Login")" method="post">
+        <form id="logoutForm" action="@Url.Action("Logout", "Login", new {area = ""})" method="post">
             @Html.AntiForgeryToken()
         </form>
-        <form id="externalLoginForm" action="@Url.Action("ExternalLogin", "Login")" method="post" class="form-horizontal" role="form">
+        <form id="externalLoginForm" action="@Url.Action("ExternalLogin", "Login",new {area = ""})" method="post" class="form-horizontal" role="form">
             @Html.AntiForgeryToken()
             <input type="hidden" name="provider" value="Google" />
         </form>

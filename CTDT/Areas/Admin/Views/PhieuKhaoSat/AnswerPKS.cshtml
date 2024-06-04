@@ -38,7 +38,7 @@
     });
 
     function renderSurveyData(data) {
-        var tableHtml = '<table class="table table-bordered">\n';
+        var tableHtml = '<table class="table table-bordered table-hover">\n';
         tableHtml += '<thead>\n';
         tableHtml += '<tr>\n';
         tableHtml += '<th scope="col">#</th>\n';
@@ -54,16 +54,27 @@
             var elements = page.elements;
             elements.forEach(function (element) {
                 tableHtml += '<tr>\n';
-                tableHtml += '<th scope="row">' + index + '</th>\n';
+                tableHtml += '<th scope="row" class="text-center">' + index + '</th>\n';
                 tableHtml += '<td>' + element.title + '</td>\n';
-                if (element.type === "text") {
-                    var textValue = element.response ? element.response.text : "";
+
+                if (element.type === "text" || element.type === "comment") {
+                    var textValue = element.response ? element.response.text : "Không có câu trả lời";
                     tableHtml += '<td><b>' + textValue + '</b></td>\n';
                 } else if (element.type === "radiogroup") {
-                    var radioValue = element.response ? element.response.text : "";
-                    tableHtml += '<td> <b>' + radioValue + '</b></td>\n';
+                    var radioValue = element.response ? element.response.text : "Không có câu trả lời";
+                    tableHtml += '<td><b>' + radioValue + '</b></td>\n';
+                } else if (element.type === "checkbox") {
+                    var checkboxValues = element.response ? element.response.text : [];
+                    var otherValue = element.response ? element.response.other : null;
+                    var checkboxValueString = checkboxValues.join(', ');
+
+                    if (otherValue) {
+                        checkboxValueString += ' ' + otherValue;
+                    }
+
+                    tableHtml += '<td><b>' + checkboxValueString + '</b></td>\n';
                 } else {
-                    tableHtml += '<td></td>\n';
+                    tableHtml += '<td>Không có câu trả lời</td>\n';
                 }
 
                 tableHtml += '</tr>\n';

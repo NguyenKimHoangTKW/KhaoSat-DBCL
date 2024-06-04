@@ -176,10 +176,13 @@
 
             survey.pages.forEach(function (page) {
                 page.elements.forEach(function (element) {
-                    if (element.type === "text") {
+                    if (element.type === "text" || element.type === "comment") {
                         rowData.push(element.response ? element.response.text || "" : "");
                     } else if (element.type === "radiogroup") {
                         rowData.push(element.response ? element.response.text || "" : "");
+                    } else if (element.type === "checkbox") {
+                        let checkboxResponses = Array.isArray(element.response.text) ? element.response.text.join(", ") : "";
+                        rowData.push(checkboxResponses);
                     } else {
                         rowData.push("");
                     }
@@ -225,7 +228,6 @@
             }
         });
     }
-
     // End Xuất Excel
 
     // Load dữ liệu Data

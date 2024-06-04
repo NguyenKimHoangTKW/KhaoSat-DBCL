@@ -16,12 +16,64 @@
     <div class="card">
         <div class="card-body">
             <h4>Quản Lý Danh Tài Khoản</h4>
+            <div>
+                <button class="btn btn-primary btn-tone m-r-5" data-toggle="modal" data-target="#bd-example-modal-lg">Thêm mới</button>
+                <button class="btn btn-success btn-tone m-r-5" data-toggle="modal" data-target="#importExcelModal">Import từ Excel</button>
+            </div>
             <div class="row justify-content-end m-b-20">
                 <div class="col-auto">
                     <input type="text" id="searchInput" class="form-control" placeholder="Nhập từ khóa tìm kiếm...">
                 </div>
             </div>
-            <!-- Modal Sửa Lớp -->
+            <!-- Modal Thêm mới User -->
+            <div class="modal fade" id="bd-example-modal-lg">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title h4">Thêm mới Người dùng</h5>
+                            <button type="button" class="close" data-dismiss="modal">
+                                <i class="anticon anticon-close"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="form-validation">
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label control-label">Email</label>
+                                    <div class="col-sm-10">
+                                        <input type="email" class="form-control" id="Email" required>
+                                    </div>
+
+                                    <label class="col-sm-2 col-form-label control-label" style="margin-top: 10px;">Chức vụ *</label>
+                                    <div class="col-sm-10" style="margin-top: 10px;">
+                                        <select id="ChucVu" name="ChucVu" class="form-control" required>
+                                            @foreach (var typeUser in ViewBag.TypeUserList)
+                                            {
+                                                <option value="@typeUser.Value">@typeUser.Text</option>
+                                            }
+                                        </select>
+                                    </div>
+
+                                    <div class="col-sm-10" id="ctdtContainer" style="margin-top: 10px; display: none;">
+                                        <label class="col-sm-2 col-form-label control-label">CTĐT *</label>
+                                        <select id="CTDT" name="CTDT" class="form-control" style="margin-left: 130px; margin-top: -34px;">
+                                            @foreach (var ctdt in ViewBag.CTDTList)
+                                            {
+                                                <option value="@ctdt.Value">@ctdt.Text</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger btn-tone m-r-5" data-dismiss="modal">Thoát</button>
+                                <button type="button" class="btn btn-success btn-tone m-r-5" id="btnSave">Lưu</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Modal Thêm mới User -->
+            <!-- Modal Sửa User -->
             <div class="modal fade" id="ModalEditLop">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
@@ -69,7 +121,7 @@
                     </div>
                 </div>
             </div>
-            <!--End Modal Sửa Lớp -->
+            <!--End Modal Sửa User -->
             <div class="m-t-25">
                 <div class="table-responsive">
                     <table class="table table-bordered">
@@ -108,9 +160,11 @@
             var keyword = $(this).val().toLowerCase();
             LoadData(currentPage, keyword);
         }, 1000));
-        toggleCTDTDropdown();
-        $('#Edit_ChucVu').change(function () {
-            toggleCTDTDropdown();
+        $("#btnSave").click(function () {
+            AddUser();
+        });
+        $('#ChucVu, #Edit_ChucVu').change(function () {
+            toggleCTDTDropdown($(this).attr('id'));
         });
 
         $(document).on("click", "#btnSave", function () {
@@ -155,18 +209,62 @@
         });
     });
 
-    function toggleCTDTDropdown() {
-        var selectedRole = $('#Edit_ChucVu').val();
+    function toggleCTDTDropdown(chucVuId) {
+        var selectedRole = $('#' + chucVuId).val();
         if (selectedRole == 3) {
-            $('#ctdtContainer').show();
+            $('#' + chucVuId).closest('.form-group').find('#ctdtContainer').show();
         } else {
-            $('#ctdtContainer').hide();
+            $('#' + chucVuId).closest('.form-group').find('#ctdtContainer').hide();
         }
     }
+
     function search() {
         var keyword = $('#searchInput').val().toLowerCase();
         $('#showdata tr').filter(function () {
             $(this).toggle($(this).text().toLowerCase().indexOf(keyword) > -1)
+        });
+    }
+
+    function AddUser() {
+        var Email = $("#Email").val();
+        var ChucVu = $('#ChucVu').val();
+        var CTDT = ChucVu == '3' ? $('#CTDT').val() : null;
+
+        $.ajax({
+            url: '/Admin/NguoiDung/Add',
+            type: 'POST',
+            dataType: 'JSON',
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({
+                email: Email,
+                id_typeusers: ChucVu,
+                id_ctdt: CTDT
+            }),
+            success: function (response) {
+                if (response.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: response.status,
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    LoadData(currentPage);
+                    $('#bd-example-modal-lg').modal('hide');
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: response.status
+                    });
+                }
+            },
+            error: function (response) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Đã có lỗi xảy ra. Vui lòng thử lại sau.'
+                });
+            }
         });
     }
 
@@ -210,6 +308,7 @@
             },
         });
     }
+
     function DelNguoiDung(id) {
         $.ajax({
             type: 'POST',
@@ -251,10 +350,10 @@
                 $('#Edit_ChucVu').val(res.data.id_typeusers);
                 if (res.data.id_typeusers == 3) {
                     $('#Edit_CTDT').val(res.data.id_ctdt);
-                    $('#ctdtContainer').show();
+                    $('#Edit_CTDT').closest('.form-group').find('#ctdtContainer').show();
                 } else {
                     $('#Edit_CTDT').val(null);
-                    $('#ctdtContainer').hide();
+                    $('#Edit_CTDT').closest('.form-group').find('#ctdtContainer').hide();
                 }
                 $('#change_Ngay_Tao').val(res.data.ngaytao);
             }
@@ -300,6 +399,7 @@
             }
         });
     }
+
     function debounce(func, delay) {
         let timeoutId;
         return function () {
@@ -309,6 +409,7 @@
             timeoutId = setTimeout(() => func.apply(context, args), delay);
         };
     }
+
     function renderPagination(currentPage, totalPages) {
         var html = '<nav aria-label="Page navigation example"><ul class="pagination justify-content-end">';
 
@@ -335,26 +436,19 @@
             html += '<li class="page-item ' + (currentPage == i ? 'active' : '') + '"><a class="page-link" href="#" data-page="' + i + '">' + i + '</a></li>';
         }
 
-        html += '<li class="page-item ' + (currentPage == totalPages ? 'disabled' : '') + '"><a class="page-link" href="#" data-page="' + (currentPage + 1) + '">Tiếp</a></li>';
-        html += '</ul></nav>';
+        html += '<li class="page-item ' + (currentPage == totalPages ? 'disabled' : '') + '"><a class="page-link" href="#" data-page="' + (currentPage + 1) + '">Sau</a></li>';
 
+        html += '</ul></nav>';
         $('#pagination').html(html);
     }
 
-    function unixTimestampToDate(unixTimestamp) {
-        var date = new Date(unixTimestamp * 1000);
-
-        var weekdays = ['Chủ Nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
-
-        var dayOfWeek = weekdays[date.getDay()];
-
-        var month = ("0" + (date.getMonth() + 1)).slice(-2);
-        var day = ("0" + date.getDate()).slice(-2);
+    function unixTimestampToDate(timestamp) {
+        var date = new Date(timestamp * 1000);
+        var day = date.getDate();
+        var month = date.getMonth() + 1;
         var year = date.getFullYear();
-        var hours = ("0" + date.getHours()).slice(-2);
-        var minutes = ("0" + date.getMinutes()).slice(-2);
-        var seconds = ("0" + date.getSeconds()).slice(-2);
-        var formattedDate = dayOfWeek + ', ' + day + "-" + month + "-" + year + " " + hours + ":" + minutes + ":" + seconds;
-        return formattedDate;
+
+        return (day < 10 ? '0' + day : day) + '/' + (month < 10 ? '0' + month : month) + '/' + year;
     }
+
 </script>

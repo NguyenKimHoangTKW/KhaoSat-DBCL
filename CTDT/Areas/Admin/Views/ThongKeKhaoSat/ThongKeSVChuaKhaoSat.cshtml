@@ -1,21 +1,21 @@
 ﻿@{
-    ViewBag.Title = "Thống kê sinh viên chưa thực hiện khảo sát - TDMU";
+    ViewBag.Title = "Thống kê đối tượng thực hiện khảo sát - TDMU";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
 <div class="main-content">
     <div class="page-header">
-        <h2 class="header-title">Thống kê sinh viên chưa thực hiện khảo sát</h2>
+        <h2 class="header-title">Thống kê đối tượng thực hiện khảo sát</h2>
         <div class="header-sub-title">
             <nav class="breadcrumb breadcrumb-dash">
                 <a href="#" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Home</a>
-                <span class="breadcrumb-item active">Danh sách sinh viên chưa thực hiện khảo sát</span>
+                <span class="breadcrumb-item active">Danh sách đối tượng thực hiện khảo sát</span>
             </nav>
         </div>
     </div>
     <div class="card">
         <div class="card-body">
-            <h4>Danh sách sinh viên chưa thực hiện khảo sát</h4>
+            <h4>Danh sách đối tượng thực hiện khảo sát</h4>
             <div class="col-sm-10" style="margin-top: 10px;">
                 <select id="MaCTDT" class="form-control">
                     <option value="">Tất cả</option>
@@ -27,10 +27,17 @@
             </div>
             <div class="col-sm-10" style="margin-top: 10px;">
                 <select id="MaPKS" class="form-control">
+                    <option value="">Tất cả</option>
                     @foreach (var item in ViewBag.PKSList)
                     {
                         <option value="@item.Value">@item.Text</option>
                     }
+                </select>
+            </div>
+            <div class="col-sm-10" style="margin-top: 10px;">
+                <select id="SurveyStatus" class="form-control">
+                    <option value="0">Chưa khảo sát</option>
+                    <option value="1">Đã khảo sát</option>
                 </select>
             </div>
             <div class="col-sm-10" style="margin-top: 10px;">
@@ -73,7 +80,8 @@
         $("#FilterSV").click(function () {
             var selectCtdt = $("#MaCTDT").val();
             var selectPks = $("#MaPKS").val();
-            LoadData(1, selectCtdt, selectPks);
+            var surveyStatus = $("#SurveyStatus").val();
+            LoadData(1, selectCtdt, selectPks, surveyStatus);
         });
 
         $("#ExportExcel").click(function () {
@@ -96,10 +104,12 @@
                 if (result.dismiss === Swal.DismissReason.timer) {
                     var selectCtdt = $("#MaCTDT").val();
                     var selectPks = $("#MaPKS").val();
-                    window.location = '/ThongKeKhaoSat/ExportToExcel?ctdt=' + selectCtdt + '&survey=' + selectPks;
+                    var surveyStatus = $("#SurveyStatus").val();
+                    window.location = '/Admin/ThongKeKhaoSat/ExportToExcel?ctdt=' + selectCtdt + '&survey=' + selectPks + '&completed=' + (surveyStatus == "1");
                 }
             });
         });
+
 
         $(document).on("click", ".page-link", function () {
             var page = $(this).data("page");
@@ -107,16 +117,17 @@
                 currentPage = page;
                 var selectCtdt = $("#MaCTDT").val();
                 var selectPks = $("#MaPKS").val();
-                LoadData(currentPage, selectCtdt, selectPks);
+                var surveyStatus = $("#SurveyStatus").val();
+                LoadData(currentPage, selectCtdt, selectPks, surveyStatus);
             }
         });
     });
 
-    function LoadData(pageNumber, ctdt, survey) {
+    function LoadData(pageNumber, ctdt, survey, completed) {
         $.ajax({
-            url: '/ThongKeKhaoSat/LoadSVChuaKhaoSat',
+            url: '/Admin/ThongKeKhaoSat/LoadSVChuaKhaoSat',
             type: 'GET',
-            data: { pageNumber: pageNumber, pageSize: 10, ctdt: ctdt, survey: survey },
+            data: { pageNumber: pageNumber, pageSize: 10, ctdt: ctdt, survey: survey, completed: completed == "1" },
             success: function (res) {
                 var items = res.data;
                 totalPages = res.totalPages;

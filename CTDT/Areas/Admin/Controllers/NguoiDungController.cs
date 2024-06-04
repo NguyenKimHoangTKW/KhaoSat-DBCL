@@ -80,6 +80,41 @@ namespace CTDT.Areas.Admin.Controllers
                 return Json(new { status = "Load dữ liệu thất bại" }, JsonRequestBehavior.AllowGet);
             }
         }
+        [HttpPost]
+        public ActionResult Add(users us)
+        {
+            var status = "";
+            var success = false;
+
+            if (ModelState.IsValid)
+            {
+                DateTime now = DateTime.UtcNow;
+                if (string.IsNullOrEmpty(us.email))
+                {
+                    status = "Vui lòng nhập địa chỉ Email";
+                }
+                else if (db.users.SingleOrDefault(t => t.email == us.email) != null)
+                {
+                    status = "Email đang bị trùng, vui lòng nhập lại email mới";
+                }
+                else
+                {
+                    int unixTimestamp = (int)(now.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+                    us.ngaytao = unixTimestamp;
+                    us.ngaycapnhat = unixTimestamp;
+                    db.users.Add(us);
+                    db.SaveChanges();
+                    status = "Thêm mới tài khoản thành công";
+                    success = true;
+                }
+            }
+            else
+            {
+                status = "Dữ liệu không hợp lệ";
+            }
+
+            return Json(new { status = status, success = success }, JsonRequestBehavior.AllowGet);
+        }
 
         [HttpPost]
         public ActionResult Edit(users us)

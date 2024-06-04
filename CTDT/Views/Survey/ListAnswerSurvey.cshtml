@@ -6,16 +6,17 @@
 <div style="padding-top: 50px; padding-bottom: 70px;">
     <div class="container">
         <div class="row">
-            <div class="col-md-12 columns">
+            <div class="col-md-12">
                 <div class="row justify-content-center">
                     <div class="col-md-12 text-center">
                         <h2 class="section-title">
                             DANH SÁCH CHI TIẾT PHIẾU KHẢO SÁT
                         </h2>
+
                     </div>
                     <div class="row justify-content-center">
                         <div class="table-responsive">
-                            <table class="table table-striped align-middle mb-0 bg-white custom-table">
+                            <table class="table table-striped table-bordered align-middle mb-0 bg-white custom-table">
                                 <thead class="bg-primary text-white">
                                     <tr>
                                         <th>STT</th>
@@ -37,27 +38,6 @@
         </div>
     </div>
 </div>
-
-<style>
-    .custom-table {
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        overflow: hidden;
-        margin-bottom: 20px;
-    }
-    .custom-table thead {
-        background-color: #007bff;
-        color: white;
-    }
-
-    .custom-table th, .custom-table td {
-        padding: 12px 15px;
-    }
-
-    .custom-table tbody tr {
-        transition: background-color 0.3s, font-weight 0.3s;
-    }
-</style>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
@@ -96,7 +76,7 @@
                         html += "    </td>";
                         html += "    <td>" + formattedDate1 + "</td>";
                         html += "    <td>";
-                        html += "        <button type='button' class='btn btn-link btn-sm btn-rounded'>";
+                        html += "        <button onclick=\"window.location.href='/Survey/AnswerPKS?id=" + items[i].MaPhieu + "'\" type='button' class='btn btn-link btn-sm btn-rounded'>";
                         html += "            Xem chi tiết câu hỏi";
                         html += "        </button>";
                         html += "    </td>";

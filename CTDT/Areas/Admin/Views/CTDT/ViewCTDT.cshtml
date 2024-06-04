@@ -197,7 +197,7 @@
 
     function LoadData(pageNumber, keyword) {
         $.ajax({
-            url: '/CTDT/LoadDataCTDT',
+            url: '/Admin/CTDT/LoadDataCTDT',
             type: 'GET',
             data: { pageNumber: pageNumber, pageSize: 10, keyword: keyword },
             success: function (res) {
@@ -269,7 +269,7 @@
         var ten_ctdt = $("#ten_ctdt").val().trim();
         var MaKhoa = $("#MaKhoa").val().trim();
         $.ajax({
-            url: '/CTDT/Add',
+            url: '/Admin/CTDT/Add',
             type: 'POST',
             dataType: 'JSON',
             contentType: "application/json; charset=utf-8",
@@ -303,7 +303,7 @@
 
         $.ajax({
             type: 'POST',
-            url: '/CTDT/Edit',
+            url: '/Admin/CTDT/Edit',
             dataType: 'JSON',
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(ctdt),
@@ -317,7 +317,7 @@
     function DelCTDT(id) {
         $.ajax({
             type: 'POST',
-            url: '/CTDT/Delete',
+            url: '/Admin/CTDT/Delete',
             data: { id: id },
             success: function (response) {
                 alert(response.status);

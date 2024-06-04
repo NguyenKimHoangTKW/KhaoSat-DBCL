@@ -24,13 +24,24 @@ namespace CTDT.Areas.CTDT.Controllers
             return View();
         }
         [HttpGet]
-        public ActionResult LoadSVChuaKhaoSat(int pageNumber = 1, int pageSize = 10, int survey = 0)
+        public ActionResult LoadSVChuaKhaoSat(int pageNumber = 1, int pageSize = 10, int survey = 0, bool completed = false)
         {
             var user = SessionHelper.GetUser();
-            var query = db.sinhvien.Where(x => x.lop.ctdt.id_ctdt == user.id_ctdt).AsQueryable();
+            var query = db.sinhvien.Where(x=> x.lop.ctdt.id_ctdt == user.id_ctdt).AsQueryable();
 
+            var totalRecords = query.Count();
+
+            if (completed)
+            {
+                query = query.Where(sv => db.answer_response.Any(aw => aw.id_sv == sv.id_sv && (survey == 0 || aw.surveyID == survey)));
+            }
+            else
+            {
+                query = query.Where(sv => !db.answer_response.Any(aw => aw.id_sv == sv.id_sv && (survey == 0 || aw.surveyID == survey)));
+            }
+
+            var filteredRecords = query.Count();
             var GetSV = query
-                .Where(sv => !db.answer_response.Any(aw => aw.id_sv == sv.id_sv && (survey == 0 || aw.surveyID == survey)))
                 .OrderBy(l => l.id_sv)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
@@ -42,21 +53,29 @@ namespace CTDT.Areas.CTDT.Controllers
                     NgaySinh = x.ngaysinh.ToString("yyyy-MM-dd"),
                     SDT = x.sodienthoai,
                     CTDT = x.lop.ctdt.ten_ctdt,
-                    Lop = x.lop.ma_lop
+                    Lop = x.lop.ma_lop,
                 })
                 .ToList();
 
-            var filteredRecords = query.Count(sv => !db.answer_response.Any(aw => aw.id_sv == sv.id_sv && (survey == 0 || aw.surveyID == survey)));
             var totalPages = (int)Math.Ceiling((double)filteredRecords / pageSize);
 
             return Json(new { data = GetSV, totalPages = totalPages }, JsonRequestBehavior.AllowGet);
         }
-        public ActionResult ExportToExcel(int survey = 0)
+        public ActionResult ExportToExcel(int survey = 0, bool completed = false)
         {
             var user = SessionHelper.GetUser();
             var query = db.sinhvien.Where(x => x.lop.ctdt.id_ctdt == user.id_ctdt).AsQueryable();
+
+            if (completed)
+            {
+                query = query.Where(sv => db.answer_response.Any(aw => aw.id_sv == sv.id_sv && (survey == 0 || aw.surveyID == survey)));
+            }
+            else
+            {
+                query = query.Where(sv => !db.answer_response.Any(aw => aw.id_sv == sv.id_sv && (survey == 0 || aw.surveyID == survey)));
+            }
+
             var GetSV = query
-                .Where(sv => !db.answer_response.Any(aw => aw.id_sv == sv.id_sv && (survey == 0 || aw.surveyID == survey)))
                 .OrderBy(l => l.id_sv)
                 .AsEnumerable()
                 .Select(x => new
@@ -109,10 +128,11 @@ namespace CTDT.Areas.CTDT.Controllers
                 worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
 
                 string timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
-                string fileName = $"SinhVienChuaKhaoSat_{timestamp}.xlsx";
+                string status = completed ? "DoiTuongDaKhaoSat" : "DoiTuongChuaKhaoSat";
+                string fileName = $"{status}_{timestamp}.xlsx";
                 string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
-                string folderPath = Server.MapPath("~/App_Data/SinhVienChuaKhaoSat-CTDT");
+                string folderPath = Server.MapPath("~/App_Data/DoiTuongKhaoSat-CTDT");
                 if (!Directory.Exists(folderPath))
                 {
                     Directory.CreateDirectory(folderPath);
