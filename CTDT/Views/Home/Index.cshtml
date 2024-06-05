@@ -1,6 +1,8 @@
-﻿@{
+﻿@using CTDT.Helper
+@{
     ViewBag.Title = "Trung tâm Đảm Bảo Chất Lượng - Trường Đại Học Thủ Dầu Một";
-    var user = Session["UserInfoSessionKey"] as CTDT.Models.users;
+    var user = SessionHelper.GetUser();
+    var isAuthenticated = SessionHelper.IsUserLoggedIn();
 }
 <div style="padding-top: 50px; padding-bottom: 70px;">
     <div class="container">
@@ -12,6 +14,7 @@
                     </div>
                     <div id="showdata" class="row justify-content-center">
 
+
                     </div>
                 </div>
             </div>
@@ -20,11 +23,13 @@
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
+    var isAuthenticated = @Html.Raw(Json.Encode(isAuthenticated));
     document.addEventListener('DOMContentLoaded', function () {
         LoadData();
     });
 
     function LoadData() {
+        var userType = @((user != null) ? user.id_typeusers : 0);
         var xhr = new XMLHttpRequest();
         xhr.open('GET', '/Home/LoadHeDaoTao', true);
 
@@ -36,7 +41,7 @@
                         var res = JSON.parse(xhr.responseText);
                         var items = res.data;
                         var html = "";
-
+                        var surveyUrl = "";
                         if (items.length === 0) {
                             html += "<div class='col-lg-12 survey-item'>";
                             html += "<div class='card survey-card border-0'>";
@@ -50,18 +55,50 @@
                                 html += "<div class='col-sm-6 mb-4'>";
                                 html += "<div class='card feature-card'>";
                                 html += "<div class='card-body'>";
-                                html += "<a href='#' class='feature-icon'>";
-                                html += "<i class='fa fa-check-square-o' aria-hidden='true'></i>";
+                                html += "<a href='#'>";
+                                html += "<img src='https://tdmu.edu.vn/hinh/Icon.png' class='feature-icon' alt='Icon' style='width: 50px;'>";
                                 html += "</a>";
-                                html += "<h5 class='card-title'>KHẢO SÁT CÁC BÊN LIÊN QUAN - <span style='color: #a604f6;'>HỆ ĐÀO TẠO " + items[i].TenHDT + "</span></h5>";
+                                if (items[i].TenHDT == "ĐẠI HỌC") {
+                                    html += "<h5 class='card-title'>KHẢO SÁT CÁC BÊN LIÊN QUAN - <span style='color: red;'>DÀNH CHO HỆ ĐÀO TẠO " + items[i].TenHDT + "</span></h5>";
+                                } else {
+                                    html += "<h5 class='card-title'>KHẢO SÁT CÁC BÊN LIÊN QUAN - <span style='color: blue;'>DÀNH CHO HỆ ĐÀO TẠO " + items[i].TenHDT + "</span></h5>";
+                                }
+                                surveyUrl = '/Home/PhieuKhaoSat?id=' + items[i].MaHDT;
                                 html += "<p class='card-text'>Khảo sát ý kiến, đánh giá, góp ý của Cán Bộ Viên Chức Giảng viên, Sinh viên, Cựu Sinh Viên, Doanh Nghiệp,...</p>";
-                                html += "<a href='/Home/PhieuKhaoSat?id=" + items[i].MaHDT + "'>";
-                                html += "<button class='btn btn-primary'>Đi đến</button>";
-                                html += "</a>";
+                                html += "<button class='btn btn-primary' onclick='handleSurveyClick(\"" + surveyUrl + "\")'>Đi đến</button>";
                                 html += "</div>";
                                 html += "</div>";
                                 html += "</div>";
+
                             }
+                        }
+                        if (userType  !== 1) {
+                            // Dành cho CTDT
+                            html += "<div class='col-sm-6 mb-4'>";
+                            html += "<div class='card feature-card'>";
+                            html += "<div class='card-body'>";
+                            html += "<a href='#' class='feature-icon'>";
+                            html += "<img src='https://tdmu.edu.vn/hinh/Icon.png' class='feature-icon' alt='Icon' style='width: 50px;'>";
+                            html += "</a>";
+                            html += "<h5 class='card-title'>KHẢO SÁT CÁC BÊN LIÊN QUAN - <span style='color: #FF00FF;'>DÀNH CHO CHƯƠNG TRÌNH ĐÀO TẠO</span></h5>";
+                            html += "<p class='card-text'>Thống kê kết quả khảo sát ý kiến, đánh giá, góp ý của Cán Bộ Viên Chức Giảng viên, Sinh viên, Cựu Sinh Viên, Doanh Nghiệp theo Chương trình đào tạo ...</p>";
+                            html += "<button class='btn btn-primary' onclick='handleSurveyClick(\"" + surveyUrl + "\")'>Đi đến</button>";
+                            html += "</div>";
+                            html += "</div>";
+                            html += "</div>";
+                            // Dành cho Admin
+                            html += "<div class='col-sm-6 mb-4'>";
+                            html += "<div class='card feature-card'>";
+                            html += "<div class='card-body'>";
+                            html += "<a href='#' class='feature-icon'>";
+                            html += "<img src='https://tdmu.edu.vn/hinh/Icon.png' class='feature-icon' alt='Icon' style='width: 50px;'>";
+                            html += "</a>";
+                            html += "<h5 class='card-title'>KHẢO SÁT CÁC BÊN LIÊN QUAN - <span style='color: #009900;'>DÀNH CHO QUẢN TRỊ VIÊN</span></h5>";
+                            html += "<p class='card-text'>Thống kê, Quản lý kết quả khảo sát ý kiến, đánh giá, góp ý của Cán Bộ Viên Chức Giảng viên, Sinh viên, Cựu Sinh Viên, Doanh Nghiệp thực hiện khảo sát...</p>";
+                            html += "<button class='btn btn-primary' onclick='handleSurveyClick(\"" + surveyUrl + "\")'>Đi đến</button>";
+                            html += "</div>";
+                            html += "</div>";
+                            html += "</div>";
                         }
                         document.getElementById('showdata').innerHTML = html;
                     } else {
@@ -79,5 +116,25 @@
 
         xhr.send();
     }
+    function handleSurveyClick(url) {
+        if (isAuthenticated) {
+            window.location.href = url;
+        } else {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Bạn chưa đăng nhập',
+                text: 'Bạn vui lòng đăng nhập để xác thực',
+                confirmButtonText: 'Đăng nhập'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('externalLoginForm').submit();
+                }
+            });
+        }
+    }
 </script>
 
+<form id="externalLoginForm" action="@Url.Action("ExternalLogin", "Login")" method="post" class="form-horizontal" role="form" style="display: none;">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="provider" value="Google" />
+</form>

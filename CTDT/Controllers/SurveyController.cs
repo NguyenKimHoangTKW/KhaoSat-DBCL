@@ -69,15 +69,14 @@ namespace CTDT.Controllers
         [HttpGet]
         public ActionResult LoadSurveyForm(int iduser)
         {
-            var query = db.survey.AsQueryable();
+            var query = db.answer_response.Where(aw => aw.id_users == iduser).AsQueryable();
 
             var ListSurveyForm = query
-                .Where(sr => db.answer_response.Any(x =>x.id_users == iduser))
                 .Select(f => new
                 {
                     MaPhieu = f.surveyID,
-                    TieuDePhieu = f.surveyTitle,
-                    MoTaPhieu = f.surveyDescription,
+                    TieuDePhieu = f.survey.surveyTitle,
+                    MoTaPhieu = f.survey.surveyDescription,
                 }).ToList();
             return Json(new { data = ListSurveyForm, status = "Load dữ liệu thành công" }, JsonRequestBehavior.AllowGet);
         }
@@ -88,10 +87,10 @@ namespace CTDT.Controllers
         }
 
         [HttpGet]
-        public ActionResult LoadListAnswerSurvey(int id)
+        public ActionResult LoadListAnswerSurvey(int id, int iduser)
         {
             var listsurvey = db.answer_response
-                .Where(x => x.surveyID == id)
+                .Where(x => x.surveyID == id && x.id_users == iduser)
                 .Select(f => new
                 {
                     TenCTDT = f.ctdt.ten_ctdt,

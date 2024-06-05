@@ -61,15 +61,11 @@
                         html += "</a>";
                         html += "<h5 class='card-title'>" + items[i].TenPKS + "</h5>";
                         html += "<p class='card-text'>" + truncatedText + "</p>";
-
-                        var surveyUrl = "";
                         if (items[i].TenLoaiKhaoSat == "DOANH NGHIỆP") {
-                            surveyUrl = '/Home/XacThucCTDT?id=' + items[i].MaPhieu;
+                            html += "<button class='btn btn-primary' onclick='window.location=\"/Home/XacThucCTDT?id=" + items[i].MaPhieu + "\"'>Thực hiện khảo sát</button>";
                         } else if (items[i].TenLoaiKhaoSat == "CỰU SINH VIÊN") {
-                            surveyUrl = '/Home/XacThuc?id=' + items[i].MaPhieu;
-                        }
-
-                        html += "<button class='btn btn-primary' onclick='handleSurveyClick(\"" + surveyUrl + "\")'>Thực hiện khảo sát</button>";
+                            html += "<button class='btn btn-primary' onclick='window.location=\"/Home/XacThuc?id=" + items[i].MaPhieu + "\"'>Thực hiện khảo sát</button>";
+                        }  
                         html += "</div>";
                         html += "</div>";
                         html += "</div>";

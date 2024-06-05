@@ -1,6 +1,8 @@
-﻿@{
+﻿@using CTDT.Helper
+@{
     ViewBag.Title = "Danh sách chi tiết phiếu khảo sát - TDMU";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var user = SessionHelper.GetUser();
 }
 
 <div style="padding-top: 50px; padding-bottom: 70px;">
@@ -12,9 +14,11 @@
                         <h2 class="section-title">
                             DANH SÁCH CHI TIẾT PHIẾU KHẢO SÁT
                         </h2>
-
                     </div>
-                    <div class="row justify-content-center">
+                </div>
+                <button class="btn btn-secondary btn-tone mb-4" onclick="window.location.href='/Survey/SurveyForm?iduser=@user.id_users'">Quay trở về</button>
+                <div class="row justify-content-center">
+                    <div class="col-md-12">
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered align-middle mb-0 bg-white custom-table">
                                 <thead class="bg-primary text-white">
@@ -47,7 +51,7 @@
 
     function LoadData() {
         $.ajax({
-            url: '/Survey/LoadListAnswerSurvey?id=' + @Html.Raw(ViewBag.id),
+            url: '/Survey/LoadListAnswerSurvey?id=@Html.Raw(ViewBag.id)&iduser=@user.id_users',
             type: 'GET',
             success: function (res) {
                 var items = res.data;
