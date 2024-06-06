@@ -25,8 +25,13 @@ public class LoginController : Controller
     [ValidateAntiForgeryToken]
     public ActionResult ExternalLogin(string provider, string returnUrl)
     {
-        // Request a redirect to the external login provider
-        return new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Login", new { ReturnUrl = returnUrl }));
+        var properties = new AuthenticationProperties
+        {
+            RedirectUri = Url.Action("ExternalLoginCallback", "Login", new { ReturnUrl = returnUrl })
+        };
+
+        HttpContext.GetOwinContext().Authentication.Challenge(properties, provider);
+        return new HttpUnauthorizedResult();
     }
 
     // GET: /Login/ExternalLoginCallback
@@ -35,25 +40,27 @@ public class LoginController : Controller
         var loginInfo = HttpContext.GetOwinContext().Authentication.GetExternalLoginInfo();
         if (loginInfo == null)
         {
-            return RedirectToAction("Login");
+            return RedirectToAction("Index","Home");
         }
 
-        // Sign in the user with this external login provider if the user already has a login
+        // Log the external identity claims
+        var externalClaims = loginInfo.ExternalIdentity.Claims.ToList();
+        foreach (var claim in externalClaims)
+        {
+            System.Diagnostics.Debug.WriteLine($"Claim Type: {claim.Type}, Value: {claim.Value}");
+        }
+
+        // Continue with your login process...
         var identity = new ClaimsIdentity(loginInfo.ExternalIdentity.Claims, DefaultAuthenticationTypes.ApplicationCookie);
         HttpContext.GetOwinContext().Authentication.SignIn(new AuthenticationProperties { IsPersistent = false }, identity);
 
-        // Extract user information from loginInfo
         var email = loginInfo.ExternalIdentity.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
         var avatarUrl = loginInfo.ExternalIdentity.Claims.FirstOrDefault(c => c.Type == "urn:google:picture")?.Value;
-
-        // Get the user's IP address
         string userIpAddress = GetClientIpAddress();
 
-        // Check if the user already exists in the database
         var user = db.users.FirstOrDefault(u => u.email == email);
         if (user == null)
         {
-            // Create a new user record
             user = new users
             {
                 name = loginInfo.ExternalIdentity.Name,
@@ -72,7 +79,6 @@ public class LoginController : Controller
         }
         else
         {
-            // Update the user's last login IP address and avatar URL
             user.userIpAddress = userIpAddress;
             user.ngaycapnhat = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
             user.avatarUrl = avatarUrl;
@@ -80,7 +86,6 @@ public class LoginController : Controller
             db.SaveChanges();
         }
 
-        // Store user information in session
         SessionHelper.SetUser(user);
         if (user.id_typeusers == 3)
         {
@@ -93,7 +98,6 @@ public class LoginController : Controller
         }
         return RedirectToLocal(returnUrl);
     }
-
     private string GetClientIpAddress()
     {
         string ipAddress = Request.ServerVariables["HTTP_X_FORWARDED_FOR"];

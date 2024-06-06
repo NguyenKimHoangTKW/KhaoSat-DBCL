@@ -110,16 +110,16 @@
       <PropertyRef Name="id_users" />
     </Key>
     <Property Name="id_users" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="name" Type="nvarchar" MaxLength="50" />
-    <Property Name="email" Type="nvarchar" MaxLength="100" Nullable="false" />
-    <Property Name="username" Type="nvarchar" MaxLength="50" />
-    <Property Name="password" Type="nvarchar" MaxLength="255" />
-    <Property Name="id_typeusers" Type="int" Nullable="false" />
-    <Property Name="ngaycapnhat" Type="int" Nullable="false" />
-    <Property Name="ngaytao" Type="int" Nullable="false" />
+    <Property Name="name" Type="nvarchar(max)" />
+    <Property Name="email" Type="nvarchar(max)" />
+    <Property Name="username" Type="nvarchar(max)" />
+    <Property Name="password" Type="nvarchar(max)" />
+    <Property Name="id_typeusers" Type="int" />
+    <Property Name="ngaycapnhat" Type="int" />
+    <Property Name="ngaytao" Type="int" />
     <Property Name="id_ctdt" Type="int" />
-    <Property Name="userIpAddress" Type="nvarchar" MaxLength="50" />
-    <Property Name="avatarUrl" Type="nvarchar" MaxLength="150" />
+    <Property Name="userIpAddress" Type="nvarchar(max)" />
+    <Property Name="avatarUrl" Type="nvarchar(max)" />
   </EntityType>
   <Association Name="FK_answer_response_ctdt">
     <End Role="ctdt" Type="Self.ctdt" Multiplicity="0..1" />
@@ -254,7 +254,7 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_users_typeusers">
-    <End Role="typeusers" Type="Self.typeusers" Multiplicity="1" />
+    <End Role="typeusers" Type="Self.typeusers" Multiplicity="0..1" />
     <End Role="users" Type="Self.users" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="typeusers">

@@ -191,16 +191,16 @@
       <PropertyRef Name="id_users" />
     </Key>
     <Property Name="id_users" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="email" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-    <Property Name="username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="password" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-    <Property Name="id_typeusers" Type="Int32" Nullable="false" />
-    <Property Name="ngaycapnhat" Type="Int32" Nullable="false" />
-    <Property Name="ngaytao" Type="Int32" Nullable="false" />
+    <Property Name="name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="username" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="password" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="id_typeusers" Type="Int32" />
+    <Property Name="ngaycapnhat" Type="Int32" />
+    <Property Name="ngaytao" Type="Int32" />
     <Property Name="id_ctdt" Type="Int32" />
-    <Property Name="userIpAddress" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="avatarUrl" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+    <Property Name="userIpAddress" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="avatarUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <NavigationProperty Name="answer_response" Relationship="dbSurveyModel.FK_answer_response_users" FromRole="users" ToRole="answer_response" />
     <NavigationProperty Name="ctdt" Relationship="dbSurveyModel.FK_users_ctdt" FromRole="users" ToRole="ctdt" />
     <NavigationProperty Name="survey" Relationship="dbSurveyModel.FK_survey_users" FromRole="users" ToRole="survey" />
@@ -339,7 +339,7 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_users_typeusers">
-    <End Type="dbSurveyModel.typeusers" Role="typeusers" Multiplicity="1" />
+    <End Type="dbSurveyModel.typeusers" Role="typeusers" Multiplicity="0..1" />
     <End Type="dbSurveyModel.users" Role="users" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="typeusers">

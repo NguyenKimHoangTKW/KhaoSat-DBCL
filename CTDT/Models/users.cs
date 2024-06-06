@@ -26,9 +26,9 @@ namespace CTDT.Models
         public string email { get; set; }
         public string username { get; set; }
         public string password { get; set; }
-        public int id_typeusers { get; set; }
-        public int ngaycapnhat { get; set; }
-        public int ngaytao { get; set; }
+        public Nullable<int> id_typeusers { get; set; }
+        public Nullable<int> ngaycapnhat { get; set; }
+        public Nullable<int> ngaytao { get; set; }
         public Nullable<int> id_ctdt { get; set; }
         public string userIpAddress { get; set; }
         public string avatarUrl { get; set; }

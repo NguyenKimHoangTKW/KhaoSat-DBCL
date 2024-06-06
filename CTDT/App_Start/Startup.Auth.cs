@@ -24,11 +24,11 @@ namespace CTDT.App_Start
             // Enable external Google authentication
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
-            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions
+            var googleOptions = new GoogleOAuth2AuthenticationOptions
             {
                 ClientId = "183100229430-394rpj38v42o4kfgum7hvnjplnv3ebrl.apps.googleusercontent.com",
                 ClientSecret = "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",
-                Provider = new GoogleOAuth2AuthenticationProvider()
+                Provider = new GoogleOAuth2AuthenticationProvider
                 {
                     OnAuthenticated = context =>
                     {
@@ -36,7 +36,14 @@ namespace CTDT.App_Start
                         return Task.FromResult(0);
                     }
                 }
-            });
+            };
+
+            // Add scopes to the options
+            googleOptions.Scope.Add("openid");
+            googleOptions.Scope.Add("profile");
+            googleOptions.Scope.Add("email");
+
+            app.UseGoogleAuthentication(googleOptions);
         }
     }
 }

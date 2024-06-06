@@ -3,8 +3,16 @@
   "WorkspaceRootPath": "D:\\TTDBCL\\KhaoSat-DBCL\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{D6CEE176-D9C5-454D-9B4D-6C2D46C88776}|CTDT\\CTDT.csproj|d:\\ttdbcl\\khaosat-dbcl\\ctdt\\views\\shared\\_footerlayout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{D6CEE176-D9C5-454D-9B4D-6C2D46C88776}|CTDT\\CTDT.csproj|solutionrelative:ctdt\\views\\shared\\_footerlayout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{D6CEE176-D9C5-454D-9B4D-6C2D46C88776}|CTDT\\CTDT.csproj|d:\\ttdbcl\\khaosat-dbcl\\ctdt\\models\\ctdtmodel.edmx||{C99AEA30-8E36-4515-B76F-496F5A48A6AA}|",
+      "RelativeMoniker": "D:0:0:{D6CEE176-D9C5-454D-9B4D-6C2D46C88776}|CTDT\\CTDT.csproj|solutionrelative:ctdt\\models\\ctdtmodel.edmx||{C99AEA30-8E36-4515-B76F-496F5A48A6AA}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D6CEE176-D9C5-454D-9B4D-6C2D46C88776}|CTDT\\CTDT.csproj|d:\\ttdbcl\\khaosat-dbcl\\ctdt\\controllers\\logincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D6CEE176-D9C5-454D-9B4D-6C2D46C88776}|CTDT\\CTDT.csproj|solutionrelative:ctdt\\controllers\\logincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D6CEE176-D9C5-454D-9B4D-6C2D46C88776}|CTDT\\CTDT.csproj|d:\\ttdbcl\\khaosat-dbcl\\ctdt\\app_start\\startup.auth.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D6CEE176-D9C5-454D-9B4D-6C2D46C88776}|CTDT\\CTDT.csproj|solutionrelative:ctdt\\app_start\\startup.auth.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -19,14 +27,39 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "_FooterLayout.cshtml",
-              "DocumentMoniker": "D:\\TTDBCL\\KhaoSat-DBCL\\CTDT\\Views\\Shared\\_FooterLayout.cshtml",
-              "RelativeDocumentMoniker": "CTDT\\Views\\Shared\\_FooterLayout.cshtml",
-              "ToolTip": "D:\\TTDBCL\\KhaoSat-DBCL\\CTDT\\Views\\Shared\\_FooterLayout.cshtml",
-              "RelativeToolTip": "CTDT\\Views\\Shared\\_FooterLayout.cshtml",
-              "ViewState": "AQIAADAAAAAAAAAAAAAAAE4AAAAMAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-06-05T15:56:53.301Z",
+              "Title": "CTDTModel.edmx [Diagram1]",
+              "DocumentMoniker": "D:\\TTDBCL\\KhaoSat-DBCL\\CTDT\\Models\\CTDTModel.edmx",
+              "RelativeDocumentMoniker": "CTDT\\Models\\CTDTModel.edmx",
+              "ToolTip": "D:\\TTDBCL\\KhaoSat-DBCL\\CTDT\\Models\\CTDTModel.edmx [Diagram1]",
+              "RelativeToolTip": "CTDT\\Models\\CTDTModel.edmx [Diagram1]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001116|",
+              "WhenOpened": "2024-06-06T07:55:10.397Z",
+              "EditorCaption": " [Diagram1]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Startup.Auth.cs",
+              "DocumentMoniker": "D:\\TTDBCL\\KhaoSat-DBCL\\CTDT\\App_Start\\Startup.Auth.cs",
+              "RelativeDocumentMoniker": "CTDT\\App_Start\\Startup.Auth.cs",
+              "ToolTip": "D:\\TTDBCL\\KhaoSat-DBCL\\CTDT\\App_Start\\Startup.Auth.cs",
+              "RelativeToolTip": "CTDT\\App_Start\\Startup.Auth.cs",
+              "ViewState": "AQIAAAkAAAAAAAAAAAAAwAwAAAAYAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-06T07:18:20.117Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "LoginController.cs",
+              "DocumentMoniker": "D:\\TTDBCL\\KhaoSat-DBCL\\CTDT\\Controllers\\LoginController.cs",
+              "RelativeDocumentMoniker": "CTDT\\Controllers\\LoginController.cs",
+              "ToolTip": "D:\\TTDBCL\\KhaoSat-DBCL\\CTDT\\Controllers\\LoginController.cs",
+              "RelativeToolTip": "CTDT\\Controllers\\LoginController.cs",
+              "ViewState": "AQIAABUAAAAAAAAAAAAswCUAAAAEAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-06T07:08:31.458Z",
               "EditorCaption": ""
             }
           ]
