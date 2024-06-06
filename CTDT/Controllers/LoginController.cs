@@ -87,15 +87,15 @@ public class LoginController : Controller
         }
 
         SessionHelper.SetUser(user);
-        if (user.id_typeusers == 3)
-        {
-            return RedirectToAction("TKSVCKS", "ThongKeKhaoSat", new { area = "CTDT" });
-        }
+        //if (user.id_typeusers == 3)
+        //{
+        //    return RedirectToAction("TKSVCKS", "ThongKeKhaoSat", new { area = "CTDT" });
+        //}
 
-        if (user.id_typeusers == 2)
-        {
-            return RedirectToAction("Index", "PhieuKhaoSat", new { area = "Admin" });
-        }
+        //if (user.id_typeusers == 2)
+        //{
+        //    return RedirectToAction("Index", "PhieuKhaoSat", new { area = "Admin" });
+        //}
         return RedirectToLocal(returnUrl);
     }
     private string GetClientIpAddress()

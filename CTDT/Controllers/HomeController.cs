@@ -97,12 +97,28 @@ namespace CTDT.Controllers
             return Json(sinhvien, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        public ActionResult SaveDataXacThucCTDT( string ctdt, string sv)
+        public ActionResult SaveDataXacThucCTDT(string ctdt, string sv)
         {
             try
             {
+                // Save the data to the session
                 Session["XTCTDT"] = ctdt;
                 Session["XTSV"] = sv;
+
+                // Convert ctdt and sv to integers
+                if (int.TryParse(ctdt, out int intCtdt) && int.TryParse(sv, out int intSv))
+                {
+                    var surveyResponse = db.answer_response.SingleOrDefault(x => x.id_ctdt == intCtdt && x.id_sv == intSv);
+                    if (surveyResponse != null)
+                    {
+                        return Json(new { success = false, message = "Sinh viên này đã thực hiện khảo sát" });
+                    }
+                }
+                else
+                {
+                    return Json(new { success = false, message = "Dữ liệu đầu vào không hợp lệ" });
+                }
+
                 int idPhieu = Convert.ToInt32(Session["IDPhieu"]);
                 return Json(new { success = true, idPhieu = idPhieu });
             }
@@ -112,18 +128,57 @@ namespace CTDT.Controllers
             }
         }
         [HttpPost]
+        public ActionResult SaveDataXacThucCTDTWithoutSV(string ctdt)
+        {
+            var user = SessionHelper.GetUser();
+            try
+            {
+                Session["XTCTDT"] = ctdt;
+
+                if (int.TryParse(ctdt, out int intCtdt))
+                {
+                    var surveyResponse = db.answer_response.FirstOrDefault(x => x.id_ctdt == intCtdt && x.id_users == user.id_users);
+                    if (surveyResponse != null)
+                    {
+                        return Json(new { success = false, message = "Tài khoản này đã khảo sát chương trình đào tạo này rồi" });
+                    }
+                }
+                else
+                {
+                    return Json(new { success = false, message = "Dữ liệu đầu vào không hợp lệ" });
+                }
+
+                int idPhieu = Convert.ToInt32(Session["IDPhieu"]);
+                return Json(new { success = true, idPhieu = idPhieu });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpPost]
         public ActionResult GetSvIdByMssv(string mssv)
         {
             var student = db.sinhvien.SingleOrDefault(s => s.ma_sv == mssv);
             if (student != null)
             {
-                return Json(new { success = true, svId = student.id_sv, ctdt = student.lop.ctdt.id_ctdt });
+                var surveyResponse = db.answer_response.SingleOrDefault(r => r.id_sv == student.id_sv);
+                if (surveyResponse != null)
+                {
+                    return Json(new { success = false, message = "Sinh viên này đã thực hiện khảo sát" });
+                }
+                else
+                {
+                    return Json(new { success = true, svId = student.id_sv, ctdt = student.lop.ctdt.id_ctdt });
+                }
             }
             else
             {
                 return Json(new { success = false, message = "MSSV không tồn tại." });
             }
         }
+
         [HttpPost]
         public ActionResult ClearSession()
         {

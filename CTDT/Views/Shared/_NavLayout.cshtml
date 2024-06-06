@@ -38,8 +38,19 @@
                 </ul>
             </div>
         }
+        else
+        {
+            <a href="#" onclick="document.getElementById('externalLoginForm').submit();" class="nav-link" style="text-decoration: none; color: white; font-size: 1.7rem;">
+                <i class="fa-solid fa-user" style="padding-right: 10px; font-size:2rem;"></i>Tài khoản
+            </a>
+        }
         <form id="logoutForm" action="@Url.Action("Logout", "Login", new {area = ""})" method="post" style="display:none;">
             @Html.AntiForgeryToken()
         </form>
+        <form id="externalLoginForm" action="@Url.Action("ExternalLogin", "Login")" method="post" class="form-horizontal" role="form" style="display: none;">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="provider" value="Google" />
+        </form>
+
     </div>
 </nav>

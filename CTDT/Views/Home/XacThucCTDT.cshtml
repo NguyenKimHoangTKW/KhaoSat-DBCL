@@ -40,8 +40,7 @@
                             <div id="home" class="container tab-pane active" style="margin-left: 0">
                                 <div class="mt-4 p-5 text-black rounded" style="background-color: #E7E9EB!important">
                                     <div id="spinner-div" class="pt-5">
-                                        <div class="spinner-border text-primary" role="status">
-                                        </div>
+                                        <div class="spinner-border text-primary" role="status"></div>
                                     </div>
                                     <form id="form_xacthuc_ctdt" style="margin-bottom: 5px">
                                         <div class="mb-3">
@@ -86,6 +85,7 @@
         </div>
     </div>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
@@ -103,12 +103,11 @@
                 return;
             }
 
-            var khoa = $("#select2-xacthucctdt-khoa").val();
             var ctdt = $("#select2-xacthucctdt-ctdt").val();
             $.ajax({
                 type: "POST",
-                url: "@Url.Action("SaveDataXacThucCTDT", "Home")",
-                data: { khoa: khoa, ctdt: ctdt },
+                url: "@Url.Action("SaveDataXacThucCTDTWithoutSV", "Home")",
+                data: { ctdt: ctdt },
                 success: function (response) {
                     if (response.success) {
                         Swal.fire({
@@ -123,7 +122,7 @@
                         Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
-                            text: 'Có lỗi xảy ra khi lưu dữ liệu vào session: ' + response.message
+                            text: response.message
                         });
                     }
                 },
@@ -158,4 +157,3 @@
         $('.nav-tabs a[href="#' + tabID + '"]').tab('show');
     }
 </script>
-

@@ -29,9 +29,9 @@
     });
 
     function LoadData() {
-        const iduser = @Html.Raw(user.id_users);
+        const ids = '@string.Join(",", ViewBag.surveyIds)';
         $.ajax({
-            url: '/Survey/LoadSurveyForm?iduser=' + iduser,
+            url: '/Survey/LoadSurveyForm?ids=' + ids,
             type: 'GET',
             success: function (res) {
                 var items = res.data;

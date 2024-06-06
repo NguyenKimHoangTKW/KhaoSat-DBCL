@@ -218,29 +218,35 @@
             var ctdt = $("#select2-ctdt").val();
             var sv = $("#select2-sv").val();
             $.ajax({
-                type: "POST",
-                url: "@Url.Action("SaveDataXacThucCTDT", "Home")",
-                data: { ctdt: ctdt, sv: sv },
-                success: function (response) {
-                    if (response.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Xác thực thành công!',
-                            showConfirmButton: false,
-                            timer: 2000
-                        }).then(function () {
-                            window.location.href = "@Url.Action("Survey", "Survey")" + "?id=" + response.idPhieu;
-                        });
-                    }
-                },
-                error: function () {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'Có lỗi xảy ra khi gửi dữ liệu lên server!'
-                    });
-                }
+    type: "POST",
+    url: "@Url.Action("SaveDataXacThucCTDT", "Home")",
+    data: { ctdt: ctdt, sv: sv },
+    success: function (response) {
+        if (response.success) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Xác thực thành công!',
+                showConfirmButton: false,
+                timer: 2000
+            }).then(function () {
+                window.location.href = "@Url.Action("Survey", "Survey")" + "?id=" + response.idPhieu;
             });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: response.message
+            });
+        }
+    },
+    error: function () {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Có lỗi xảy ra khi gửi dữ liệu lên server!'
+        });
+    }
+});
     });
 
         $("#select2-khoa").change(function () {

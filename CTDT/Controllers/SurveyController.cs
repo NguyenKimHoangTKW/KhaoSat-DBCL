@@ -64,22 +64,26 @@ namespace CTDT.Controllers
         public ActionResult SurveyForm(int iduser)
         {
             var listsurvey = db.answer_response.Where(x => x.id_users == iduser).ToList();
+            var surveyIds = listsurvey.Select(x => x.surveyID).ToList();
+            ViewBag.surveyIds = surveyIds;
             return View(listsurvey);
         }
-        [HttpGet]
-        public ActionResult LoadSurveyForm(int iduser)
-        {
-            var query = db.answer_response.Where(aw => aw.id_users == iduser).AsQueryable();
 
-            var ListSurveyForm = query
+        [HttpGet]
+        public ActionResult LoadSurveyForm(string ids)
+        {
+            var surveyIds = ids.Split(',').Select(int.Parse).ToList();
+            var ListSurveyForm = db.survey
+                .Where(x => surveyIds.Contains(x.surveyID))
                 .Select(f => new
                 {
                     MaPhieu = f.surveyID,
-                    TieuDePhieu = f.survey.surveyTitle,
-                    MoTaPhieu = f.survey.surveyDescription,
+                    TieuDePhieu = f.surveyTitle,
+                    MoTaPhieu = f.surveyDescription,
                 }).ToList();
             return Json(new { data = ListSurveyForm, status = "Load dữ liệu thành công" }, JsonRequestBehavior.AllowGet);
         }
+
         public ActionResult ListAnswerSurvey(int id)
         {
             ViewBag.id = id;
