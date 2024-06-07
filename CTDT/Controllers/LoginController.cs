@@ -2,131 +2,76 @@
 using System.Web.Mvc;
 using Microsoft.Owin.Security;
 using System.Security.Claims;
-using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using CTDT.Models;
+using System.Linq;
 using System;
 using CTDT.Helper;
 
 public class LoginController : Controller
 {
     dbSurveyEntities db = new dbSurveyEntities();
-    private const string XsrfKey = "XsrfId";
-    private const string UserInfoSessionKey = "UserInfo";
+    private IAuthenticationManager AuthenticationManager => HttpContext.GetOwinContext().Authentication;
 
-    // GET: Login
-    public ActionResult Login()
+    [AllowAnonymous]
+    public ActionResult Login(string returnUrl)
     {
+        ViewBag.ReturnUrl = returnUrl;
         return View();
     }
 
-    // POST: /Login/ExternalLogin
     [HttpPost]
+    [AllowAnonymous]
     [ValidateAntiForgeryToken]
     public ActionResult ExternalLogin(string provider, string returnUrl)
     {
-        var properties = new AuthenticationProperties
-        {
-            RedirectUri = Url.Action("ExternalLoginCallback", "Login", new { ReturnUrl = returnUrl })
-        };
-
-        HttpContext.GetOwinContext().Authentication.Challenge(properties, provider);
-        return new HttpUnauthorizedResult();
+        return new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Login", new { ReturnUrl = returnUrl }));
     }
 
-    // GET: /Login/ExternalLoginCallback
-    public ActionResult ExternalLoginCallback(string returnUrl)
+    [AllowAnonymous]
+    public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
     {
-        var loginInfo = HttpContext.GetOwinContext().Authentication.GetExternalLoginInfo();
+        var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync();
         if (loginInfo == null)
         {
-            return RedirectToAction("Index","Home");
+            return RedirectToAction("Login");
         }
 
-        // Log the external identity claims
-        var externalClaims = loginInfo.ExternalIdentity.Claims.ToList();
-        foreach (var claim in externalClaims)
-        {
-            System.Diagnostics.Debug.WriteLine($"Claim Type: {claim.Type}, Value: {claim.Value}");
-        }
-
-        // Continue with your login process...
+        var email = loginInfo.Email;
+        var name = loginInfo.ExternalIdentity.FindFirstValue(ClaimTypes.Name);
+        var profilePictureClaim = loginInfo.ExternalIdentity.Claims.FirstOrDefault(c => c.Type == "picture");
+        var profilePictureUrl = profilePictureClaim?.Value;
+        DateTime now = DateTime.UtcNow;
+        // Create a claims identity and add the email claim
         var identity = new ClaimsIdentity(loginInfo.ExternalIdentity.Claims, DefaultAuthenticationTypes.ApplicationCookie);
-        HttpContext.GetOwinContext().Authentication.SignIn(new AuthenticationProperties { IsPersistent = false }, identity);
-
-        var email = loginInfo.ExternalIdentity.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-        var avatarUrl = loginInfo.ExternalIdentity.Claims.FirstOrDefault(c => c.Type == "urn:google:picture")?.Value;
-        string userIpAddress = GetClientIpAddress();
-
-        var user = db.users.FirstOrDefault(u => u.email == email);
+        identity.AddClaim(new Claim(ClaimTypes.Email, email));
+        var user = db.users.SingleOrDefault(u => u.email == email);
+        int unixTimestamp = (int)(now.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
         if (user == null)
         {
             user = new users
             {
-                name = loginInfo.ExternalIdentity.Name,
                 email = email,
-                username = null,
-                password = null,
+                name = name,
                 id_typeusers = 1,
-                ngaycapnhat = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds,
-                ngaytao = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds,
-                userIpAddress = userIpAddress,
-                avatarUrl = avatarUrl
+                ngaytao = unixTimestamp,
+                ngaycapnhat = unixTimestamp,
+                avatarUrl = profilePictureUrl
             };
-
             db.users.Add(user);
             db.SaveChanges();
         }
         else
         {
-            user.userIpAddress = userIpAddress;
-            user.ngaycapnhat = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
-            user.avatarUrl = avatarUrl;
-            db.Entry(user).State = System.Data.Entity.EntityState.Modified;
+            user.name = name;
+            user.ngaycapnhat = unixTimestamp;
+            user.avatarUrl = profilePictureUrl;
             db.SaveChanges();
         }
-
+        AuthenticationManager.SignIn(new AuthenticationProperties { IsPersistent = false }, identity);
         SessionHelper.SetUser(user);
-        //if (user.id_typeusers == 3)
-        //{
-        //    return RedirectToAction("TKSVCKS", "ThongKeKhaoSat", new { area = "CTDT" });
-        //}
 
-        //if (user.id_typeusers == 2)
-        //{
-        //    return RedirectToAction("Index", "PhieuKhaoSat", new { area = "Admin" });
-        //}
-        return RedirectToLocal(returnUrl);
-    }
-    private string GetClientIpAddress()
-    {
-        string ipAddress = Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
-
-        if (!string.IsNullOrEmpty(ipAddress))
-        {
-            string[] addresses = ipAddress.Split(',');
-            if (addresses.Length > 0)
-            {
-                return addresses[0].Trim();
-            }
-        }
-        return Request.ServerVariables["REMOTE_ADDR"];
-    }
-
-    // GET: /Login/ExternalLoginFailure
-    [HttpGet]
-    public ActionResult ExternalLoginFailure()
-    {
-        return View();
-    }
-
-    // POST: /Login/Logout
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public ActionResult Logout()
-    {
-        HttpContext.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-        SessionHelper.ClearUser();
         return RedirectToAction("Index", "Home");
     }
 
@@ -139,40 +84,21 @@ public class LoginController : Controller
         return RedirectToAction("Index", "Home");
     }
 
-    private void AddErrors(IdentityResult result)
-    {
-        foreach (var error in result.Errors)
-        {
-            ModelState.AddModelError("", error);
-        }
-    }
-
-    private class ChallengeResult : HttpUnauthorizedResult
+    internal class ChallengeResult : HttpUnauthorizedResult
     {
         public ChallengeResult(string provider, string redirectUri)
-            : this(provider, redirectUri, null)
-        {
-        }
-
-        public ChallengeResult(string provider, string redirectUri, string userId)
         {
             LoginProvider = provider;
             RedirectUri = redirectUri;
-            UserId = userId;
         }
 
         public string LoginProvider { get; set; }
         public string RedirectUri { get; set; }
-        public string UserId { get; set; }
 
         public override void ExecuteResult(ControllerContext context)
         {
             var properties = new AuthenticationProperties { RedirectUri = RedirectUri };
-            if (UserId != null)
-            {
-                properties.Dictionary[XsrfKey] = UserId;
-            }
             context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
         }
     }
-}   
+}

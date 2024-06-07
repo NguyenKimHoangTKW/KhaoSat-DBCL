@@ -1,0 +1,63 @@
+﻿<div class="side-nav">
+    <div class="side-nav-inner">
+        <ul class="side-nav-menu scrollable">
+            <!-- Phiếu khảo sát menu -->
+            <li class="nav-item dropdown @((ViewBag.CurrentMenu == "PhieuKhaoSat") ? "open" : "")">
+                <a class="dropdown-toggle" href="javascript:void(0);">
+                    <span class="icon-holder">
+                        <i class="anticon anticon-form"></i>
+                    </span>
+                    <span class="title">Phiếu khảo sát</span>
+                    <span class="arrow">
+                        <i class="arrow-icon"></i>
+                    </span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="@((ViewBag.CurrentController == "PhieuKhaoSat" && ViewBag.CurrentAction == "Index") ? "active" : "")">
+                        <a href="@Url.Action("Index", "PhieuKhaoSat")">Danh sách phiếu khảo sát</a>
+                    </li>
+                    <li class="@((ViewBag.CurrentController == "ThongKeKhaoSat" && ViewBag.CurrentAction == "Index") ? "active" : "")">
+                        <a href="@Url.Action("ThongKeSVChuaKhaoSat", "ThongKeKhaoSat")">Danh sách sinh viên chưa khảo sát</a>
+                    </li>
+                </ul>
+            </li>
+            <!-- Sinh Viên menu -->
+            <li class="nav-item dropdown @((ViewBag.CurrentMenu == "SinhVien") ? "open" : "")">
+                <a class="dropdown-toggle" href="javascript:void(0);">
+                    <span class="icon-holder">
+                        <i class="anticon anticon-team"></i>
+                    </span>
+                    <span class="title">Sinh Viên</span>
+                    <span class="arrow">
+                        <i class="arrow-icon"></i>
+                    </span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="@((ViewBag.CurrentController == "Khoa" && ViewBag.CurrentAction == "ViewKhoa") ? "active" : "")">
+                        <a href="@Url.Action("ViewKhoa", "Khoa")">Danh sách Khoa</a>
+                    </li>
+                    <li class="@((ViewBag.CurrentController == "CTDT" && ViewBag.CurrentAction == "ViewCTDT") ? "active" : "")">
+                        <a href="@Url.Action("ViewCTDT", "CTDT")">Danh sách Chương trình đào tạo</a>
+                    </li>
+                    <li class="@((ViewBag.CurrentController == "Lop" && ViewBag.CurrentAction == "ViewLop") ? "active" : "")">
+                        <a href="@Url.Action("ViewLop", "Lop")">Danh sách Lớp</a>
+                    </li>
+                    <li class="@((ViewBag.CurrentController == "SinhVien" && ViewBag.CurrentAction == "ViewSinhVien") ? "active" : "")">
+                        <a href="@Url.Action("ViewSinhVien", "SinhVien")">Danh sách Sinh viên</a>
+                    </li>
+                </ul>
+            </li>
+
+            <!-- Sinh Viên menu -->
+            <li class="nav-item dropdown">
+                <a class="dropdown-toggle" href="/Admin/NguoiDung/ViewUser">
+                    <span class="icon-holder">
+                        <i class="anticon anticon-team"></i>
+                    </span>
+                    <span class="title">Người dùng</span>
+                </a>
+                
+            </li>
+        </ul>
+    </div>
+</div>

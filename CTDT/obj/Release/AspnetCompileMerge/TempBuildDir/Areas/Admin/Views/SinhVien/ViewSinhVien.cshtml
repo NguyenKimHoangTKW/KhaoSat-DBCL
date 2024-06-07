@@ -1,0 +1,313 @@
+﻿@{
+    ViewBag.Title = "Danh sách sinh viên - TDMU";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="main-content">
+    <div class="page-header">
+        <h2 class="header-title">Quản Lý Danh Sách Sinh Viên</h2>
+        <div class="header-sub-title">
+            <nav class="breadcrumb breadcrumb-dash">
+                <a href="#" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Home</a>
+                <span class="breadcrumb-item active">Danh sách Sinh Viên</span>
+            </nav>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <h4>Quản Lý Danh Sách Sinh Viên</h4>
+            <div>
+                <button class="btn btn-primary btn-tone m-r-5" data-toggle="modal" data-target="#bd-example-modal-lg">Thêm mới</button>
+                <button class="btn btn-success btn-tone m-r-5" data-toggle="modal" data-target="#importExcelModal">Import từ Excel</button>
+            </div>
+            <!-- Modal Import Excel -->
+            <div class="modal fade" id="importExcelModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Import Sinh Viên từ Excel</h5>
+                            <button type="button" class="close" data-dismiss="modal">
+                                <i class="anticon anticon-close"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="importExcelForm" enctype="multipart/form-data">
+                                <div class="form-group">
+                                    <label for="excelFile">Chọn file Excel</label>
+                                    <input type="file" class="form-control" id="excelFile" name="excelFile" accept=".xlsx, .xls">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Upload</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Modal Import Excel -->
+            <div class="row justify-content-end m-b-20">
+                <div class="col-auto">
+                    <input type="text" id="searchInput" class="form-control" placeholder="Nhập từ khóa tìm kiếm...">
+                </div>
+            </div>
+            <!--Modal Thêm mới Lớp-->
+            <div class="modal fade" id="bd-example-modal-lg">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title h4">Thêm mới Lớp</h5>
+                            <button type="button" class="close" data-dismiss="modal">
+                                <i class="anticon anticon-close"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="form-validation" method="post" action="/Lop/Add">
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label control-label">Tên Lớp *</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="TenLop" placeholder="Nhập tên Lớp ... *">
+                                    </div>
+                                    <label class="col-sm-2 col-form-label control-label" style="margin-top: 10px;">Chọn CTĐT *</label>
+                                    <div class="col-sm-10" style="margin-top: 10px;">
+                                        <select id="MaCTDT" class="form-control">
+                                            <option value="">-- Chọn CTĐT --</option>
+                                            @*@foreach (var item in ViewBag.CTDTList)
+                                        {
+                                            <option value="@item.Value">@item.Text</option>
+                                        }*@
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger btn-tone m-r-5" data-dismiss="modal">Thoát</button>
+                                <button type="button" class="btn btn-success btn-tone m-r-5" id="btnSave">Lưu</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--End Modal Thêm mới Lớp-->
+            <!-- Modal Sửa Lớp -->
+            <div class="modal fade" id="ModalEditLop">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title h4">Sửa đổi Lớp</h5>
+                            <button type="button" class="close" data-dismiss="modal">
+                                <i class="anticon anticon-close"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="form-validation" method="post" action="/Lop/Add">
+                                <div class="form-group row">
+                                    <input type="hidden" id="Edit_MaLop" />
+                                    <input type="hidden" id="change_Ngay_Tao" name="change_Ngay_Tao" />
+                                    <input type="hidden" id="change_Ngay_Cap_Nhat" name="change_Ngay_Cap_Nhat" />
+                                    <label class="col-sm-2 col-form-label control-label">Tên Lớp *</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="Edit_TenLop" placeholder="Nhập tên Lớp ... *">
+                                    </div>
+                                    <label class="col-sm-2 col-form-label control-label" style="margin-top: 10px;">Chọn CTĐT *</label>
+                                    <div class="col-sm-10" style="margin-top: 10px;">
+                                        <select id="Edit_Ma_CTDT" class="form-control">
+                                            <option value="">-- Chọn CTĐT --</option>
+                                            @*@foreach (var item in ViewBag.CTDTList)
+                                        {
+                                            <option value="@item.Value">@item.Text</option>
+                                        }*@
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger btn-tone m-r-5" data-dismiss="modal">Thoát</button>
+                                <button type="button" class="btn btn-success btn-tone m-r-5" id="btnSaveChange">Thay đổi</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--End Modal Sửa Lớp -->
+            <div class="m-t-25">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th scope="col">STT</th>
+                                <th scope="col">ID Sinh Viên</th>
+                                <th scope="col">MSSV</th>
+                                <th scope="col">Họ và Tên</th>
+                                <th scope="col">Ngày sinh</th>
+                                <th scope="col">Số điện thoại</th>
+                                <th scope="col">Địa chỉ</th>
+                                <th scope="col">Giới tính</th>
+                                <th scope="col">Năm tốt nghiệp</th>
+                                <th scope="col">Ngày tạo</th>
+                                <th scope="col">Cập nhật lần cuối</th>
+                                <th scope="col">Chức năng</th>
+                            </tr>
+                        </thead>
+                        <tbody id="showdata">
+                        </tbody>
+                    </table>
+
+                </div>
+                <div id="pagination" class="m-t-15 pagination-right">
+                    <!-- Pagination buttons will be inserted here -->
+                </div>
+                <!-- End Modal Import Excel -->
+
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    var currentPage = 1;
+    var pageSize = 10;
+    var totalPages = 0;
+
+    $(document).ready(function () {
+        LoadData(currentPage);
+        $('#importExcelForm').on('submit', function (e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            $.ajax({
+                url: '/SinhVien/ImportExcel',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (res) {
+                    if (res.success) {
+                        $('#importResult').html('<div class="alert alert-success">' + res.message + '</div>');
+                        $('#importExcelModal').modal('hide');
+                        LoadData(currentPage);
+                    } else {
+                        $('#importResult').html('<div class="alert alert-danger">' + res.message + '</div>');
+                    }
+                },
+                error: function () {
+                    $('#importResult').html('<div class="alert alert-danger">Có lỗi xảy ra khi upload file</div>');
+                }
+            });
+        });
+        $('#searchInput').on('keyup', debounce(function () {
+            var keyword = $(this).val().toLowerCase();
+            currentPage = 1;
+            LoadData(currentPage, keyword);
+        }, 300));
+
+        $('#pagination').on('click', 'a.page-link', function (e) {
+            e.preventDefault();
+            var page = $(this).data('page');
+            if (page && page !== currentPage) {
+                currentPage = page;
+                var keyword = $('#searchInput').val().toLowerCase();
+                LoadData(currentPage, keyword);
+            }
+        });
+    });
+
+    function debounce(func, wait) {
+        var timeout;
+        return function () {
+            var context = this, args = arguments;
+            clearTimeout(timeout);
+            timeout = setTimeout(function () {
+                timeout = null;
+                func.apply(context, args);
+            }, wait);
+        };
+    }
+
+    function LoadData(pageNumber, keyword = '') {
+        $.ajax({
+            url: '/SinhVien/LoadSinhVien',
+            type: 'GET',
+            data: { pageNumber: pageNumber, pageSize: pageSize, keyword: keyword },
+            success: function (res) {
+                var items = res.data;
+                var html = "";
+                if (items.length === 0) {
+                    html += "<tr><td colspan='12' class='text-center'>Không có dữ liệu</td></tr>";
+                } else {
+                    var stt = (pageNumber - 1) * pageSize;
+                    for (let i = 0; i < items.length; i++) {
+                        var formattedDate1 = unixTimestampToDate(items[i].NgayCapNhat);
+                        var formattedDate2 = unixTimestampToDate(items[i].NgayTao);
+                        html += "<tr>";
+                        html += "<td>" + (stt + i + 1) + "</td>";
+                        html += "<td>" + "#" + items[i].IDSV + "</td>";
+                        html += "<td>" + items[i].MSSV + "</td>";
+                        html += "<td>" + items[i].HoTen + "</td>";
+                        html += "<td>" + items[i].NgaySinh + "</td>";
+                        html += "<td>" + items[i].SDT + "</td>";
+                        html += "<td>" + items[i].DiaChi + "</td>";
+                        html += "<td>" + items[i].GioiTinh + "</td>";
+                        html += "<td>" + items[i].NamTotNghiep + "</td>";
+                        html += "<td>" + formattedDate1 + "</td>";
+                        html += "<td>" + formattedDate2 + "</td>";
+                        html += "<td><button class='btn btn-icon btn-hover btn-sm btn-rounded pull-right btnEdit' data-toggle='modal' data-target='#ModalEditLop'> <i class='anticon anticon-edit'></i></button><button class='btn btn-icon btn-hover btn-sm btn-rounded pull-right btnDelete'> <i class='anticon anticon-delete'></i></button></td>";
+                        html += "</tr>";
+                    }
+                }
+                $('#showdata').html(html);
+                totalPages = res.totalPages;
+                renderPagination(pageNumber, totalPages);
+            },
+            error: function () {
+                var html = "<tr><td colspan='12' class='text-center'>Không thể tải dữ liệu</td></tr>";
+                $('#showdata').html(html);
+            }
+        });
+    }
+
+    function renderPagination(currentPage, totalPages) {
+        var html = '<nav aria-label="Page navigation example"><ul class="pagination justify-content-end">';
+
+        var startPage = currentPage - 2;
+        var endPage = currentPage + 2;
+
+        if (startPage < 1) {
+            startPage = 1;
+            endPage = 5;
+        }
+
+        if (endPage > totalPages) {
+            endPage = totalPages;
+            startPage = totalPages - 4;
+        }
+
+        if (startPage < 1) {
+            startPage = 1;
+        }
+
+        html += '<li class="page-item ' + (currentPage === 1 ? 'disabled' : '') + '"><a class="page-link" href="#" data-page="' + (currentPage - 1) + '">Trước</a></li>';
+
+        for (var i = startPage; i <= endPage; i++) {
+            html += '<li class="page-item ' + (currentPage === i ? 'active' : '') + '"><a class="page-link" href="#" data-page="' + i + '">' + i + '</a></li>';
+        }
+
+        html += '<li class="page-item ' + (currentPage === totalPages ? 'disabled' : '') + '"><a class="page-link" href="#" data-page="' + (currentPage + 1) + '">Tiếp</a></li>';
+        html += '</ul></nav>';
+
+        $('#pagination').html(html);
+    }
+
+    function unixTimestampToDate(unixTimestamp) {
+        var date = new Date(unixTimestamp * 1000);
+
+        var weekdays = ['Chủ Nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
+
+        var dayOfWeek = weekdays[date.getDay()];
+
+        var month = ("0" + (date.getMonth() + 1)).slice(-2);
+        var day = ("0" + date.getDate()).slice(-2);
+        var year = date.getFullYear();
+        var hours = ("0" + date.getHours()).slice(-2);
+        var minutes = ("0" + date.getMinutes()).slice(-2);
+        var seconds = ("0" + date.getSeconds()).slice(-2);
+        var formattedDate = dayOfWeek + ', ' + day + "-" + month + "-" + year + " " + hours + ":" + minutes + ":" + seconds;
+        return formattedDate;
+    }
+</script>

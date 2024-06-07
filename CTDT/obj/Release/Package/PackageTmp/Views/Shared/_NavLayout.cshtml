@@ -1,0 +1,56 @@
+﻿@using CTDT.Helper
+
+@{
+    var user = SessionHelper.GetUser();
+}
+
+<nav class="navbar navbar-expand-sm bg-blue navbar-dark sticky">
+    <div class="container">
+        <a class="navbar-brand" href="javascript:void(0)" onclick="window.location.href='/Home/Index'">Trang Chủ</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav h4">
+                <li class="nav-item">
+                    <a class="nav-link" href="https://tdmu.edu.vn/gioi-thieu">Giới thiệu</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://tdmu.edu.vn/lien-he">Liên hệ</a>
+                </li>
+            </ul>
+        </div>
+        @if (SessionHelper.IsUserLoggedIn())
+        {
+            <div class="dropdown">
+                <a href="#" class="nav-link" style="text-decoration: none; color: white; font-size: 1.7rem;">
+
+                    Xin chào - @user.name
+                    <img src="@user.avatarUrl" style="width: 50px; border-radius: 100%;" />
+                </a>
+                <ul class="dropdown-content" style="list-style: none">
+                    <li>
+                        <a href="javascript:void(0)" onclick="window.location.href='/Survey/SurveyForm?iduser=@user.id_users'"><i class="fa fa-note-sticky"></i>Biểu mẫu đã khảo sát</a>
+                    </li>
+                    <li>
+                        <a href="#" onclick="document.getElementById('logoutForm').submit();"><i class="fa-solid fa-right-from-bracket"></i>Đăng xuất</a>
+                    </li>
+                </ul>
+            </div>
+        }
+        else
+        {
+            <a href="#" onclick="document.getElementById('externalLoginForm').submit();" class="nav-link" style="text-decoration: none; color: white; font-size: 1.7rem;">
+                <i class="fa-solid fa-user" style="padding-right: 10px; font-size:2rem;"></i>Tài khoản
+            </a>
+        }
+        <form id="logoutForm" action="@Url.Action("Logout", "Login", new {area = ""})" method="post" style="display:none;">
+            @Html.AntiForgeryToken()
+        </form>
+        <form id="externalLoginForm" action="@Url.Action("ExternalLogin", "Login")" method="post" class="form-horizontal" role="form" style="display: none;">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="provider" value="Google" />
+        </form>
+
+    </div>
+</nav>

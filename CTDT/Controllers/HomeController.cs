@@ -16,6 +16,8 @@ namespace CTDT.Controllers
         dbSurveyEntities db = new dbSurveyEntities();
         public ActionResult Index()
         {
+            var email = TempData["Email"] as string;
+            ViewBag.Email = email;
             return View();
         }
         public ActionResult PhieuKhaoSat(int id)

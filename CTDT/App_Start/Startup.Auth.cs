@@ -1,10 +1,8 @@
-﻿using Microsoft.Owin;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
 using Owin;
-using Microsoft.AspNet.Identity;
-using System.Security.Claims;
-using System.Threading.Tasks;
 
 [assembly: OwinStartup(typeof(CTDT.App_Start.Startup))]
 
@@ -14,36 +12,27 @@ namespace CTDT.App_Start
     {
         public void Configuration(IAppBuilder app)
         {
-            // Enable cookie authentication
+            ConfigureAuth(app);
+        }
+
+        public void ConfigureAuth(IAppBuilder app)
+        {
+            // Configure the application for cookie-based authentication
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
-                LoginPath = new PathString("/Login"),
+                LoginPath = new PathString("/Login/Login")
             });
 
-            // Enable external Google authentication
+            // Configure Google authentication
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
-            var googleOptions = new GoogleOAuth2AuthenticationOptions
+            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
             {
                 ClientId = "183100229430-394rpj38v42o4kfgum7hvnjplnv3ebrl.apps.googleusercontent.com",
                 ClientSecret = "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",
-                Provider = new GoogleOAuth2AuthenticationProvider
-                {
-                    OnAuthenticated = context =>
-                    {
-                        context.Identity.AddClaim(new Claim("urn:google:picture", context.User.GetValue("picture").ToString()));
-                        return Task.FromResult(0);
-                    }
-                }
-            };
-
-            // Add scopes to the options
-            googleOptions.Scope.Add("openid");
-            googleOptions.Scope.Add("profile");
-            googleOptions.Scope.Add("email");
-
-            app.UseGoogleAuthentication(googleOptions);
+                CallbackPath = new PathString("/signin-google")
+            });
         }
     }
 }

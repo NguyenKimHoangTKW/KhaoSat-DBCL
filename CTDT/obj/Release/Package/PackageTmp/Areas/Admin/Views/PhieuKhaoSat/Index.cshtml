@@ -1,0 +1,313 @@
+﻿﻿
+@{
+    ViewBag.title = "Phiếu khảo sát- TDMU";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="main-content">
+    <div class="page-header no-gutters">
+        <div class="col-lg-12">
+
+
+            <div class="mb-4" style="border: 1px solid #9caab9; padding: 15px; border-radius: 8px; background-color: #fcfcfc;">
+                <div class="row items-push">
+                    <div class="col-3">
+                        <label class="form-label" style="font-size: 16px;font-weight: bold;color: #333">Tìm theo hệ đào tạo:</label>
+                        <select class="form-control" name="surveyTypeTS" id="surveyTypeTS">
+                            <option value="">Tất cả</option>
+                            @foreach (var item in ViewBag.HDT)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label" style="font-size: 16px;font-weight: bold;color: #333">Tìm theo đối tượng:</label>
+                        <select class="form-control" name="surveyType" id="surveyType">
+                            <option value="">Tất cả</option>
+                            @foreach (var item in ViewBag.LKS)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" style="font-size: 16px;font-weight: bold;color: #333">Tìm theo từ khóa:</label>
+                        <input type="text" class="form-control" name="keywordSearch" id="keywordSearch" placeholder="Tìm kiếm ...">
+
+                    </div>
+                    <div class="col-2">
+                        <label class="form-label" for="example-select"> <br></label>
+                        <button type="submit" id="btnFilter" name="btnFilter" class="btn btn-primary w-100">Tìm kiếm</button>
+                    </div>
+                </div>
+            </div>
+
+            <!--Modal Thêm mới Phiếu-->
+            <div class="modal fade" id="bd-example-modal-lg">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title h4">Thêm mới Phiếu khảo sát</h5>
+                            <button type="button" class="close" data-dismiss="modal">
+                                <i class="anticon anticon-close"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="form-validation">
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label control-label">Tiêu đề *</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="TieuDe" placeholder="Nhập tiêu đề ... *">
+                                    </div>
+
+                                    <label class="col-sm-2 col-form-label control-label" style="margin-top: 10px;">Mô tả *</label>
+                                    <div class="col-sm-10" style="margin-top: 10px;">
+                                        <textarea class="form-control" id="MoTa" placeholder="Nhập Mô tả ... *"></textarea>
+                                    </div>
+
+                                    <label class="col-sm-2 col-form-label control-label" style="margin-top: 10px;">Dành cho hệ *</label>
+                                    <div class="col-sm-10" style="margin-top: 10px;">
+                                        @foreach (var item in ViewBag.HDT)
+                                        {
+                                            <div class="form-check form-check-inline">
+                                                <input type="radio" class="form-check-input" name="DanhChoHe" value="@item.Value" id="DanhChoHe_@item.Value">
+                                                <label class="form-check-label" for="DanhChoHe_@item.Value">@item.Text</label>
+                                            </div>
+                                        }
+                                    </div>
+
+                                    <label class="col-sm-2 col-form-label control-label" style="margin-top: 10px;">Đối tượng *</label>
+                                    <div class="col-sm-10" style="margin-top: 10px;">
+                                        <select id="MaDoiTuong" class="form-control">
+                                            @foreach (var item in ViewBag.LKS)
+                                            {
+                                                <option value="@item.Value">@item.Text</option>
+                                            }
+                                        </select>
+                                    </div>
+
+                                    <label class="col-sm-2 col-form-label control-label" style="margin-top: 10px;">Ngày bắt đầu *</label>
+                                    <div class="col-sm-10" style="margin-top: 10px;">
+                                        <input type="datetime-local" class="form-control" id="NgayBatDau" />
+                                    </div>
+
+                                    <label class="col-sm-2 col-form-label control-label" style="margin-top: 10px;">Ngày kết thúc *</label>
+                                    <div class="col-sm-10" style="margin-top: 10px;">
+                                        <input type="datetime-local" class="form-control" id="NgayKetThuc" />
+                                    </div>
+                                    <label class="col-sm-2 col-form-label control-label" style="margin-top: 10px;">Trạng thái *</label>
+                                    <div class="col-sm-10" style="margin-top: 10px;">
+                                        <select id="TrangThai" class="form-control">
+                                            <option value="1">Mở</option>
+                                            <option value="0">Đóng</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger btn-tone m-r-5" data-dismiss="modal">Thoát</button>
+                                <button type="button" class="btn btn-success btn-tone m-r-5" id="btnSave" onclick="AddPKS()">Lưu</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!--End Modal Thêm mới Phiếu-->
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-11 mx-auto">
+            <!-- Card View -->
+            <div class="row" id="card-view">
+                <!--Load dữ liệu-->
+            </div>
+        </div>
+
+    </div>
+    <div id="pagination" class="m-t-15 pagination-right">
+        <!-- Pagination buttons will be inserted here -->
+    </div>
+    <div>
+        <button class="btn btn-primary btn-tone m-r-5" data-toggle="modal" data-target="#bd-example-modal-lg">Thêm mới</button>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    var currentPage = 1;
+    var totalPages = 0;
+    $(document).ready(function () {
+        LoadData();
+
+        $("#btnFilter").click(function () {
+            var selectHdt = $("#surveyTypeTS").val();
+            var selectLKS = $("#surveyType").val();
+            LoadData(1, selectHdt, selectLKS);
+        });
+
+        $(document).on("click", ".page-link", function () {
+            var page = $(this).data("page");
+            if (page > 0 && page <= totalPages) {
+                LoadData(page);
+            }
+        });
+    });
+
+    function LoadData(pageNumber, hdt, loaiks) {
+        $.ajax({
+            url: '/PhieuKhaoSat/LoadPhieu',
+            type: 'GET',
+            data: { pageNumber: pageNumber, pageSize: 10, hdt: hdt, loaiks: loaiks },
+            success: function (res) {
+                var items = res.data;
+                totalPages = res.totalPages;
+                var html = "";
+                var logoUrl = '@Url.Content("~/Areas/assets/images/logo/logo_test_2.png")';
+                if (items.length === 0) {
+                    html += "<tr><td colspan='7' class='text-center'>Không có dữ liệu</td></tr>";
+                } else {
+                    for (let i = 0; i < items.length; i++) {
+                        var formattedNgayTao = unixTimestampToDate(items[i].NgayTao);
+                        var formattedNgayChinhSua = unixTimestampToDate(items[i].NgayChinhSua);
+                        var trangThaiText = items[i].TrangThai == 0 ? 'ĐANG ĐÓNG' : 'ĐANG MỞ';
+                        html += "<div class='col-lg-3 col-sm-12'>";
+                        html += "    <div class='card bg-white m-b-30' style='align-self: center; text-align: center'>";
+                        html += "        <div class='card-header'>";
+                        html += "            <span style='color: #333;font-weight: bold;font-size: 15px'>HỆ " + items[i].TenHDT + " </span>";
+                        html += "            -";
+                        html += "            <span style='color: #333;font-weight: bold;font-size: 15px'>DÀNH CHO " + items[i].LoaiKhaoSat + "</span>";
+                        html += "            -";
+                        html += "            <span style='color: #333; font-weight: bold; font-size: 15px'>" + trangThaiText + "</span>";
+                        html += "        </div>";
+                        html += "        <img src='" + logoUrl + "' />";
+                        html += "        <div class='card-body'>";
+                        html += "            <div class='card-title mb-4' style='font-size: 14px; font-family: \'Inter\';font-style: normal;font-weight: 600;line-height: 150%;overflow: hidden'>";
+                        html += "                <a href='#' style='color: #333'>" + items[i].TieuDePhieu + "</a>";
+                        html += "                <br>";
+                        html += "                   <button onclick=\"window.location.href='/Admin/PhieuKhaoSat/KetQuaPKS?id=" + items[i].MaPhieu + "'\" type='button' class='btn btn-success' style='display: inline-flex; align-items: center;'>";
+                        html += "                    <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-eye-fill' viewBox='0 0 16 16'>";
+                        html += "                        <path d='M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0'></path>";
+                        html += "                        <path d='M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7'></path>";
+                        html += "                    </svg>";
+                        html += "                </button>";
+                        html += "                <button onclick=\"window.location.href='/Admin/PhieuKhaoSat/AddSurvey?id=" + items[i].MaPhieu + "'\" type='button' class='btn btn-secondary' style='display: inline-flex; align-items: center;'>";
+                        html += "                    <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-pencil' viewBox='0 0 16 16'>";
+                        html += "                        <path d='M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325'></path>";
+                        html += "                    </svg>";
+                        html += "                </button>";
+                        html += "                <button onclick='delData(12)' type='button' class='btn btn-danger' style='display: inline-flex; align-items: center;'>";
+                        html += "                    <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-trash3-fill' viewBox='0 0 16 16'>";
+                        html += "                        <path d='M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5'></path>";
+                        html += "                    </svg>";
+                        html += "                </button>";
+                        html += "            </div>";
+                        html += "            <ul class='list-group list-group-flush'>";
+                        html += "                <li class='list-group-item'>";
+                        html += "                    <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-person-circle' viewBox='0 0 16 16'>";
+                        html += "                        <path d='M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0'></path>";
+                        html += "                        <path fill-rule='evenodd' d='M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1'></path>";
+                        html += "                    </svg> Người tạo: <span style='font-weight: bold'>ĐANG PHÁT TRIỂN</span>";
+                        html += "                </li>";
+                        html += "                <li class='list-group-item'>";
+                        html += "                    <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-pencil-square' viewBox='0 0 16 16'>";
+                        html += "                        <path d='M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z'></path>";
+                        html += "                        <path fill-rule='evenodd' d='M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z'></path>";
+                        html += "                    </svg> Ngày cập nhật: <br><span style='font-weight: bold'>" + formattedNgayChinhSua + "</span>";
+                        html += "                </li>";
+                        html += "                <li class='list-group-item'>";
+                        html += "                    <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-calendar-date-fill' viewBox='0 0 16 16'>";
+                        html += "                        <path d='M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v1h16V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4zm5.402 9.746c.625 0 1.184-.484 1.184-1.18 0-.832-.527-1.23-1.16-1.23-.586 0-1.168.387-1.168 1.21 0 .817.543 1.2 1.144 1.2'></path>";
+                        html += "                        <path d='M16 14V5H0v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2m-6.664-1.21c-1.11 0-1.656-.767-1.703-1.407h.683c.043.37.387.82 1.051.82.844 0 1.301-.848 1.305-2.164h-.027c-.153.414-.637.79-1.383.79-.852 0-1.676-.61-1.676-1.77 0-1.137.871-1.809 1.797-1.809 1.172 0 1.953.734 1.953 2.668 0 1.805-.742 2.871-2 2.871zm-2.89-5.435v5.332H5.77V8.079h-.012c-.29.156-.883.52-1.258.777V8.16a13 13 0 0 1 1.313-.805h.632z'></path>";
+                        html += "                    </svg> Ngày tạo: <br><span style='font-weight: bold'>" + formattedNgayTao + "</span>";
+                        html += "                </li>";
+                        html += "            </ul>";
+                        html += "        </div>";
+                        html += "    </div>";
+                        html += "</div>";
+                    }
+                }
+                $('#card-view').html(html);
+                renderPagination(pageNumber, totalPages);
+            },
+            error: function () {
+                var html = "<tr><td colspan='7' class='text-center'>Không thể tải dữ liệu</td></tr>";
+                $('#card-view').html(html);
+            }
+        });
+    };
+    function renderPagination(currentPage, totalPages) {
+        var html = '<nav aria-label="Page navigation example"><ul class="pagination justify-content-end">';
+        html += '<li class="page-item ' + (currentPage == 1 ? 'disabled' : '') + '"><a class="page-link" href="#" data-page="' + (currentPage - 1) + '">Trước</a></li>';
+
+        for (var i = 1; i <= totalPages; i++) {
+            html += '<li class="page-item ' + (currentPage == i ? 'active' : '') + '"><a class="page-link" href="#" data-page="' + i + '">' + i + '</a></li>';
+        }
+
+        html += '<li class="page-item ' + (currentPage == totalPages ? 'disabled' : '') + '"><a class="page-link" href="#" data-page="' + (currentPage + 1) + '">Tiếp</a></li>';
+        html += '</ul></nav>';
+
+        $('#pagination').html(html);
+    }
+    function AddPKS() {
+        var tieuDe = $('#TieuDe').val();
+        var moTa = $('#MoTa').val();
+        var danhChoHe = $('input[name="DanhChoHe"]:checked').val();
+        var maDoiTuong = $('#MaDoiTuong').val();
+        var ngayBatDau = $('#NgayBatDau').val();
+        var ngayKetThuc = $('#NgayKetThuc').val();
+        var trangThai = $('#TrangThai').val();
+
+        var unixNgayBatDau = Math.floor(new Date(ngayBatDau).getTime() / 1000);
+        var unixNgayKetThuc = Math.floor(new Date(ngayKetThuc).getTime() / 1000);
+
+        var data = {
+            surveyTitle: tieuDe,
+            surveyDescription: moTa,
+            id_hedaotao: danhChoHe,
+            id_loaikhaosat: maDoiTuong,
+            surveyTimeStart: unixNgayBatDau,
+            surveyTimeEnd: unixNgayKetThuc,
+            surveyStatus: trangThai
+        };
+
+        $.ajax({
+            url: '/Admin/PhieuKhaoSat/NewSurvey',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            success: function (response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: response.status,
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+                LoadData();
+            },
+            error: function () {
+                alert('Lưu không thành công.');
+            }
+        });
+    };
+
+    function unixTimestampToDate(unixTimestamp) {
+        var date = new Date(unixTimestamp * 1000);
+
+        var weekdays = ['Chủ Nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
+
+        var dayOfWeek = weekdays[date.getDay()];
+
+        var month = ("0" + (date.getMonth() + 1)).slice(-2);
+        var day = ("0" + date.getDate()).slice(-2);
+        var year = date.getFullYear();
+        var hours = ("0" + date.getHours()).slice(-2);
+        var minutes = ("0" + date.getMinutes()).slice(-2);
+        var seconds = ("0" + date.getSeconds()).slice(-2);
+        var formattedDate = dayOfWeek + ', ' + day + "-" + month + "-" + year + " " + ', ' + hours + ":" + minutes + ":" + seconds;
+        return formattedDate;
+    }
+</script>

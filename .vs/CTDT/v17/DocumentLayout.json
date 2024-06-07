@@ -3,24 +3,24 @@
   "WorkspaceRootPath": "D:\\TTDBCL\\KhaoSat-DBCL\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{D6CEE176-D9C5-454D-9B4D-6C2D46C88776}|CTDT\\CTDT.csproj|d:\\ttdbcl\\khaosat-dbcl\\ctdt\\views\\home\\xacthucctdt.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{D6CEE176-D9C5-454D-9B4D-6C2D46C88776}|CTDT\\CTDT.csproj|solutionrelative:ctdt\\views\\home\\xacthucctdt.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{D6CEE176-D9C5-454D-9B4D-6C2D46C88776}|CTDT\\CTDT.csproj|d:\\ttdbcl\\khaosat-dbcl\\ctdt\\areas\\admin\\controllers\\khoacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D6CEE176-D9C5-454D-9B4D-6C2D46C88776}|CTDT\\CTDT.csproj|solutionrelative:ctdt\\areas\\admin\\controllers\\khoacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D6CEE176-D9C5-454D-9B4D-6C2D46C88776}|CTDT\\CTDT.csproj|d:\\ttdbcl\\khaosat-dbcl\\ctdt\\controllers\\logincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D6CEE176-D9C5-454D-9B4D-6C2D46C88776}|CTDT\\CTDT.csproj|solutionrelative:ctdt\\controllers\\logincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D6CEE176-D9C5-454D-9B4D-6C2D46C88776}|CTDT\\CTDT.csproj|d:\\ttdbcl\\khaosat-dbcl\\ctdt\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{D6CEE176-D9C5-454D-9B4D-6C2D46C88776}|CTDT\\CTDT.csproj|solutionrelative:ctdt\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{D6CEE176-D9C5-454D-9B4D-6C2D46C88776}|CTDT\\CTDT.csproj|d:\\ttdbcl\\khaosat-dbcl\\ctdt\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D6CEE176-D9C5-454D-9B4D-6C2D46C88776}|CTDT\\CTDT.csproj|solutionrelative:ctdt\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D6CEE176-D9C5-454D-9B4D-6C2D46C88776}|CTDT\\CTDT.csproj|d:\\ttdbcl\\khaosat-dbcl\\ctdt\\views\\survey\\surveyform.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{D6CEE176-D9C5-454D-9B4D-6C2D46C88776}|CTDT\\CTDT.csproj|solutionrelative:ctdt\\views\\survey\\surveyform.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{D6CEE176-D9C5-454D-9B4D-6C2D46C88776}|CTDT\\CTDT.csproj|d:\\ttdbcl\\khaosat-dbcl\\ctdt\\views\\home\\xacthuc.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{D6CEE176-D9C5-454D-9B4D-6C2D46C88776}|CTDT\\CTDT.csproj|solutionrelative:ctdt\\views\\home\\xacthuc.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{D6CEE176-D9C5-454D-9B4D-6C2D46C88776}|CTDT\\CTDT.csproj|d:\\ttdbcl\\khaosat-dbcl\\ctdt\\controllers\\surveycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D6CEE176-D9C5-454D-9B4D-6C2D46C88776}|CTDT\\CTDT.csproj|solutionrelative:ctdt\\controllers\\surveycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D6CEE176-D9C5-454D-9B4D-6C2D46C88776}|CTDT\\CTDT.csproj|d:\\ttdbcl\\khaosat-dbcl\\ctdt\\app_start\\startup.auth.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D6CEE176-D9C5-454D-9B4D-6C2D46C88776}|CTDT\\CTDT.csproj|solutionrelative:ctdt\\app_start\\startup.auth.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,77 +30,71 @@
       "DocumentGroups": [
         {
           "DockedWidth": 593,
-          "SelectedChildIndex": 2,
-          "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "XacThuc.cshtml",
-              "DocumentMoniker": "D:\\TTDBCL\\KhaoSat-DBCL\\CTDT\\Views\\Home\\XacThuc.cshtml",
-              "RelativeDocumentMoniker": "CTDT\\Views\\Home\\XacThuc.cshtml",
-              "ToolTip": "D:\\TTDBCL\\KhaoSat-DBCL\\CTDT\\Views\\Home\\XacThuc.cshtml",
-              "RelativeToolTip": "CTDT\\Views\\Home\\XacThuc.cshtml",
-              "ViewState": "AQIAANIAAAAAAAAAAIAwwPgAAAADAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-06-06T15:28:57.943Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "SurveyForm.cshtml",
-              "DocumentMoniker": "D:\\TTDBCL\\KhaoSat-DBCL\\CTDT\\Views\\Survey\\SurveyForm.cshtml",
-              "RelativeDocumentMoniker": "CTDT\\Views\\Survey\\SurveyForm.cshtml",
-              "ToolTip": "D:\\TTDBCL\\KhaoSat-DBCL\\CTDT\\Views\\Survey\\SurveyForm.cshtml",
-              "RelativeToolTip": "CTDT\\Views\\Survey\\SurveyForm.cshtml",
-              "ViewState": "AQIAAA4AAAAAAAAAAAAwwDUAAAAzAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-06-06T15:23:56.809Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "HomeController.cs",
-              "DocumentMoniker": "D:\\TTDBCL\\KhaoSat-DBCL\\CTDT\\Controllers\\HomeController.cs",
-              "RelativeDocumentMoniker": "CTDT\\Controllers\\HomeController.cs",
-              "ToolTip": "D:\\TTDBCL\\KhaoSat-DBCL\\CTDT\\Controllers\\HomeController.cs",
-              "RelativeToolTip": "CTDT\\Controllers\\HomeController.cs",
-              "ViewState": "AQIAAGIAAAAAAAAAAAAcwHUAAAARAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-06T15:14:44.264Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "SurveyController.cs",
-              "DocumentMoniker": "D:\\TTDBCL\\KhaoSat-DBCL\\CTDT\\Controllers\\SurveyController.cs",
-              "RelativeDocumentMoniker": "CTDT\\Controllers\\SurveyController.cs",
-              "ToolTip": "D:\\TTDBCL\\KhaoSat-DBCL\\CTDT\\Controllers\\SurveyController.cs",
-              "RelativeToolTip": "CTDT\\Controllers\\SurveyController.cs",
-              "ViewState": "AQIAADAAAAAAAAAAAAAowFUAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-06T15:08:34.173Z",
-              "EditorCaption": ""
-            }
-          ]
-        },
-        {
-          "DockedWidth": 911,
           "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "XacThucCTDT.cshtml",
-              "DocumentMoniker": "D:\\TTDBCL\\KhaoSat-DBCL\\CTDT\\Views\\Home\\XacThucCTDT.cshtml",
-              "RelativeDocumentMoniker": "CTDT\\Views\\Home\\XacThucCTDT.cshtml",
-              "ToolTip": "D:\\TTDBCL\\KhaoSat-DBCL\\CTDT\\Views\\Home\\XacThucCTDT.cshtml",
-              "RelativeToolTip": "CTDT\\Views\\Home\\XacThucCTDT.cshtml",
-              "ViewState": "AQIAAGAAAAAAAAAAAAAwwHQAAAAnAAAA",
+              "Title": "KhoaController.cs",
+              "DocumentMoniker": "D:\\TTDBCL\\KhaoSat-DBCL\\CTDT\\Areas\\Admin\\Controllers\\KhoaController.cs",
+              "RelativeDocumentMoniker": "CTDT\\Areas\\Admin\\Controllers\\KhoaController.cs",
+              "ToolTip": "D:\\TTDBCL\\KhaoSat-DBCL\\CTDT\\Areas\\Admin\\Controllers\\KhoaController.cs",
+              "RelativeToolTip": "CTDT\\Areas\\Admin\\Controllers\\KhoaController.cs",
+              "ViewState": "AQIAACcAAAAAAAAAAAAowD0AAAAUAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-07T08:59:27.177Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "HomeController.cs",
+              "DocumentMoniker": "D:\\TTDBCL\\KhaoSat-DBCL\\CTDT\\Controllers\\HomeController.cs",
+              "RelativeDocumentMoniker": "CTDT\\Controllers\\HomeController.cs",
+              "ToolTip": "D:\\TTDBCL\\KhaoSat-DBCL\\CTDT\\Controllers\\HomeController.cs",
+              "RelativeToolTip": "CTDT\\Controllers\\HomeController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABMAAAAiAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-07T08:42:27.731Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\TTDBCL\\KhaoSat-DBCL\\CTDT\\Views\\Home\\Index.cshtml",
+              "RelativeDocumentMoniker": "CTDT\\Views\\Home\\Index.cshtml",
+              "ToolTip": "D:\\TTDBCL\\KhaoSat-DBCL\\CTDT\\Views\\Home\\Index.cshtml",
+              "RelativeToolTip": "CTDT\\Views\\Home\\Index.cshtml",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABQAAAAZAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-06-06T15:19:05.879Z",
+              "WhenOpened": "2024-06-07T08:30:13.233Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "LoginController.cs",
+              "DocumentMoniker": "D:\\TTDBCL\\KhaoSat-DBCL\\CTDT\\Controllers\\LoginController.cs",
+              "RelativeDocumentMoniker": "CTDT\\Controllers\\LoginController.cs",
+              "ToolTip": "D:\\TTDBCL\\KhaoSat-DBCL\\CTDT\\Controllers\\LoginController.cs",
+              "RelativeToolTip": "CTDT\\Controllers\\LoginController.cs",
+              "ViewState": "AQIAABYAAAAAAAAAAAAmwDgAAAAhAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-07T08:29:45.932Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Startup.Auth.cs",
+              "DocumentMoniker": "D:\\TTDBCL\\KhaoSat-DBCL\\CTDT\\App_Start\\Startup.Auth.cs",
+              "RelativeDocumentMoniker": "CTDT\\App_Start\\Startup.Auth.cs",
+              "ToolTip": "D:\\TTDBCL\\KhaoSat-DBCL\\CTDT\\App_Start\\Startup.Auth.cs",
+              "RelativeToolTip": "CTDT\\App_Start\\Startup.Auth.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAB8AAABkAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-07T08:18:44.161Z",
               "EditorCaption": ""
             }
           ]

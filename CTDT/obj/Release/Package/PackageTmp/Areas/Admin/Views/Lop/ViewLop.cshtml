@@ -1,0 +1,280 @@
+﻿@{
+    ViewBag.Title = "Danh sách lớp - TDMU";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="main-content">
+    <div class="page-header">
+        <h2 class="header-title">Quản Lý Danh Sách Lớp</h2>
+        <div class="header-sub-title">
+            <nav class="breadcrumb breadcrumb-dash">
+                <a href="#" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Home</a>
+                <span class="breadcrumb-item active">Danh sách Lớp</span>
+            </nav>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <h4>Quản Lý Danh Sách Lớp</h4>
+            <div>
+                <button class="btn btn-primary btn-tone m-r-5" data-toggle="modal" data-target="#bd-example-modal-lg">Thêm mới</button>
+            </div>
+            <div class="row justify-content-end m-b-20">
+                <div class="col-auto">
+                    <input type="text" id="searchInput" class="form-control" placeholder="Nhập từ khóa tìm kiếm...">
+                </div>
+            </div>
+            <!--Modal Thêm mới Lớp-->
+            <div class="modal fade" id="bd-example-modal-lg">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title h4">Thêm mới Lớp</h5>
+                            <button type="button" class="close" data-dismiss="modal">
+                                <i class="anticon anticon-close"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="form-validation" method="post" action="/Lop/Add">
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label control-label">Tên Lớp *</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="TenLop" placeholder="Nhập tên Lớp ... *">
+                                    </div>
+                                    <label class="col-sm-2 col-form-label control-label" style="margin-top: 10px;">Chọn CTĐT *</label>
+                                    <div class="col-sm-10" style="margin-top: 10px;">
+                                        <select id="MaCTDT" class="form-control">
+                                            <option value="">-- Chọn CTĐT --</option>
+                                            @foreach (var item in ViewBag.CTDTList)
+                                            {
+                                                <option value="@item.Value">@item.Text</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger btn-tone m-r-5" data-dismiss="modal">Thoát</button>
+                                <button type="button" class="btn btn-success btn-tone m-r-5" id="btnSave">Lưu</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--End Modal Thêm mới Lớp-->
+            <!-- Modal Sửa Lớp -->
+            <div class="modal fade" id="ModalEditLop">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title h4">Sửa đổi Lớp</h5>
+                            <button type="button" class="close" data-dismiss="modal">
+                                <i class="anticon anticon-close"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="form-validation" method="post" action="/Lop/Add">
+                                <div class="form-group row">
+                                    <input type="hidden" id="Edit_MaLop" />
+                                    <input type="hidden" id="change_Ngay_Tao" name="change_Ngay_Tao" />
+                                    <input type="hidden" id="change_Ngay_Cap_Nhat" name="change_Ngay_Cap_Nhat" />
+                                    <label class="col-sm-2 col-form-label control-label">Tên Lớp *</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="Edit_TenLop" placeholder="Nhập tên Lớp ... *">
+                                    </div>
+                                    <label class="col-sm-2 col-form-label control-label" style="margin-top: 10px;">Chọn CTĐT *</label>
+                                    <div class="col-sm-10" style="margin-top: 10px;">
+                                        <select id="Edit_Ma_CTDT" class="form-control">
+                                            <option value="">-- Chọn CTĐT --</option>
+                                            @foreach (var item in ViewBag.CTDTList)
+                                            {
+                                                <option value="@item.Value">@item.Text</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger btn-tone m-r-5" data-dismiss="modal">Thoát</button>
+                                <button type="button" class="btn btn-success btn-tone m-r-5" id="btnSaveChange">Thay đổi</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--End Modal Sửa Lớp -->
+            <div class="m-t-25">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th scope="col">STT</th>
+                                <th scope="col">ID Lớp</th>
+                                <th scope="col">Mã Lớp</th>
+                                <th scope="col">Tên CTĐT</th>
+                                <th scope="col">Ngày Cập Nhật</th>
+                                <th scope="col">Ngày Tạo</th>
+                                <th scope="col">Chức năng</th>
+                            </tr>
+                        </thead>
+                        <tbody id="showdata">
+                        </tbody>
+                    </table>
+
+                </div>
+                <div id="pagination" class="m-t-15 pagination-right">
+                    <!-- Pagination buttons will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        var currentPage = 1;
+        var totalPages = 0;
+
+        $(document).ready(function () {
+            LoadData(currentPage);
+
+            $(document).on('keyup', "#searchInput", debounce(function () {
+                var keyword = $(this).val().toLowerCase();
+                LoadData(currentPage, keyword);
+            }, 1000));
+            $(document).on("click", "#btnSave", function () {
+                AddLop();
+            });
+
+            $(document).on("click", ".page-link", function () {
+                var page = $(this).data("page");
+                if (page > 0 && page <= totalPages) {
+                    currentPage = page;
+                    LoadData(currentPage);
+                }
+            });
+        });
+        function search() {
+            var keyword = $('#searchInput').val().toLowerCase();
+            $('#showdata tr').filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(keyword) > -1)
+            });
+        }
+        function AddLop() {
+            var TenLop = $("#TenLop").val().trim();
+            var MaCTDT = $("#MaCTDT").val().trim();
+            $.ajax({
+                url: '/Lop/Add',
+                type: 'POST',
+                dataType: 'JSON',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({
+                    ma_lop: TenLop,
+                    id_ctdt: MaCTDT
+                }),
+                success: function (response) {
+                    alert(response.status);
+                    LoadData(currentPage);
+                },
+                error: function (response) {
+                    alert(response.status)
+                },
+            });
+        }
+
+        function LoadData(pageNumber, keyword) {
+            $.ajax({
+                url: '/Lop/LoadDataLop',
+                type: 'GET',
+                data: { pageNumber: pageNumber, pageSize: 10, keyword: keyword },
+                success: function (res) {
+                    var items = res.data;
+                    totalPages = res.totalPages;
+                    var html = "";
+
+                    if (items.length === 0) {
+                        html += "<tr><td colspan='7' class='text-center'>Không có dữ liệu</td></tr>";
+                    } else {
+                        for (let i = 0; i < items.length; i++) {
+                            var formattedDate1 = unixTimestampToDate(items[i].NgayCapNhat);
+                            var formattedDate2 = unixTimestampToDate(items[i].NgayTao);
+                            var index = (pageNumber - 1) * 10 + i + 1;
+                            html += "<tr>";
+                            html += "<td>" +index + "</td>";
+                            html += "<td>" + "#" + items[i].IdLop + "</td>";
+                            html += "<td>" + items[i].MaLop + "</td>";
+                            html += "<td>" + items[i].MaCTDT + "</td>";
+                            html += "<td>" + formattedDate1 + "</td>";
+                            html += "<td>" + formattedDate2 + "</td>";
+                            html += "<td><button class='btn btn-icon btn-hover btn-sm btn-rounded pull-right btnEdit' data-toggle='modal' data-target='#ModalEditLop'> <i class='anticon anticon-edit'></i></button><button class='btn btn-icon btn-hover btn-sm btn-rounded pull-right btnDelete'> <i class='anticon anticon-delete'></i></button></td>";
+                            html += "</tr>";
+                        }
+                    }
+                    $('#showdata').html(html);
+                    renderPagination(pageNumber, totalPages);
+                },
+                error: function () {
+                    var html = "<tr><td colspan='7' class='text-center'>Không thể tải dữ liệu</td></tr>";
+                    $('#showdata').html(html);
+                }
+            });
+        }
+
+        function debounce(func, delay) {
+            let timeoutId;
+            return function () {
+                const context = this;
+                const args = arguments;
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => func.apply(context, args), delay);
+            };
+        }
+        function renderPagination(currentPage, totalPages) {
+            var html = '<nav aria-label="Page navigation example"><ul class="pagination justify-content-end">';
+
+            var startPage = currentPage - 2;
+            var endPage = currentPage + 2;
+
+            if (startPage < 1) {
+                startPage = 1;
+                endPage = 5;
+            }
+
+            if (endPage > totalPages) {
+                endPage = totalPages;
+                startPage = totalPages - 4;
+            }
+
+            if (startPage < 1) {
+                startPage = 1;
+            }
+
+            html += '<li class="page-item ' + (currentPage == 1 ? 'disabled' : '') + '"><a class="page-link" href="#" data-page="' + (currentPage - 1) + '">Trước</a></li>';
+
+            for (var i = startPage; i <= endPage; i++) {
+                html += '<li class="page-item ' + (currentPage == i ? 'active' : '') + '"><a class="page-link" href="#" data-page="' + i + '">' + i + '</a></li>';
+            }
+
+            html += '<li class="page-item ' + (currentPage == totalPages ? 'disabled' : '') + '"><a class="page-link" href="#" data-page="' + (currentPage + 1) + '">Tiếp</a></li>';
+            html += '</ul></nav>';
+
+            $('#pagination').html(html);
+        }
+
+
+        function unixTimestampToDate(unixTimestamp) {
+            var date = new Date(unixTimestamp * 1000);
+
+            var weekdays = ['Chủ Nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
+
+            var dayOfWeek = weekdays[date.getDay()];
+
+            var month = ("0" + (date.getMonth() + 1)).slice(-2);
+            var day = ("0" + date.getDate()).slice(-2);
+            var year = date.getFullYear();
+            var hours = ("0" + date.getHours()).slice(-2);
+            var minutes = ("0" + date.getMinutes()).slice(-2);
+            var seconds = ("0" + date.getSeconds()).slice(-2);
+            var formattedDate = dayOfWeek + ', ' + day + "-" + month + "-" + year + " " + hours + ":" + minutes + ":" + seconds;
+            return formattedDate;
+        }
+    </script>

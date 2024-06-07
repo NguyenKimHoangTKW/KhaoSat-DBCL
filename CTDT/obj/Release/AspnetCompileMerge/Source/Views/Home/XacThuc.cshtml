@@ -1,0 +1,322 @@
+﻿@{
+    ViewBag.Title = "Xác thực thông tin khảo sát";
+}
+<style>
+    #spinner-div {
+        position: fixed;
+        display: none;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        text-align: center;
+        background-color: rgba(255, 255, 255, 0.8);
+        z-index: 2;
+    }
+</style>
+<input type="hidden" class="form-control" id="base_url" name="base_url" value="<?php echo base_url(); ?>">
+<div style="padding-top: 50px; padding-bottom: 70px;">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 columns">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12">
+
+                        <div class="text-center">
+                            <h2 class="text-center" style="font-weight: 700">XÁC THỰC THÔNG TIN</h2>
+                        </div>
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a onclick="activaTab('home')" style="color: #0a58ca" class="nav-link active" data-toggle="tab" href="#home">Xác thực</a>
+                            </li>
+                            <li class="nav-item">
+                                <a onclick="activaTab('menu1')" style="color: #0a58ca" class="nav-link" data-toggle="tab" href="#menu1">Không nhớ MSSV/MSHV</a>
+                            </li>
+                        </ul>
+
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div id="home" class="container tab-pane active" style="margin-left: 0">
+                                <div class="mt-4 p-5 text-black rounded" style="background-color: #E7E9EB!important">
+                                    <form id="form_checkmssv" style="margin-bottom: 10px;">
+                                        <div class="form-label-group">
+                                            <label>Mã số sinh viên/học viên của bạn</label>
+                                            <p><i>*Lưu ý: Nếu không nhớ MSSV/MSHV có thể chọn chức năng - Không nhớ MSSV/MSHV ở bên trên</i></p>
+                                            <input type="text" class="form-control" id="mssv" name="mssv" placeholder="Nhập MSSV của bạn ...." autofocus>
+                                        </div>
+                                        <div class="d-flex justify-content-center" style="padding-top: 20px">
+                                            <button style="width: 150px; margin: 5px" id="btnCheckMSSV" type="button" class="btn btn-primary" data-loading-text="Đang xử lý....">
+                                                Xác thực
+                                            </button>
+                                            <button style="width: 150px; margin: 5px" onclick="window.location='@Url.Action("Index","Home")';" type="button" class="btn btn-secondary">Trở về trang chủ</button>
+                                        </div>
+                                        <br>
+                                        <div id="show_error" class="alert alert-danger d-flex align-items-center"
+                                             role="alert" style="visibility:hidden">
+                                            <div id="error_mssv"></div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <div id="menu1" class="container tab-pane fade">
+                                <div class="mt-4 p-5 text-black rounded" style="background-color: #E7E9EB!important">
+                                    <div id="spinner-div" class="pt-5">
+                                        <div class="spinner-border text-primary" role="status"></div>
+                                    </div>
+                                    <form id="form_checkmssv">
+                                        <div class="mb-3" style="padding-bottom: 15px;">
+                                            <select class="form-control" id="select2-khoa">
+                                                <option selected>Chọn khoa của bạn</option>
+                                                @foreach (var item in ViewBag.KhoaList)
+                                                {
+                                                    <option value="@item.Value">@item.Text</option>
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="mb-3" style="padding-bottom: 15px;">
+                                            <select class="form-control" id="select2-ctdt">
+                                                <option selected>Chọn chương trình đào tạo của bạn</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3" style="padding-bottom: 15px;">
+                                            <select class="form-control" id="select2-lop">
+                                                <option selected>Chọn lớp của bạn</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3" style="padding-bottom: 15px;">
+                                            <select class="js-example-basic-single js-states form-control"
+                                                    id="select2-sv">
+                                                <option selected>Chọn tên của bạn</option>
+                                            </select>
+                                        </div>
+                                        <div class="d-flex justify-content-center">
+                                            <button style="width: 150px; margin: 5px" id="forget_mssv_button"
+                                                    type="button" class="btn btn-primary"
+                                                    data-loading-text="Đang xử lý....">
+                                                Xác thực
+                                            </button>
+                                            <button style="width: 150px; margin: 5px"
+                                                    onclick="window.location='@Url.Action("Index","Home")';" type="button"
+                                                    class="btn btn-secondary">
+                                                Trở về trang chủ
+                                            </button>
+                                        </div>
+                                        <br>
+                                        <div id="show_error_forget" class="alert alert-danger d-flex align-items-center"
+                                             role="alert" style="visibility:hidden">
+                                            <div id="error_forger_mssv"></div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function () {
+        var isKhoaSelected = false;
+        var isCTDTSelected = false;
+        var isLopSelected = false;
+        var isSVSelected = false;
+        $("#btnCheckMSSV").click(function () {
+            var mssv = $("#mssv").val();
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GetSvIdByMssv", "Home")",
+                data: { mssv: mssv },
+                success: function (response) {
+                    if (response.success) {
+                        var idsv = response.svId;
+                        var idctdt = response.ctdt;
+                        $.ajax({
+                            type: "POST",
+                            url: "@Url.Action("SaveDataXacThucCTDT", "Home")",
+                            data: { ctdt: idctdt, sv: idsv },
+                            success: function (response) {
+                                if (response.success) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Xác thực thành công!',
+                                        width: 600,
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    }).then(function () {
+                                        window.location.href = "@Url.Action("Survey", "Survey")" + "?id=" + response.idPhieu;
+                                    });
+                                }
+                            },
+                            error: function () {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: 'Có lỗi xảy ra khi gửi dữ liệu lên server!'
+                                });
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            width: 600,
+                            text: response.message
+                        });
+                    }
+                },
+                error: function () {
+                    alert("Có lỗi xảy ra khi gửi dữ liệu lên server!");
+                }
+            });
+        });
+
+
+
+        $("#forget_mssv_button").click(function () {
+            if (!isKhoaSelected) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    width: 600,
+                    text: 'Vui lòng chọn khoa trước khi xác thực!'
+                });
+                return;
+            }
+            else if (!isCTDTSelected) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    width: 600,
+                    text: 'Vui lòng chọn chọn chương trình đào tạo trước khi xác thực!'
+                });
+                return;
+            }
+            else if (!isLopSelected) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    width: 600,
+                    text: 'Vui lòng chọn chọn lớp trước khi xác thực!'
+                });
+                return;
+            }
+            else if (!isSVSelected) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    width: 600,
+                    text: 'Vui lòng chọn chọn tên của bạn trước khi xác thực!'
+                });
+                return;
+            }
+            var ctdt = $("#select2-ctdt").val();
+            var sv = $("#select2-sv").val();
+            $.ajax({
+    type: "POST",
+    url: "@Url.Action("SaveDataXacThucCTDT", "Home")",
+    data: { ctdt: ctdt, sv: sv },
+    success: function (response) {
+        if (response.success) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Xác thực thành công!',
+                showConfirmButton: false,
+                timer: 2000
+            }).then(function () {
+                window.location.href = "@Url.Action("Survey", "Survey")" + "?id=" + response.idPhieu;
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: response.message
+            });
+        }
+    },
+    error: function () {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Có lỗi xảy ra khi gửi dữ liệu lên server!'
+        });
+    }
+});
+    });
+
+        $("#select2-khoa").change(function () {
+            if ($(this).val() == "Chọn khoa của bạn") {
+                isKhoaSelected = false;
+                $("#select2-ctdt").empty();
+                $("#select2-ctdt").append("<option selected>Chọn chương trình đào tạo của bạn</option>");
+                return;
+            }
+            isKhoaSelected = true;
+            $.get("/Home/LoadCTDTByKhoa", { khoaId: $(this).val() }, function (data) {
+                $("#select2-ctdt").empty();
+                $("#select2-ctdt").append("<option selected>Chọn chương trình đào tạo của bạn</option>");
+                $.each(data, function (index, row) {
+                    $("#select2-ctdt").append("<option value='" + row.id_ctdt + "'>" + row.ten_ctdt + "</option>");
+                });
+            });
+        });
+
+        $("#select2-ctdt").change(function () {
+            if ($(this).val() == "Chọn chương trình đào tạo của bạn") {
+                isCTDTSelected = false;
+                $("#select2-lop").empty();
+                $("#select2-lop").append("<option selected>Chọn lớp của bạn</option>");
+                return;
+            }
+            isCTDTSelected = true;
+            $.get("/Home/LoadLopByCTDT", { CTDTID: $(this).val() }, function (data) {
+                $("#select2-lop").empty();
+                $("#select2-lop").append("<option selected>Chọn lớp của bạn</option>");
+                $.each(data, function (index, row) {
+                    $("#select2-lop").append("<option value='" + row.id_lop + "'>" + row.ma_lop + "</option>");
+                });
+            });
+        });
+
+        $("#select2-lop").change(function () {
+            if ($(this).val() == "Chọn lớp của bạn") {
+                isLopSelected = false;
+                $("#select2-sv").empty();
+                $("#select2-sv").append("<option selected>Chọn tên của bạn</option>");
+                return;
+            }
+            isLopSelected = true;
+            $.get("/Home/LoadSVByLop", { LopID: $(this).val() }, function (data) {
+                $("#select2-sv").empty();
+                $("#select2-sv").append("<option selected>Chọn tên của bạn</option>");
+                $.each(data, function (index, row) {
+                    var ngaySinh = new Date(parseInt(row.ngaysinh.substr(6)));
+                    var formattedNgaySinh = ngaySinh.toLocaleDateString("en-US");
+
+                    $("#select2-sv").append("<option value='" + row.id_sv + "'>" + row.hovaten + " - " + row.ma_sv + " - " + formattedNgaySinh + "</option>");
+                });
+            });
+        });
+
+
+        $("#select2-sv").change(function () {
+            if ($(this).val() == "Chọn tên của bạn") {
+                isSVSelected = false;
+                $("#select2-sv").empty();
+                $("#select2-sv").append("<option selected>Chọn tên của bạn</option>");
+                return;
+            }
+            else {
+                isSVSelected = true;
+            }
+        });
+});
+    function activaTab(tabID) {
+        $('.nav-tabs a[href="#' + tabID + '"]').tab('show');
+    }
+</script>

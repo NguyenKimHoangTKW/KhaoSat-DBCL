@@ -1,0 +1,23 @@
+﻿<div class="side-nav">
+    <div class="side-nav-inner">
+        <ul class="side-nav-menu scrollable">
+            <!-- Phiếu khảo sát menu -->
+            <li class="nav-item dropdown @((ViewBag.CurrentMenu == "PhieuKhaoSat") ? "open" : "")">
+                <a class="dropdown-toggle" href="javascript:void(0);">
+                    <span class="icon-holder">
+                        <i class="anticon anticon-form"></i>
+                    </span>
+                    <span class="title">Phiếu khảo sát</span>
+                    <span class="arrow">
+                        <i class="arrow-icon"></i>
+                    </span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="@((ViewBag.CurrentController == "ThongKeKhaoSat" && ViewBag.CurrentAction == "Index") ? "active" : "")">
+                        <a href="@Url.Action("TKSVCKS", "ThongKeKhaoSat", new {area = "CTDT"})">Danh sách đối tượng khảo sát</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
