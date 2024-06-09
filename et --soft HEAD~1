@@ -1,0 +1,27 @@
+[33m4fc5365[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m Chuyen tu login GG thong thuong sang Firebase
+[33m7acdba5[m Chuyen tu login GG thong thuong sang Firebase
+[33m8613c44[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m Fix lai dang nhap cung luc nhieu user
+[33m80eb56d[m Update check sinh vien, tai khoan da khao sat Form nao
+[33m88871dd[m Xong login Google
+[33m31fb5b8[m Fix lai dang nhap Google, them phan dieu huong cho Admin va CTDT, sua lai 1 chut giao dien client
+[33mf5e4454[m Hoan thanh va Upload Version 1
+[33mcd1332f[m Fix lai Xem thong tin PKS - lan 2
+[33m13e056d[m Fix lai Xem thong tin PKS
+[33mcd19ada[m Phat trien xem SV chua KS cho CTDT, Xem duoc phieu da khao sat cua Client da KS, Them API anh Google vao tai khoan dang nhap
+[33me1d25a9[m Them phan quan ly sinh vien
+[33m2468ac0[m Final xuat excel va luu tru
+[33mc097107[m Phat trien thong ke khao sat - lan 1
+[33m4181a8a[m Xong chuc nang Xuat Excel theo CTDT
+[33m703a235[m Phat trien xuat excel theo CTDT
+[33m6d13508[m Phat trien xuat Excel - lan 2
+[33m7ba5d51[m Phat trien nhap MSSV anh xa lay idSV
+[33m7cb07e0[m Phat trien tao new PKS va Edit PKS - Lan 2
+[33m786495d[m Phat trien tao new PKS va Edit PKS - Lan 1
+[33m938510e[m Final Login GG
+[33m84840ed[m Phat trien dang nhap vao Google
+[33m08b63f9[m Phat trien xuat Excel - Lan 1
+[33mb942c2a[m Phat trien trinh xem cau hoi khao sat
+[33m7e166da[m Xong tinh nang them moi phieu, phat trien phan trang va cac phan con lai
+[33m09fb2a2[m Backup Code, Phat trien tinh nang xuat Excel
+[33m9c465c7[m Backup Chuc nang PKS
+[33mecb9e90[m first commit

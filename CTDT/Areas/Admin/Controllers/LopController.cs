@@ -67,6 +67,80 @@ namespace CTDT.Areas.Admin.Controllers
                 return Json(new { status = "Load dữ liệu thất bại" }, JsonRequestBehavior.AllowGet);
             }
         }
+        [HttpGet]
+        public ActionResult GetByID(int id)
+        {
+            var item = db.lop.Where(k => k.id_lop == id)
+                .Select(k => new
+                {
+                    id_lop = k.id_lop,
+                    id_ctdt = k.id_ctdt,
+                    ma_lop = k.ma_lop,
+                    ngaytao = k.ngaytao,
+                    ngaycapnhat = k.ngaycapnhat
+                }).FirstOrDefault();
 
+            var status = item != null ? "Success" : "Not Found";
+            return Json(new { data = item, status = status }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(lop l)
+        {
+            DateTime now = DateTime.UtcNow;
+            int unixTimestamp = (int)(now.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+            var status = "";
+
+            var lopp = db.lop.Find(l.id_lop);
+            if (lopp != null)
+            {
+                if (string.IsNullOrEmpty(l.ma_lop))
+                {
+                    status = "Tên lớp không được để trống";
+                }
+                else if (db.lop.Any(x => x.ma_lop == l.ma_lop && x.id_lop != l.id_lop))
+                {
+                    status = "Tên lớp đang bị trùng";
+                }
+                else
+                {
+                    lopp.ma_lop = l.ma_lop;
+                    lopp.id_ctdt = l.id_ctdt;
+                    lopp.ngaycapnhat = unixTimestamp;
+                    db.SaveChanges();
+                    status = "Cập nhật thông tin thành công";
+                }
+            }
+            else
+            {
+                status = "Cập nhật thông tin thất bại";
+            }
+
+            return Json(new { status = status }, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public ActionResult Delete(int id)
+        {
+            var status = "";
+            try
+            {
+                var lop = db.lop.Find(id);
+                if (lop != null)
+                {
+                    db.lop.Remove(lop);
+                    db.SaveChanges();
+                    status = "Xóa lớp thành công";
+                }
+                else
+                {
+                    status = "Không tìm thấy lớp cần xóa";
+                }
+            }
+            catch (Exception ex)
+            {
+                status = "Xóa lớp thất bại: " + ex.Message;
+            }
+            return Json(new { status = status }, JsonRequestBehavior.AllowGet);
+        }
     }
 }

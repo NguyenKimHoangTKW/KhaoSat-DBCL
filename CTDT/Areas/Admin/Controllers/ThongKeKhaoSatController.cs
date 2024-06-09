@@ -79,7 +79,7 @@ namespace CTDT.Areas.Admin.Controllers
             {
                 query = query.Where(sv => !db.answer_response.Any(aw => aw.id_sv == sv.id_sv && (survey == 0 || aw.surveyID == survey)));
             }
-
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             var GetSV = query
                 .OrderBy(l => l.id_sv)
                 .AsEnumerable()
@@ -137,7 +137,7 @@ namespace CTDT.Areas.Admin.Controllers
                 string fileName = $"{status}_{timestamp}.xlsx";
                 string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
-                string folderPath = Server.MapPath("~/App_Data/DoiTuongKhaoSat");
+                string folderPath = Server.MapPath("~/DataExport/DoiTuongKhaoSat");
                 if (!Directory.Exists(folderPath))
                 {
                     Directory.CreateDirectory(folderPath);

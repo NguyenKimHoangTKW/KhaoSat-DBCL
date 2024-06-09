@@ -17,10 +17,9 @@ namespace CTDT
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
+            BundleTable.Bundles.ResetAll();
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-
-            // Configure the unique claim type identifier if different from 'nameidentifier'
-            AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.NameIdentifier;
+            BundleTable.EnableOptimizations = true;
         }
 
     }

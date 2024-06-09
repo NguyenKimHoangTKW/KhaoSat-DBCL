@@ -25,6 +25,29 @@ namespace CTDT
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
+            // Client Side
+
+            bundles.Add(new ScriptBundle("~/bundles/firebase").Include(
+                        "~/Scripts/Firebase.js"));
+            bundles.Add(new ScriptBundle("~/bundles/User/HeDaoTao").Include(
+                        "~/Scripts/User/Hedaotao.js"));
+            bundles.Add(new ScriptBundle("~/bundles/User/Phieukhaosat").Include(
+                        "~/Scripts/User/Phieukhaosat.js"));
+            bundles.Add(new ScriptBundle("~/bundles/User/Xacthuc").Include(
+                        "~/Scripts/User/Xacthuc.js"));
+            bundles.Add(new ScriptBundle("~/bundles/User/XacthucCTDT").Include(
+                        "~/Scripts/User/XacthucCTDT.js"));
+            bundles.Add(new ScriptBundle("~/bundles/User/AnswerPKS").Include(
+                        "~/Scripts/User/Survey/AnswerPKS.js"));
+            bundles.Add(new ScriptBundle("~/bundles/User/SurveyForm").Include(
+                        "~/Scripts/User/Survey/SurveyForm.js"));
+            bundles.Add(new ScriptBundle("~/bundles/User/ListAnswerSurvey").Include(
+                        "~/Scripts/User/Survey/ListAnswerSurvey.js"));
+            bundles.Add(new ScriptBundle("~/bundles/User/Survey").Include(
+                        "~/Scripts/User/Survey/Survey.js"));
+
+            // Admin
+            BundleTable.EnableOptimizations = true;
         }
     }
 }

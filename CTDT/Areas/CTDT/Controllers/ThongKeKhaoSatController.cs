@@ -91,6 +91,7 @@ namespace CTDT.Areas.CTDT.Controllers
 
             using (ExcelPackage package = new ExcelPackage())
             {
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
                 ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("SinhVienChuaKhaoSat");
 
                 if (GetSV.Any())
@@ -132,7 +133,7 @@ namespace CTDT.Areas.CTDT.Controllers
                 string fileName = $"{status}_{timestamp}.xlsx";
                 string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
-                string folderPath = Server.MapPath("~/App_Data/DoiTuongKhaoSat-CTDT");
+                string folderPath = Server.MapPath("~/DataExport/DoiTuongKhaoSat-CTDT");
                 if (!Directory.Exists(folderPath))
                 {
                     Directory.CreateDirectory(folderPath);

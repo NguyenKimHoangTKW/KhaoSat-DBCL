@@ -1,4 +1,5 @@
 ﻿using CTDT.Models;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -163,6 +164,67 @@ namespace CTDT.Areas.Admin.Controllers
                 status = "Xóa tài khoản thất bại: " + ex.Message;
             }
             return Json(new { status = status }, JsonRequestBehavior.AllowGet);
+        }
+
+        public int MapTenTypeToIDType(string tentype)
+        {
+            var typeuser = db.typeusers.Where(k => k.name_typeusers == tentype).FirstOrDefault();
+            return typeuser ?.id_typeusers ?? 0;
+        }
+        public int MapTenCTDTToIDCTDT(string tenctdt)
+        {
+            var ctdt = db.ctdt.Where(k => k.ten_ctdt == tenctdt).FirstOrDefault();
+            return ctdt?.id_ctdt ?? 0;
+        }
+        [HttpPost]
+        public ActionResult UploadExcel(HttpPostedFileBase excelFile)
+        {
+            if (excelFile != null && excelFile.ContentLength > 0)
+            {
+                try
+                {
+
+                    DateTime now = DateTime.UtcNow;
+                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                    using (var package = new ExcelPackage(excelFile.InputStream))
+                    {
+                        var worksheet = package.Workbook.Worksheets.FirstOrDefault();
+                        if (worksheet == null)
+                        {
+                            return Json(new { status = "Không tìm thấy worksheet trong file Excel" }, JsonRequestBehavior.AllowGet);
+                        }
+                        int unixTimestamp = (int)(now.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+                        for (int row = 2; row <= worksheet.Dimension.End.Row; row++)
+                        {
+                            string Chucvu = worksheet.Cells[row, 2].Value.ToString();
+                            int machucvu = MapTenTypeToIDType(Chucvu);
+                            string CTDT = worksheet.Cells[row, 3].Value.ToString();
+                            int mactdt = MapTenCTDTToIDCTDT(CTDT);
+                            var nguoidung = new users
+                            {
+
+                                email = worksheet.Cells[row, 1].Text,
+                                id_typeusers = machucvu,
+                                id_ctdt = mactdt,
+                                ngaytao = unixTimestamp,
+                                ngaycapnhat = unixTimestamp
+                            };
+
+                            db.users.Add(nguoidung);
+                        }
+
+                        db.SaveChanges();
+
+                        return Json(new { status = "Thêm người dùng thành công" }, JsonRequestBehavior.AllowGet);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return Json(new { status = $"Đã xảy ra lỗi: {ex.Message}" }, JsonRequestBehavior.AllowGet);
+                }
+            }
+
+            return Json(new { status = "Vui lòng chọn file Excel" }, JsonRequestBehavior.AllowGet);
         }
     }
 }

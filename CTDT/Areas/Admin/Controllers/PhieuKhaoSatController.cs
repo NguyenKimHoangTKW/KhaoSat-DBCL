@@ -139,6 +139,7 @@ namespace CTDT.Areas.Admin.Controllers
         }
         public ActionResult ExportExcelSurvey(int id, int cttdt = 0)
         {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             var query = db.answer_response.AsQueryable();
             if (cttdt != 0)
             {
@@ -179,13 +180,14 @@ namespace CTDT.Areas.Admin.Controllers
         {
             try
             {
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
                 HttpPostedFileBase file = Request.Files["file"];
 
                 if (file != null && file.ContentLength > 0)
                 {
                     string timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
                     string fileName = $"KetQuaKhaoSat_{timestamp}.xlsx";
-                    string directoryPath = Server.MapPath("~/App_Data/KetQuaPKS");
+                    string directoryPath = Server.MapPath("~/DataExport/KetQuaPKS");
                     string filePath = Path.Combine(directoryPath, fileName);
                     Directory.CreateDirectory(directoryPath);
                     file.SaveAs(filePath);

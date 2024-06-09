@@ -36,7 +36,10 @@
                                     <label for="excelFile">Chọn file Excel</label>
                                     <input type="file" class="form-control" id="excelFile" name="excelFile" accept=".xlsx, .xls">
                                 </div>
-                                <button type="submit" class="btn btn-primary">Upload</button>
+                                <button type="submit" class="btn btn-success btn-tone m-r-5">Upload</button>
+                                <a href="~/DataExport/Mau/MauUploadSinhVien.xlsx" download>
+                                    <button type="button" class="btn btn-info btn-tone m-r-5">Tải file mẫu</button>
+                                </a>
                             </form>
                         </div>
                     </div>
@@ -48,7 +51,7 @@
                     <input type="text" id="searchInput" class="form-control" placeholder="Nhập từ khóa tìm kiếm...">
                 </div>
             </div>
-            <!--Modal Thêm mới Lớp-->
+            <!-- Modal Thêm mới Lớp -->
             <div class="modal fade" id="bd-example-modal-lg">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
@@ -70,9 +73,9 @@
                                         <select id="MaCTDT" class="form-control">
                                             <option value="">-- Chọn CTĐT --</option>
                                             @*@foreach (var item in ViewBag.CTDTList)
-                                        {
-                                            <option value="@item.Value">@item.Text</option>
-                                        }*@
+                                                {
+                                                    <option value="@item.Value">@item.Text</option>
+                                                }*@
                                         </select>
                                     </div>
                                 </div>
@@ -85,7 +88,7 @@
                     </div>
                 </div>
             </div>
-            <!--End Modal Thêm mới Lớp-->
+            <!-- End Modal Thêm mới Lớp -->
             <!-- Modal Sửa Lớp -->
             <div class="modal fade" id="ModalEditLop">
                 <div class="modal-dialog modal-lg">
@@ -111,9 +114,9 @@
                                         <select id="Edit_Ma_CTDT" class="form-control">
                                             <option value="">-- Chọn CTĐT --</option>
                                             @*@foreach (var item in ViewBag.CTDTList)
-                                        {
-                                            <option value="@item.Value">@item.Text</option>
-                                        }*@
+                                                {
+                                                    <option value="@item.Value">@item.Text</option>
+                                                }*@
                                         </select>
                                     </div>
                                 </div>
@@ -126,7 +129,7 @@
                     </div>
                 </div>
             </div>
-            <!--End Modal Sửa Lớp -->
+            <!-- End Modal Sửa Lớp -->
             <div class="m-t-25">
                 <div class="table-responsive">
                     <table class="table table-bordered">
@@ -149,17 +152,16 @@
                         <tbody id="showdata">
                         </tbody>
                     </table>
-
                 </div>
                 <div id="pagination" class="m-t-15 pagination-right">
                     <!-- Pagination buttons will be inserted here -->
                 </div>
                 <!-- End Modal Import Excel -->
-
             </div>
         </div>
     </div>
 </div>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
     var currentPage = 1;
@@ -168,29 +170,31 @@
 
     $(document).ready(function () {
         LoadData(currentPage);
+
         $('#importExcelForm').on('submit', function (e) {
             e.preventDefault();
             var formData = new FormData(this);
             $.ajax({
-                url: '/SinhVien/ImportExcel',
+                url: '/Admin/SinhVien/UploadExcel',
                 type: 'POST',
                 data: formData,
                 contentType: false,
                 processData: false,
-                success: function (res) {
-                    if (res.success) {
-                        $('#importResult').html('<div class="alert alert-success">' + res.message + '</div>');
+                success: function (response) {
+                    if (response.status.includes('Thành công')) {
+                        alert(response.status);
                         $('#importExcelModal').modal('hide');
                         LoadData(currentPage);
                     } else {
-                        $('#importResult').html('<div class="alert alert-danger">' + res.message + '</div>');
+                        alert(response.status);
                     }
                 },
-                error: function () {
-                    $('#importResult').html('<div class="alert alert-danger">Có lỗi xảy ra khi upload file</div>');
+                error: function (xhr, status, error) {
+                    alert('Đã xảy ra lỗi: ' + error);
                 }
             });
         });
+
         $('#searchInput').on('keyup', debounce(function () {
             var keyword = $(this).val().toLowerCase();
             currentPage = 1;
@@ -206,108 +210,108 @@
                 LoadData(currentPage, keyword);
             }
         });
-    });
 
-    function debounce(func, wait) {
-        var timeout;
-        return function () {
-            var context = this, args = arguments;
-            clearTimeout(timeout);
-            timeout = setTimeout(function () {
-                timeout = null;
-                func.apply(context, args);
-            }, wait);
-        };
-    }
-
-    function LoadData(pageNumber, keyword = '') {
-        $.ajax({
-            url: '/SinhVien/LoadSinhVien',
-            type: 'GET',
-            data: { pageNumber: pageNumber, pageSize: pageSize, keyword: keyword },
-            success: function (res) {
-                var items = res.data;
-                var html = "";
-                if (items.length === 0) {
-                    html += "<tr><td colspan='12' class='text-center'>Không có dữ liệu</td></tr>";
-                } else {
-                    var stt = (pageNumber - 1) * pageSize;
-                    for (let i = 0; i < items.length; i++) {
-                        var formattedDate1 = unixTimestampToDate(items[i].NgayCapNhat);
-                        var formattedDate2 = unixTimestampToDate(items[i].NgayTao);
-                        html += "<tr>";
-                        html += "<td>" + (stt + i + 1) + "</td>";
-                        html += "<td>" + "#" + items[i].IDSV + "</td>";
-                        html += "<td>" + items[i].MSSV + "</td>";
-                        html += "<td>" + items[i].HoTen + "</td>";
-                        html += "<td>" + items[i].NgaySinh + "</td>";
-                        html += "<td>" + items[i].SDT + "</td>";
-                        html += "<td>" + items[i].DiaChi + "</td>";
-                        html += "<td>" + items[i].GioiTinh + "</td>";
-                        html += "<td>" + items[i].NamTotNghiep + "</td>";
-                        html += "<td>" + formattedDate1 + "</td>";
-                        html += "<td>" + formattedDate2 + "</td>";
-                        html += "<td><button class='btn btn-icon btn-hover btn-sm btn-rounded pull-right btnEdit' data-toggle='modal' data-target='#ModalEditLop'> <i class='anticon anticon-edit'></i></button><button class='btn btn-icon btn-hover btn-sm btn-rounded pull-right btnDelete'> <i class='anticon anticon-delete'></i></button></td>";
-                        html += "</tr>";
+        function LoadData(pageNumber, keyword = '') {
+            $.ajax({
+                url: '/Admin/SinhVien/LoadSinhVien',
+                type: 'GET',
+                data: { pageNumber: pageNumber, pageSize: pageSize, keyword: keyword },
+                success: function (res) {
+                    var items = res.data;
+                    var html = "";
+                    if (items.length === 0) {
+                        html += "<tr><td colspan='12' class='text-center'>Không có dữ liệu</td></tr>";
+                    } else {
+                        var stt = (pageNumber - 1) * pageSize;
+                        for (let i = 0; i < items.length; i++) {
+                            var formattedDate1 = unixTimestampToDate(items[i].NgayCapNhat);
+                            var formattedDate2 = unixTimestampToDate(items[i].NgayTao);
+                            html += "<tr>";
+                            html += "<td>" + (stt + i + 1) + "</td>";
+                            html += "<td>" + "#" + items[i].IDSV + "</td>";
+                            html += "<td>" + items[i].MSSV + "</td>";
+                            html += "<td>" + items[i].HoTen + "</td>";
+                            html += "<td>" + items[i].NgaySinh + "</td>";
+                            html += "<td>" + items[i].SDT + "</td>";
+                            html += "<td>" + items[i].DiaChi + "</td>";
+                            html += "<td>" + items[i].GioiTinh + "</td>";
+                            html += "<td>" + items[i].NamTotNghiep + "</td>";
+                            html += "<td>" + formattedDate1 + "</td>";
+                            html += "<td>" + formattedDate2 + "</td>";
+                            html += "<td><button class='btn btn-icon btn-hover btn-sm btn-rounded pull-right btnEdit' data-toggle='modal' data-target='#ModalEditLop'> <i class='anticon anticon-edit'></i></button><button class='btn btn-icon btn-hover btn-sm btn-rounded pull-right btnDelete'> <i class='anticon anticon-delete'></i></button></td>";
+                            html += "</tr>";
+                        }
                     }
+                    $('#showdata').html(html);
+                    totalPages = res.totalPages;
+                    renderPagination(pageNumber, totalPages);
+                },
+                error: function () {
+                    var html = "<tr><td colspan='12' class='text-center'>Không thể tải dữ liệu</td></tr>";
+                    $('#showdata').html(html);
                 }
-                $('#showdata').html(html);
-                totalPages = res.totalPages;
-                renderPagination(pageNumber, totalPages);
-            },
-            error: function () {
-                var html = "<tr><td colspan='12' class='text-center'>Không thể tải dữ liệu</td></tr>";
-                $('#showdata').html(html);
+            });
+        }
+
+        function renderPagination(currentPage, totalPages) {
+            var html = '<nav aria-label="Page navigation example"><ul class="pagination justify-content-end">';
+
+            var startPage = currentPage - 2;
+            var endPage = currentPage + 2;
+
+            if (startPage < 1) {
+                startPage = 1;
+                endPage = 5;
             }
-        });
-    }
 
-    function renderPagination(currentPage, totalPages) {
-        var html = '<nav aria-label="Page navigation example"><ul class="pagination justify-content-end">';
+            if (endPage > totalPages) {
+                endPage = totalPages;
+                startPage = totalPages - 4;
+            }
 
-        var startPage = currentPage - 2;
-        var endPage = currentPage + 2;
+            if (startPage < 1) {
+                startPage = 1;
+            }
 
-        if (startPage < 1) {
-            startPage = 1;
-            endPage = 5;
+            html += '<li class="page-item ' + (currentPage === 1 ? 'disabled' : '') + '"><a class="page-link" href="#" data-page="' + (currentPage - 1) + '">Trước</a></li>';
+
+            for (var i = startPage; i <= endPage; i++) {
+                html += '<li class="page-item ' + (currentPage === i ? 'active' : '') + '"><a class="page-link" href="#" data-page="' + i + '">' + i + '</a></li>';
+            }
+
+            html += '<li class="page-item ' + (currentPage === totalPages ? 'disabled' : '') + '"><a class="page-link" href="#" data-page="' + (currentPage + 1) + '">Tiếp</a></li>';
+            html += '</ul></nav>';
+
+            $('#pagination').html(html);
         }
 
-        if (endPage > totalPages) {
-            endPage = totalPages;
-            startPage = totalPages - 4;
+        function unixTimestampToDate(unixTimestamp) {
+            var date = new Date(unixTimestamp * 1000);
+
+            var weekdays = ['Chủ Nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
+
+            var dayOfWeek = weekdays[date.getDay()];
+
+            var month = ("0" + (date.getMonth() + 1)).slice(-2);
+            var day = ("0" + date.getDate()).slice(-2);
+            var year = date.getFullYear();
+            var hours = ("0" + date.getHours()).slice(-2);
+            var minutes = ("0" + date.getMinutes()).slice(-2);
+            var seconds = ("0" + date.getSeconds()).slice(-2);
+            var formattedDate = dayOfWeek + ', ' + day + "-" + month + "-" + year + " " + hours + ":" + minutes + ":" + seconds;
+            return formattedDate;
         }
 
-        if (startPage < 1) {
-            startPage = 1;
+        function debounce(func, wait) {
+            var timeout;
+            return function () {
+                var context = this, args = arguments;
+                clearTimeout(timeout);
+                timeout = setTimeout(function () {
+                    timeout = null;
+                    func.apply(context, args);
+                }, wait);
+            };
         }
-
-        html += '<li class="page-item ' + (currentPage === 1 ? 'disabled' : '') + '"><a class="page-link" href="#" data-page="' + (currentPage - 1) + '">Trước</a></li>';
-
-        for (var i = startPage; i <= endPage; i++) {
-            html += '<li class="page-item ' + (currentPage === i ? 'active' : '') + '"><a class="page-link" href="#" data-page="' + i + '">' + i + '</a></li>';
-        }
-
-        html += '<li class="page-item ' + (currentPage === totalPages ? 'disabled' : '') + '"><a class="page-link" href="#" data-page="' + (currentPage + 1) + '">Tiếp</a></li>';
-        html += '</ul></nav>';
-
-        $('#pagination').html(html);
-    }
-
-    function unixTimestampToDate(unixTimestamp) {
-        var date = new Date(unixTimestamp * 1000);
-
-        var weekdays = ['Chủ Nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
-
-        var dayOfWeek = weekdays[date.getDay()];
-
-        var month = ("0" + (date.getMonth() + 1)).slice(-2);
-        var day = ("0" + date.getDate()).slice(-2);
-        var year = date.getFullYear();
-        var hours = ("0" + date.getHours()).slice(-2);
-        var minutes = ("0" + date.getMinutes()).slice(-2);
-        var seconds = ("0" + date.getSeconds()).slice(-2);
-        var formattedDate = dayOfWeek + ', ' + day + "-" + month + "-" + year + " " + hours + ":" + minutes + ":" + seconds;
-        return formattedDate;
-    }
+    });
 </script>

@@ -61,6 +61,9 @@
     <Reference Include="EPPlus.System.Drawing, Version=6.1.1.0, Culture=neutral, PublicKeyToken=2308d35469c9bac0, processorArchitecture=MSIL">
       <HintPath>..\packages\EPPlus.System.Drawing.6.1.1\lib\net462\EPPlus.System.Drawing.dll</HintPath>
     </Reference>
+    <Reference Include="FirebaseAdmin, Version=3.0.0.0, Culture=neutral, PublicKeyToken=97c8d00c348326ed, processorArchitecture=MSIL">
+      <HintPath>..\packages\FirebaseAdmin.3.0.0\lib\net462\FirebaseAdmin.dll</HintPath>
+    </Reference>
     <Reference Include="Google.Api.Gax, Version=4.8.0.0, Culture=neutral, PublicKeyToken=3ec5ea7f18953e47, processorArchitecture=MSIL">
       <HintPath>..\packages\Google.Api.Gax.4.8.0\lib\net462\Google.Api.Gax.dll</HintPath>
     </Reference>
@@ -133,6 +136,9 @@
     <Reference Include="System.CodeDom, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.CodeDom.7.0.0\lib\net462\System.CodeDom.dll</HintPath>
     </Reference>
+    <Reference Include="System.Collections.Immutable, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.8.0.0\lib\net462\System.Collections.Immutable.dll</HintPath>
+    </Reference>
     <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ComponentModel.Annotations.5.0.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
     </Reference>
@@ -146,8 +152,8 @@
     <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
     </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
@@ -228,12 +234,14 @@
     <Compile Include="Areas\Admin\Controllers\ThongKeKhaoSatController.cs" />
     <Compile Include="Areas\CTDT\Controllers\ThongKeKhaoSatController.cs" />
     <Compile Include="Areas\CTDT\CTDTAreaRegistration.cs" />
+    <Compile Include="Controllers\FirebaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\SurveyController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helper\SessionExpireFilter.cs" />
     <Compile Include="Helper\SessionHelper.cs" />
     <Compile Include="Models\answer_response.cs">
       <DependentUpon>CTDTModel.tt</DependentUpon>
@@ -1126,12 +1134,13 @@
     <Content Include="Areas\CTDT\Views\Shared\_CTDTLayout.cshtml" />
     <Content Include="Areas\CTDT\Views\Shared\_CTDTNavPartial.cshtml" />
     <Content Include="Areas\CTDT\Views\ThongKeKhaoSat\TKSVCKS.cshtml" />
-    <Content Include="App_Data\SinhVienChuaKhaoSat-CTDT\SinhVienChuaKhaoSat_20240603141658.xlsx" />
     <Content Include="Areas\CTDT\Views\ThongKeKhaoSat\Index.cshtml" />
-    <Content Include="App_Data\DoiTuongKhaoSat-CTDT\DoiTuongChuaKhaoSat_20240604094317.xlsx" />
-    <Content Include="App_Data\DoiTuongKhaoSat-CTDT\DoiTuongChuaKhaoSat_20240604094434.xlsx" />
-    <Content Include="App_Data\DoiTuongKhaoSat\DoiTuongDaKhaoSat_20240604094653.xlsx" />
+    <Content Include="App_Data\serviceAccountKey.json" />
+    <Content Include="DataExport\Mau\MauUploadSinhVien.xlsx" />
+    <Content Include="DataExport\DoiTuongKhaoSat\DoiTuongDaKhaoSat_20240609182705.xlsx" />
+    <Content Include="DataExport\Mau\MauUploadUser.xlsx" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
+    <Content Include="Scripts\Firebase.js" />
     <Content Include="Scripts\jquery-3.7.1.js" />
     <Content Include="Scripts\jquery-3.7.1.min.js" />
     <Content Include="Scripts\jquery-3.7.1.slim.js" />
@@ -1142,6 +1151,14 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\User\Hedaotao.js" />
+    <Content Include="Scripts\User\Phieukhaosat.js" />
+    <Content Include="Scripts\User\Survey\AnswerPKS.js" />
+    <Content Include="Scripts\User\Survey\ListAnswerSurvey.js" />
+    <Content Include="Scripts\User\Survey\Survey.js" />
+    <Content Include="Scripts\User\Survey\SurveyForm.js" />
+    <Content Include="Scripts\User\Xacthuc.js" />
+    <Content Include="Scripts\User\XacthucCTDT.js" />
     <Content Include="Style\user\ckfinder\1 %282%29de33.jpg" />
     <Content Include="Style\user\ckfinder\123 %281%29f50d.jpg" />
     <Content Include="Style\user\ckfinder\LINE_ALBUM_20230425_2306121275f.jpg" />
@@ -1323,10 +1340,11 @@
     <Content Include="Views\Survey\ListAnswerSurvey.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\KetQuaPKS\" />
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\CTDT\Data\" />
     <Folder Include="Content\Exports\" />
+    <Folder Include="Scripts\Admin\" />
+    <Folder Include="Views\Firebase\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

@@ -1,104 +1,92 @@
-﻿using System.Web;
-using System.Web.Mvc;
-using Microsoft.Owin.Security;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNet.Identity;
+﻿using CTDT.Helper;
 using CTDT.Models;
-using System.Linq;
+using FirebaseAdmin;
+using FirebaseAdmin.Auth;
+using Google.Apis.Auth.OAuth2;
+using Microsoft.AspNet.Identity;
 using System;
-using CTDT.Helper;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Mvc;
 
 public class LoginController : Controller
 {
     dbSurveyEntities db = new dbSurveyEntities();
-    private IAuthenticationManager AuthenticationManager => HttpContext.GetOwinContext().Authentication;
+    private static bool firebaseInitialized = false;
+    private static readonly object lockObj = new object();
 
-    [AllowAnonymous]
-    public ActionResult Login(string returnUrl)
+    private void InitializeFirebase()
     {
-        ViewBag.ReturnUrl = returnUrl;
-        return View();
+        if (!firebaseInitialized)
+        {
+            lock (lockObj)
+            {
+                if (!firebaseInitialized)
+                {
+                    var pathToServiceAccountKey = Server.MapPath("~/App_Data/serviceAccountKey.json");
+                    FirebaseApp.Create(new AppOptions()
+                    {
+                        Credential = GoogleCredential.FromFile(pathToServiceAccountKey),
+                    });
+                    firebaseInitialized = true;
+                }
+            }
+        }
     }
 
     [HttpPost]
-    [AllowAnonymous]
-    [ValidateAntiForgeryToken]
-    public ActionResult ExternalLogin(string provider, string returnUrl)
+    public async Task<ActionResult> LoginWithGoogle(string token)
     {
-        return new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Login", new { ReturnUrl = returnUrl }));
-    }
+        InitializeFirebase();
 
-    [AllowAnonymous]
-    public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
-    {
-        var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync();
-        if (loginInfo == null)
+        try
         {
-            return RedirectToAction("Login");
-        }
-
-        var email = loginInfo.Email;
-        var name = loginInfo.ExternalIdentity.FindFirstValue(ClaimTypes.Name);
-        var profilePictureClaim = loginInfo.ExternalIdentity.Claims.FirstOrDefault(c => c.Type == "picture");
-        var profilePictureUrl = profilePictureClaim?.Value;
-        DateTime now = DateTime.UtcNow;
-        // Create a claims identity and add the email claim
-        var identity = new ClaimsIdentity(loginInfo.ExternalIdentity.Claims, DefaultAuthenticationTypes.ApplicationCookie);
-        identity.AddClaim(new Claim(ClaimTypes.Email, email));
-        var user = db.users.SingleOrDefault(u => u.email == email);
-        int unixTimestamp = (int)(now.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-        if (user == null)
-        {
-            user = new users
+            var decodedToken = await FirebaseAuth.DefaultInstance.VerifyIdTokenAsync(token);
+            var uid = decodedToken.Uid;
+            UserRecord userRecord = await FirebaseAuth.DefaultInstance.GetUserAsync(uid);
+            string email = userRecord.Email;
+            string name = userRecord.DisplayName;
+            string avatarUrl = userRecord.PhotoUrl;
+            DateTime now = DateTime.UtcNow;
+            int unixTimestamp = (int)(now.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+            var user = db.users.FirstOrDefault(u => u.email == email);
+            if (user == null)
             {
-                email = email,
-                name = name,
-                id_typeusers = 1,
-                ngaytao = unixTimestamp,
-                ngaycapnhat = unixTimestamp,
-                avatarUrl = profilePictureUrl
-            };
-            db.users.Add(user);
+                user = new users
+                {
+                    email = email,
+                    name = name,
+                    avatarUrl = avatarUrl,
+                    username = email,
+                    ngaycapnhat = unixTimestamp,
+                    ngaytao = unixTimestamp,
+                    id_typeusers = 1
+                };
+                db.users.Add(user);
+            }
+            else
+            {
+                user.name = name;
+                user.avatarUrl = avatarUrl;
+                user.ngaytao = unixTimestamp;
+            }
             db.SaveChanges();
+            SessionHelper.SetUser(user);
+            return Json(new { success = true });
         }
-        else
+        catch (Exception ex)
         {
-            user.name = name;
-            user.ngaycapnhat = unixTimestamp;
-            user.avatarUrl = profilePictureUrl;
-            db.SaveChanges();
+            return Json(new { success = false, message = ex.Message });
         }
-        AuthenticationManager.SignIn(new AuthenticationProperties { IsPersistent = false }, identity);
-        SessionHelper.SetUser(user);
-
-        return RedirectToAction("Index", "Home");
     }
-
-    private ActionResult RedirectToLocal(string returnUrl)
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public ActionResult Logout()
     {
-        if (Url.IsLocalUrl(returnUrl))
-        {
-            return Redirect(returnUrl);
-        }
+        HttpContext.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+        SessionHelper.ClearUser();
         return RedirectToAction("Index", "Home");
-    }
-
-    internal class ChallengeResult : HttpUnauthorizedResult
-    {
-        public ChallengeResult(string provider, string redirectUri)
-        {
-            LoginProvider = provider;
-            RedirectUri = redirectUri;
-        }
-
-        public string LoginProvider { get; set; }
-        public string RedirectUri { get; set; }
-
-        public override void ExecuteResult(ControllerContext context)
-        {
-            var properties = new AuthenticationProperties { RedirectUri = RedirectUri };
-            context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
-        }
     }
 }
