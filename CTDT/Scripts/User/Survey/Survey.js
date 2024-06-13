@@ -1,13 +1,28 @@
 ﻿var surveyid = document.getElementById('idSurvey').value;
+
 $(document).ready(function () {
     $('#submit_phieu').click(function () {
+        // Hiển thị modal CAPTCHA
+        $('#captchaModal').modal('show');
+    });
+
+    // Xác nhận CAPTCHA khi người dùng nhấn nút Xác nhận trong modal
+    $('#verifyCaptchaBtn').click(function () {
+        var captchaResponse = grecaptcha.getResponse();
+        if (captchaResponse == '') {
+            alert('Vui lòng xác nhận Captcha.');
+            return;
+        }
         saveFormData();
         checkVisibility();
+        // Đóng modal CAPTCHA sau khi đã xác nhận thành công và reset CAPTCHA
+        $('#captchaModal').modal('hide');
+        grecaptcha.reset(); // Reset CAPTCHA sau khi xác nhận thành công
     });
 
     $('.inputVal2, input[type="text"], input[type="number"], input[type="email"], textarea').blur(function () {
         if ($(this).hasClass('required-ques') && $(this).val().trim() === '') {
-            $(this).closest('.item-ques').find('[id^="alert_"]').text("Trường này là bắt buộc.").show();
+            $(this).closest('.item-ques').find('[id^="alert_"]').text("Câu hỏi này là bắt buộc.").show();
         } else {
             $(this).closest('.item-ques').find('[id^="alert_"]').hide();
         }
@@ -95,7 +110,7 @@ function saveFormData() {
                     var selectedText = selectedRadio.closest('label').text().trim();
                     if (isRequired && !selectedValue) {
                         valid = false;
-                        alertElement.text("Trường " + questionTitle + " là bắt buộc.").show();
+                        alertElement.text("Câu hỏi " + questionTitle + " là bắt buộc.").show();
                     } else {
                         alertElement.hide();
                     }
@@ -170,6 +185,7 @@ function saveFormData() {
                 data: JSON.stringify({
                     surveyID: surveyid,
                     json_answer: JSON.stringify(formData),
+                    captchaResponse: grecaptcha.getResponse()
                 }),
                 success: function (response) {
                     Swal.fire({
@@ -178,7 +194,7 @@ function saveFormData() {
                         showConfirmButton: false,
                         timer: 2000
                     }).then(() => {
-                        window.location.href = '@Url.Action("Index", "Home")';
+                        window.location.href = '/Home/Index';
                     });
                 },
                 error: function (response) {
@@ -190,7 +206,7 @@ function saveFormData() {
     } else {
         Swal.fire({
             icon: 'error',
-            title: 'Vui lòng hoàn thành tất cả các trường bắt buộc',
+            title: 'Vui lòng hoàn thành tất cả các câu hỏi bắt buộc',
             showConfirmButton: true
         });
     }

@@ -21,6 +21,16 @@ async function initializeFirebase() {
 async function loginWithGoogle() {
     try {
         await initializeFirebase();
+
+        // Hiển thị thông báo "Đang đăng nhập..."
+        const loadingAlert = Swal.fire({
+            title: 'Đang xác thực và đăng nhập...',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
         const provider = new firebase.auth.GoogleAuthProvider();
         const result = await firebase.auth().signInWithPopup(provider);
         const user = result.user;
@@ -35,6 +45,10 @@ async function loginWithGoogle() {
         });
 
         const data = await response.json();
+
+        // Đóng thông báo "Đang đăng nhập..."
+        Swal.close();
+
         if (data.success) {
             Swal.fire({
                 icon: 'success',
@@ -45,9 +59,22 @@ async function loginWithGoogle() {
                 window.location.href = "/";
             });
         } else {
-            alert("Đăng nhập thất bại!");
+            Swal.fire({
+                icon: 'error',
+                title: 'Đăng nhập thất bại!',
+                text: data.message || 'Có lỗi xảy ra, vui lòng thử lại sau.'
+            });
         }
     } catch (error) {
         console.error("Login with Google failed:", error);
+
+        // Đóng thông báo "Đang đăng nhập..." nếu có lỗi xảy ra
+        Swal.close();
+
+        Swal.fire({
+            icon: 'error',
+            title: 'Đăng nhập thất bại!',
+            text: 'Có lỗi xảy ra, vui lòng thử lại sau.'
+        });
     }
 }

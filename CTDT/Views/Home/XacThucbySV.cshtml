@@ -1,0 +1,124 @@
+﻿@{
+    ViewBag.Title = "Xác thực thông tin khảo sát";
+}
+<style>
+    #spinner-div {
+        position: fixed;
+        display: none;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        text-align: center;
+        background-color: rgba(255, 255, 255, 0.8);
+        z-index: 2;
+    }
+</style>
+<input type="hidden" class="form-control" id="base_url" name="base_url" value="<?php echo base_url(); ?>">
+<div style="padding-top: 50px; padding-bottom: 70px;">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 columns">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12">
+
+                        <div class="text-center">
+                            <h2 class="text-center" style="font-weight: 700">XÁC THỰC THÔNG TIN</h2>
+                            <input type="hidden" id="viewbagid" value="@ViewBag.id" />
+                        </div>
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a onclick="activaTab('home')" style="color: #0a58ca" class="nav-link active" data-toggle="tab" href="#home">Xác thực</a>
+                            </li>
+                            <li class="nav-item">
+                                <a onclick="activaTab('menu1')" style="color: #0a58ca" class="nav-link" data-toggle="tab" href="#menu1">Không nhớ MSSV/MSHV</a>
+                            </li>
+                        </ul>
+
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div id="home" class="container tab-pane active" style="margin-left: 0">
+                                <div class="mt-4 p-5 text-black rounded" style="background-color: #E7E9EB!important">
+                                    <form id="form_checkmssv" style="margin-bottom: 10px;">
+                                        <div class="form-label-group">
+                                            <label>Mã số sinh viên/học viên của bạn</label>
+                                            <p><i>*Lưu ý: Nếu không nhớ MSSV/MSHV có thể chọn chức năng - Không nhớ MSSV/MSHV ở bên trên</i></p>
+                                            <input type="text" class="form-control" id="mssv" name="mssv" placeholder="Nhập MSSV của bạn ...." autofocus>
+                                        </div>
+                                        <div class="d-flex justify-content-center" style="padding-top: 20px">
+                                            <button style="width: 150px; margin: 5px" id="btnCheckMSSV" type="button" class="btn btn-primary" data-loading-text="Đang xử lý....">
+                                                Xác thực
+                                            </button>
+                                            <button style="width: 150px; margin: 5px" onclick="window.location='@Url.Action("Index","Home")';" type="button" class="btn btn-secondary">Trở về trang chủ</button>
+                                        </div>
+                                        <br>
+                                        <div id="show_error" class="alert alert-danger d-flex align-items-center"
+                                             role="alert" style="visibility:hidden">
+                                            <div id="error_mssv"></div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <div id="menu1" class="container tab-pane fade">
+                                <div class="mt-4 p-5 text-black rounded" style="background-color: #E7E9EB!important">
+                                    <div id="spinner-div" class="pt-5">
+                                        <div class="spinner-border text-primary" role="status"></div>
+                                    </div>
+                                    <form id="form_checkmssv">
+                                        <div class="mb-3" style="padding-bottom: 15px;">
+                                            <select class="form-control" id="select2-khoa">
+                                                <option selected>Chọn khoa của bạn</option>
+                                                @foreach (var item in ViewBag.KhoaList)
+                                                {
+                                                    <option value="@item.Value">@item.Text</option>
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="mb-3" style="padding-bottom: 15px;">
+                                            <select class="form-control" id="select2-ctdt">
+                                                <option selected>Chọn chương trình đào tạo của bạn</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3" style="padding-bottom: 15px;">
+                                            <select class="form-control" id="select2-lop">
+                                                <option selected>Chọn lớp của bạn</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3" style="padding-bottom: 15px;">
+                                            <select class="js-example-basic-single js-states form-control"
+                                                    id="select2-sv">
+                                                <option selected>Chọn tên của bạn</option>
+                                            </select>
+                                        </div>
+                                        <div class="d-flex justify-content-center">
+                                            <button style="width: 150px; margin: 5px" id="forget_mssv_button"
+                                                    type="button" class="btn btn-primary"
+                                                    data-loading-text="Đang xử lý....">
+                                                Xác thực
+                                            </button>
+                                            <button style="width: 150px; margin: 5px"
+                                                    onclick="window.location='@Url.Action("Index","Home")';" type="button"
+                                                    class="btn btn-secondary">
+                                                Trở về trang chủ
+                                            </button>
+                                        </div>
+                                        <br>
+                                        <div id="show_error_forget" class="alert alert-danger d-flex align-items-center"
+                                             role="alert" style="visibility:hidden">
+                                            <div id="error_forger_mssv"></div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+@Scripts.Render("~/bundles/User/XacthucBySV")

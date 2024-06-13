@@ -1,4 +1,5 @@
-﻿$(document).ready(function () {
+﻿var id = document.getElementById('viewbagid').value;
+$(document).ready(function () {
     var isKhoaSelected = false;
 
     $("#btnXacThucCTDT").click(function () {
@@ -15,7 +16,7 @@
         $.ajax({
             type: "POST",
             url: "/Home/SaveDataXacThucCTDTWithoutSV",
-            data: { ctdt: ctdt },
+            data: { ctdt: ctdt, surveyid: id },
             success: function (response) {
                 if (response.success) {
                     Swal.fire({
@@ -24,7 +25,7 @@
                         showConfirmButton: false,
                         timer: 2000
                     }).then(function () {
-                        window.location.href = "/Survey/Survey?id=" + response.idPhieu;
+                        window.location.href = "/Survey/Survey?id=" + id;
                     });
                 } else {
                     Swal.fire({

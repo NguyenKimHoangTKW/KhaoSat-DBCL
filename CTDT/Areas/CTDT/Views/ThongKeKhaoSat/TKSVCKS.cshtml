@@ -75,7 +75,7 @@
 
         $("#ExportExcel").click(function () {
             Swal.fire({
-                title: "Đang xuất dữ liệu...",
+                title: "Đang kiểm tra và xuất dữ liệu...",
                 html: "Vui lòng chờ trong <b></b> giây.",
                 timer: 3000,
                 timerProgressBar: true,
@@ -94,7 +94,28 @@
                     var selectCtdt = $("#MaCTDT").val();
                     var selectPks = $("#MaPKS").val();
                     var surveyStatus = $("#SurveyStatus").val();
-                    window.location = '/CTDT/ThongKeKhaoSat/ExportToExcel?survey=' + selectPks + '&completed=' + (surveyStatus == "1");
+
+                    $.ajax({
+                        url: '/Admin/ThongKeKhaoSat/ExportToExcel',
+                        type: 'GET',
+                        data: {
+                            ctdt: selectCtdt,
+                            survey: selectPks,
+                            completed: (surveyStatus == "1")
+                        },
+                        success: function (response) {
+                            if (response.data === null) {
+                                Swal.fire({
+                                    title: 'Thông báo',
+                                    text: response.message,
+                                    icon: 'info',
+                                    confirmButtonText: 'OK'
+                                });
+                            } else {
+                                window.location = '/CTDT/ThongKeKhaoSat/ExportToExcel?survey=' + selectPks + '&completed=' + (surveyStatus == "1");
+                            }
+                        }
+                    });
                 }
             });
         });
@@ -122,8 +143,9 @@
                 totalPages = res.totalPages;
                 var html = "";
 
-                if (items.length === 0) {
+                if (items == null ||items.length === 0) {
                     html += "<tr><td colspan='7' class='text-center'>Không có dữ liệu</td></tr>";
+                    $('#pagination').html('');
                 } else {
                     for (let i = 0; i < items.length; i++) {
                         var index = (pageNumber - 1) * 10 + i + 1;
@@ -137,10 +159,11 @@
                         html += "<td>" + items[i].Lop + "</td>";
                         html += "</tr>";
                     }
+                    renderPagination(pageNumber, totalPages);
                 }
                 $('#showdata').html(html);
                 $('#data-table-section').show();
-                renderPagination(pageNumber, totalPages);
+                
             },
             error: function () {
                 var html = "<tr><td colspan='7' class='text-center'>Không thể tải dữ liệu</td></tr>";

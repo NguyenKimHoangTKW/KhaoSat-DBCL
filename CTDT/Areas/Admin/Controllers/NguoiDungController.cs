@@ -8,6 +8,7 @@ using System.Web.Mvc;
 
 namespace CTDT.Areas.Admin.Controllers
 {
+    [AdminAuthorize]
     public class NguoiDungController : Controller
     {
         dbSurveyEntities db = new dbSurveyEntities();
@@ -27,7 +28,6 @@ namespace CTDT.Areas.Admin.Controllers
                 .Select(x => new
                 {
                     id_users = x.id_users,
-                    name = x.name,
                     email = x.email,
                     id_typeusers = x.id_typeusers,
                     id_ctdt = x.id_ctdt,
@@ -52,7 +52,8 @@ namespace CTDT.Areas.Admin.Controllers
                 if (!string.IsNullOrEmpty(keyword))
                 {
                     query = query.Where(l => l.email.ToLower().Contains(keyword.ToLower())
-                                          || l.name.ToLower().Contains(keyword.ToLower()));
+                                          || l.lastName.ToLower().Contains(keyword.ToLower())
+                                          || l.firstName.ToLower().Contains(keyword.ToLower()));
                 }
 
                 var Listuser = query
@@ -62,7 +63,7 @@ namespace CTDT.Areas.Admin.Controllers
                 .Select(x => new
                 {
                     MaUser = x.id_users,
-                    TenUser = x.name,
+                    TenUser = x.lastName + " " + x.firstName,
                     EmailUser = x.email,
                     MaChucVu = x.id_typeusers,
                     ChucVu = x.typeusers.name_typeusers,
@@ -126,7 +127,6 @@ namespace CTDT.Areas.Admin.Controllers
             int unixTimestamp = (int)(now.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
             if (user != null)
             {
-                user.name = us.name;
                 user.email = us.email;
                 user.ngaytao = us.ngaytao;
                 user.ngaycapnhat = unixTimestamp;

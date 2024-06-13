@@ -10,6 +10,7 @@ using System.Web.Security;
 
 namespace CTDT.Areas.Admin.Controllers
 {
+    [AdminAuthorize]
     public class CTDTController : Controller
     {
         dbSurveyEntities db = new dbSurveyEntities();

@@ -25,6 +25,32 @@
                     <input type="text" id="searchInput" class="form-control" placeholder="Nhập từ khóa tìm kiếm...">
                 </div>
             </div>
+            <!-- Modal Import Excel -->
+            <div class="modal fade" id="importExcelModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Import tài khoản từ Excel</h5>
+                            <button type="button" class="close" data-dismiss="modal">
+                                <i class="anticon anticon-close"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="importExcelForm" enctype="multipart/form-data">
+                                <div class="form-group">
+                                    <label for="excelFile">Chọn file Excel</label>
+                                    <input type="file" class="form-control" id="excelFile" name="excelFile" accept=".xlsx, .xls">
+                                </div>
+                                <button type="submit" class="btn btn-success btn-tone m-r-5">Upload</button>
+                                <a href="~/DataExport/Mau/MauUploadUser.xlsx" download>
+                                    <button type="button" class="btn btn-info btn-tone m-r-5">Tải file mẫu</button>
+                                </a>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Modal Import Excel -->
             <!-- Modal Thêm mới User -->
             <div class="modal fade" id="bd-example-modal-lg">
                 <div class="modal-dialog modal-lg">
@@ -204,6 +230,30 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     DelNguoiDung(id);
+                }
+            });
+        });
+
+        $('#importExcelForm').on('submit', function (e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            $.ajax({
+                url: '/Admin/NguoiDung/UploadExcel',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    if (response.status.includes('Thành công')) {
+                        alert(response.status);
+                        $('#importExcelModal').modal('hide');
+                        LoadData(currentPage);
+                    } else {
+                        alert(response.status);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    alert('Đã xảy ra lỗi: ' + error);
                 }
             });
         });

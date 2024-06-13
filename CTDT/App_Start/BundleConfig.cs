@@ -29,14 +29,22 @@ namespace CTDT
 
             bundles.Add(new ScriptBundle("~/bundles/firebase").Include(
                         "~/Scripts/Firebase.js"));
+            bundles.Add(new ScriptBundle("~/bundles/loginversion").Include(
+                        "~/Scripts/LoginVersion.js"));
             bundles.Add(new ScriptBundle("~/bundles/User/HeDaoTao").Include(
                         "~/Scripts/User/Hedaotao.js"));
             bundles.Add(new ScriptBundle("~/bundles/User/Phieukhaosat").Include(
                         "~/Scripts/User/Phieukhaosat.js"));
+            //
+            // Xác thực
             bundles.Add(new ScriptBundle("~/bundles/User/Xacthuc").Include(
                         "~/Scripts/User/Xacthuc.js"));
             bundles.Add(new ScriptBundle("~/bundles/User/XacthucCTDT").Include(
                         "~/Scripts/User/XacthucCTDT.js"));
+            bundles.Add(new ScriptBundle("~/bundles/User/XacthucBySV").Include(
+                        "~/Scripts/User/XacthucBySinhVien.js"));
+            //
+            // PKS
             bundles.Add(new ScriptBundle("~/bundles/User/AnswerPKS").Include(
                         "~/Scripts/User/Survey/AnswerPKS.js"));
             bundles.Add(new ScriptBundle("~/bundles/User/SurveyForm").Include(
@@ -45,7 +53,7 @@ namespace CTDT
                         "~/Scripts/User/Survey/ListAnswerSurvey.js"));
             bundles.Add(new ScriptBundle("~/bundles/User/Survey").Include(
                         "~/Scripts/User/Survey/Survey.js"));
-
+            //
             // Admin
             BundleTable.EnableOptimizations = true;
         }

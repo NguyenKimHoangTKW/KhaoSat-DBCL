@@ -9,8 +9,24 @@
           <ScalarProperty Name="id_ctdt" ColumnName="id_ctdt" />
           <ScalarProperty Name="id_sv" ColumnName="id_sv" />
           <ScalarProperty Name="id_users" ColumnName="id_users" />
+          <ScalarProperty Name="id_CBVC" ColumnName="id_CBVC" />
+          <ScalarProperty Name="id_donvi" ColumnName="id_donvi" />
           <ScalarProperty Name="surveyID" ColumnName="surveyID" />
           <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CanBoVienChuc">
+      <EntityTypeMapping TypeName="dbSurveyModel.CanBoVienChuc">
+        <MappingFragment StoreEntitySet="CanBoVienChuc">
+          <ScalarProperty Name="id_chuongtrinhdaotao" ColumnName="id_chuongtrinhdaotao" />
+          <ScalarProperty Name="id_chucvu" ColumnName="id_chucvu" />
+          <ScalarProperty Name="id_donvi" ColumnName="id_donvi" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="NgaySinh" ColumnName="NgaySinh" />
+          <ScalarProperty Name="TenCBVC" ColumnName="TenCBVC" />
+          <ScalarProperty Name="MaCBVC" ColumnName="MaCBVC" />
+          <ScalarProperty Name="id_CBVC" ColumnName="id_CBVC" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -22,6 +38,30 @@
           <ScalarProperty Name="ten_ctdt" ColumnName="ten_ctdt" />
           <ScalarProperty Name="id_khoa" ColumnName="id_khoa" />
           <ScalarProperty Name="id_ctdt" ColumnName="id_ctdt" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ChucVu">
+      <EntityTypeMapping TypeName="dbSurveyModel.ChucVu">
+        <MappingFragment StoreEntitySet="ChucVu">
+          <ScalarProperty Name="name_chucvu" ColumnName="name_chucvu" />
+          <ScalarProperty Name="id_chucvu" ColumnName="id_chucvu" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ChuongTrinhDaoTao">
+      <EntityTypeMapping TypeName="dbSurveyModel.ChuongTrinhDaoTao">
+        <MappingFragment StoreEntitySet="ChuongTrinhDaoTao">
+          <ScalarProperty Name="name_chuongtrinhdaotao" ColumnName="name_chuongtrinhdaotao" />
+          <ScalarProperty Name="id_chuongtrinhdaotao" ColumnName="id_chuongtrinhdaotao" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DonVi">
+      <EntityTypeMapping TypeName="dbSurveyModel.DonVi">
+        <MappingFragment StoreEntitySet="DonVi">
+          <ScalarProperty Name="name_donvi" ColumnName="name_donvi" />
+          <ScalarProperty Name="id_donvi" ColumnName="id_donvi" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -54,6 +94,7 @@
     <EntitySetMapping Name="lop">
       <EntityTypeMapping TypeName="dbSurveyModel.lop">
         <MappingFragment StoreEntitySet="lop">
+          <ScalarProperty Name="status" ColumnName="status" />
           <ScalarProperty Name="ngaytao" ColumnName="ngaytao" />
           <ScalarProperty Name="ngaycapnhat" ColumnName="ngaycapnhat" />
           <ScalarProperty Name="ma_lop" ColumnName="ma_lop" />
@@ -128,7 +169,8 @@
           <ScalarProperty Name="password" ColumnName="password" />
           <ScalarProperty Name="username" ColumnName="username" />
           <ScalarProperty Name="email" ColumnName="email" />
-          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="lastName" ColumnName="lastName" />
+          <ScalarProperty Name="firstName" ColumnName="firstName" />
           <ScalarProperty Name="id_users" ColumnName="id_users" />
         </MappingFragment>
       </EntityTypeMapping>

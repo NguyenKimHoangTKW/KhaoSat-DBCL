@@ -7,12 +7,14 @@ using System.Web.Mvc;
 
 namespace CTDT.Areas.Admin.Controllers
 {
+    [AdminAuthorize]
     public class KhoaController : Controller
     {
         dbSurveyEntities db = new dbSurveyEntities();
         // GET: Admin/Khoa
         public ActionResult ViewKhoa()
         {
+            ViewBag.CTDTList = new SelectList(db.ctdt.OrderBy(l => l.id_ctdt), "id_ctdt", "ten_ctdt");
             return View();
         }
 

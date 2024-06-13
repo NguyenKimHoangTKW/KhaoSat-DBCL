@@ -35,7 +35,12 @@ public class LoginController : Controller
             }
         }
     }
-
+    [HttpGet]
+    public JsonResult CheckSession()
+    {
+        var isAuthenticated = Session["User"] != null;
+        return Json(new { isAuthenticated = isAuthenticated }, JsonRequestBehavior.AllowGet);
+    }
     [HttpPost]
     public async Task<ActionResult> LoginWithGoogle(string token)
     {
@@ -47,8 +52,13 @@ public class LoginController : Controller
             var uid = decodedToken.Uid;
             UserRecord userRecord = await FirebaseAuth.DefaultInstance.GetUserAsync(uid);
             string email = userRecord.Email;
-            string name = userRecord.DisplayName;
+            string fullName = userRecord.DisplayName;
             string avatarUrl = userRecord.PhotoUrl;
+
+            string[] nameParts = fullName.Split(' ');
+            string firstName = nameParts.Length > 0 ? nameParts[0] : "";
+            string lastName = nameParts.Length > 1 ? string.Join(" ", nameParts.Skip(1)) : "";
+
             DateTime now = DateTime.UtcNow;
             int unixTimestamp = (int)(now.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
             var user = db.users.FirstOrDefault(u => u.email == email);
@@ -57,7 +67,8 @@ public class LoginController : Controller
                 user = new users
                 {
                     email = email,
-                    name = name,
+                    firstName = firstName,
+                    lastName = lastName,
                     avatarUrl = avatarUrl,
                     username = email,
                     ngaycapnhat = unixTimestamp,
@@ -68,9 +79,10 @@ public class LoginController : Controller
             }
             else
             {
-                user.name = name;
+                user.firstName = firstName;
+                user.lastName = lastName;
                 user.avatarUrl = avatarUrl;
-                user.ngaytao = unixTimestamp;
+                user.ngaycapnhat = unixTimestamp;
             }
             db.SaveChanges();
             SessionHelper.SetUser(user);
@@ -81,11 +93,9 @@ public class LoginController : Controller
             return Json(new { success = false, message = ex.Message });
         }
     }
-    [HttpPost]
-    [ValidateAntiForgeryToken]
+
     public ActionResult Logout()
     {
-        HttpContext.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
         SessionHelper.ClearUser();
         return RedirectToAction("Index", "Home");
     }

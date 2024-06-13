@@ -18,6 +18,7 @@
             <h4>Quản Lý Danh Sách Lớp</h4>
             <div>
                 <button class="btn btn-primary btn-tone m-r-5" data-toggle="modal" data-target="#bd-example-modal-lg">Thêm mới</button>
+                <button id="changeStatusSelected" class="btn btn-secondary btn-tone m-r-5">Thay đổi trạng thái hiển thị các lớp đã chọn</button>
             </div>
             <div class="row justify-content-end m-b-20">
                 <div class="col-auto">
@@ -108,19 +109,20 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
+                                <th scope="col"><input type="checkbox" id="selectAll"></th>
                                 <th scope="col">STT</th>
                                 <th scope="col">ID Lớp</th>
                                 <th scope="col">Mã Lớp</th>
                                 <th scope="col">Tên CTĐT</th>
                                 <th scope="col">Ngày Cập Nhật</th>
                                 <th scope="col">Ngày Tạo</th>
+                                <th scope="col">Hiển thị</th>
                                 <th scope="col">Chức năng</th>
                             </tr>
                         </thead>
                         <tbody id="showdata">
                         </tbody>
                     </table>
-
                 </div>
                 <div id="pagination" class="m-t-15 pagination-right">
                     <!-- Pagination buttons will be inserted here -->
@@ -136,7 +138,56 @@
 
         $(document).ready(function () {
             LoadData(currentPage);
+            // Chọn tất cả các checkbox
+            $(document).on('change', '#selectAll', function () {
+                $('.selectItem').prop('checked', this.checked);
+            });
 
+            // Bỏ chọn checkbox tổng nếu có một checkbox bị bỏ chọn
+            $(document).on('change', '.selectItem', function () {
+                if (!this.checked) {
+                    $('#selectAll').prop('checked', false);
+                }
+            });
+            // Thay đổi trạng thái của các lớp được chọn
+            $('#changeStatusSelected').click(function () {
+                var selectedIds = [];
+                $('.selectItem:checked').each(function () {
+                    selectedIds.push($(this).data('id'));
+                });
+
+                if (selectedIds.length > 0) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '/Admin/Lop/ChangeStatusMultiple',
+                        data: JSON.stringify({ ids: selectedIds }),
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (response) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: response.status,
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                            LoadData(currentPage);
+                        },
+                        error: function (response) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Thay đổi trạng thái thất bại: ' + response.status,
+                            });
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Chưa chọn lớp nào',
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                }
+            });
             $(document).on("click", ".btnEdit", function () {
                 var MaLop = $(this).closest("tr").find("td:eq(1)").text().substring(1);
                 GetByID(MaLop);
@@ -162,7 +213,31 @@
                     LoadData(currentPage);
                 }
             });
-
+            $(document).on("click", ".change-status", function () {
+                var id = $(this).data('id');
+                $.ajax({
+                    type: 'POST',
+                    url: '/Admin/Lop/IsStatus',
+                    data: JSON.stringify({ id: id }),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: response.status,
+                            showConfirmButton: false,
+                            timer: 2000
+                        });
+                        LoadData(currentPage);
+                    },
+                    error: function (response) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Thay đổi trạng thái thất bại: ' + response.status,
+                        });
+                    }
+                });
+            });
             $(document).on("click", ".btnDelete", function () {
                 var id = $(this).closest("tr").find("td:eq(1)").text().substring(1);
                 var name = $(this).closest("tr").find("td:eq(2)").text();
@@ -245,20 +320,31 @@
                     var html = "";
 
                     if (items.length === 0) {
-                        html += "<tr><td colspan='7' class='text-center'>Không có dữ liệu</td></tr>";
+                        html += "<tr><td colspan='9' class='text-center'>Không có dữ liệu</td></tr>";
                     } else {
                         for (let i = 0; i < items.length; i++) {
                             var formattedDate1 = unixTimestampToDate(items[i].NgayCapNhat);
                             var formattedDate2 = unixTimestampToDate(items[i].NgayTao);
                             var index = (pageNumber - 1) * 10 + i + 1;
                             html += "<tr>";
-                            html += "<td>" +index + "</td>";
+                            html += "<td><input type='checkbox' class='selectItem' data-id='" + items[i].IdLop + "'></td>";
+                            html += "<td>" + index + "</td>";
                             html += "<td>" + "#" + items[i].IdLop + "</td>";
                             html += "<td>" + items[i].MaLop + "</td>";
                             html += "<td>" + items[i].MaCTDT + "</td>";
                             html += "<td>" + formattedDate1 + "</td>";
                             html += "<td>" + formattedDate2 + "</td>";
-                            html += "<td><button class='btn btn-icon btn-hover btn-sm btn-rounded pull-right btnEdit' data-toggle='modal' data-target='#ModalEditLop'> <i class='anticon anticon-edit'></i></button><button class='btn btn-icon btn-hover btn-sm btn-rounded pull-right btnDelete'> <i class='anticon anticon-delete'></i></button></td>";
+
+                            if (items[i].hienthi) {
+                                html += "<td class='text-center'><i class='fa fa-check text-success change-status' data-id='" + items[i].IdLop + "'></i></td>";
+                            } else {
+                                html += "<td class='text-center'><i class='fa fa-times text-danger change-status' data-id='" + items[i].IdLop + "'></i></td>";
+                            }
+
+                            html += "<td class='text-center'>";
+                            html += "<button class='btn btn-icon btn-hover btn-sm btn-rounded pull-right btnEdit' data-toggle='modal' data-target='#ModalEditLop'><i class='anticon anticon-edit'></i></button>";
+                            html += "<button class='btn btn-icon btn-hover btn-sm btn-rounded pull-right btnDelete'><i class='anticon anticon-delete'></i></button>";
+                            html += "</td>";
                             html += "</tr>";
                         }
                     }
@@ -266,11 +352,12 @@
                     renderPagination(pageNumber, totalPages);
                 },
                 error: function () {
-                    var html = "<tr><td colspan='7' class='text-center'>Không thể tải dữ liệu</td></tr>";
+                    var html = "<tr><td colspan='9' class='text-center'>Không thể tải dữ liệu</td></tr>";
                     $('#showdata').html(html);
                 }
             });
         }
+
 
         function debounce(func, delay) {
             let timeoutId;

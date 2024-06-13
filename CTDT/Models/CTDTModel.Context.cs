@@ -26,7 +26,11 @@ namespace CTDT.Models
         }
     
         public virtual DbSet<answer_response> answer_response { get; set; }
+        public virtual DbSet<CanBoVienChuc> CanBoVienChuc { get; set; }
         public virtual DbSet<ctdt> ctdt { get; set; }
+        public virtual DbSet<ChucVu> ChucVu { get; set; }
+        public virtual DbSet<ChuongTrinhDaoTao> ChuongTrinhDaoTao { get; set; }
+        public virtual DbSet<DonVi> DonVi { get; set; }
         public virtual DbSet<hedaotao> hedaotao { get; set; }
         public virtual DbSet<khoa> khoa { get; set; }
         public virtual DbSet<LoaiKhaoSat> LoaiKhaoSat { get; set; }

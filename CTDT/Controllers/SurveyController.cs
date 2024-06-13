@@ -16,6 +16,7 @@ namespace CTDT.Controllers
         // GET: Survey
         public ActionResult Survey(int id)
         {
+            ViewBag.id = id;
             string jsonData = string.Join("", db.survey.Where(d => d.surveyID == id).Select(x => x.surveyData));
 
             jsonData = Regex.Unescape(jsonData);
@@ -28,21 +29,11 @@ namespace CTDT.Controllers
         public ActionResult AddAnswer(answer_response answer)
         {
             var getuser = SessionHelper.GetUser();
-            string getctdtString = Session["XTCTDT"] as string;
-            string getsvString = Session["XTSV"] as string;
 
-            int? getctdt = null;
-            int? getsv = null;
-
-            if (int.TryParse(getctdtString, out int ctdtResult))
-            {
-                getctdt = ctdtResult;
-            }
-
-            if (int.TryParse(getsvString, out int svResult))
-            {
-                getsv = svResult;
-            }
+            int? getctdt = TryParseSessionValue("XTCTDT");
+            int? getsv = TryParseSessionValue("XTSV");
+            int? getdonvi = TryParseSessionValue("XTDV");
+            int? getcbvc = TryParseSessionValue("CBVC");
 
             var status = "";
             if (ModelState.IsValid)
@@ -50,16 +41,31 @@ namespace CTDT.Controllers
                 status = "Khảo sát thành công";
                 DateTime now = DateTime.UtcNow;
                 int unixTimestamp = (int)(now.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+
                 answer.time = unixTimestamp;
                 answer.id_users = getuser.id_users;
                 answer.id_ctdt = getctdt;
                 answer.id_sv = getsv;
+                answer.id_donvi = getdonvi;
+                answer.id_CBVC = getcbvc;
+
                 db.answer_response.Add(answer);
                 db.SaveChanges();
             }
 
             return Json(new { status = status }, JsonRequestBehavior.AllowGet);
         }
+
+        private int? TryParseSessionValue(string key)
+        {
+            string sessionValue = Session[key] as string;
+            if (int.TryParse(sessionValue, out int result))
+            {
+                return result;
+            }
+            return null;
+        }
+
         // Load Biễu mẫu đã khảo sát
         public ActionResult SurveyForm(int iduser)
         {
@@ -72,6 +78,11 @@ namespace CTDT.Controllers
         [HttpGet]
         public ActionResult LoadSurveyForm(string ids)
         {
+            if (string.IsNullOrEmpty(ids))
+            {
+                return Json(new { data = new List<object>(), status = "Không có dữ liệu." }, JsonRequestBehavior.AllowGet);
+            }
+
             var surveyIds = ids.Split(',').Select(int.Parse).ToList();
             var ListSurveyForm = db.survey
                 .Where(x => surveyIds.Contains(x.surveyID))
@@ -81,8 +92,15 @@ namespace CTDT.Controllers
                     TieuDePhieu = f.surveyTitle,
                     MoTaPhieu = f.surveyDescription,
                 }).ToList();
+
+            if (ListSurveyForm.Count == 0)
+            {
+                return Json(new { data = new List<object>(), status = "Không có dữ liệu." }, JsonRequestBehavior.AllowGet);
+            }
+
             return Json(new { data = ListSurveyForm, status = "Load dữ liệu thành công" }, JsonRequestBehavior.AllowGet);
         }
+
 
         public ActionResult ListAnswerSurvey(int id)
         {
@@ -133,5 +151,6 @@ namespace CTDT.Controllers
             }
             return Content(JsonConvert.SerializeObject(surveyData), "application/json");
         }
+        //
     }
 }

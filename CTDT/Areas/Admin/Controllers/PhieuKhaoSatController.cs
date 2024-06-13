@@ -13,6 +13,7 @@ using System.Web.Mvc;
 
 namespace CTDT.Areas.Admin.Controllers
 {
+    [AdminAuthorize]
     public class PhieuKhaoSatController : Controller
     {
         dbSurveyEntities db = new dbSurveyEntities();

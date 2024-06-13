@@ -241,9 +241,20 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helper\AdminAuthorizeAttribute.cs" />
+    <Compile Include="Helper\CTDTAuthorizeAttribute.cs" />
     <Compile Include="Helper\SessionExpireFilter.cs" />
     <Compile Include="Helper\SessionHelper.cs" />
     <Compile Include="Models\answer_response.cs">
+      <DependentUpon>CTDTModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CanBoVienChuc.cs">
+      <DependentUpon>CTDTModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ChucVu.cs">
+      <DependentUpon>CTDTModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ChuongTrinhDaoTao.cs">
       <DependentUpon>CTDTModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ctdt.cs">
@@ -263,6 +274,9 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>CTDTModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DonVi.cs">
+      <DependentUpon>CTDTModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\hedaotao.cs">
       <DependentUpon>CTDTModel.tt</DependentUpon>
@@ -1139,6 +1153,16 @@
     <Content Include="DataExport\Mau\MauUploadSinhVien.xlsx" />
     <Content Include="DataExport\DoiTuongKhaoSat\DoiTuongDaKhaoSat_20240609182705.xlsx" />
     <Content Include="DataExport\Mau\MauUploadUser.xlsx" />
+    <Content Include="DataExport\DoiTuongKhaoSat\DoiTuongChuaKhaoSat_20240610215320.xlsx" />
+    <Content Include="DataExport\DoiTuongKhaoSat\DoiTuongChuaKhaoSat_20240610220321.xlsx" />
+    <Content Include="DataExport\DoiTuongKhaoSat\DoiTuongChuaKhaoSat_20240610220757.xlsx" />
+    <Content Include="DataExport\DoiTuongKhaoSat\DoiTuongChuaKhaoSat_20240610220842.xlsx" />
+    <Content Include="DataExport\DoiTuongKhaoSat\DoiTuongDaKhaoSat_20240611082636.xlsx" />
+    <Content Include="DataExport\DoiTuongKhaoSat-CTDT\DoiTuongChuaKhaoSat_20240610141646.xlsx" />
+    <Content Include="DataExport\DoiTuongKhaoSat-CTDT\DoiTuongChuaKhaoSat_20240610142102.xlsx" />
+    <Content Include="DataExport\DoiTuongKhaoSat-CTDT\DoiTuongChuaKhaoSat_20240610142533.xlsx" />
+    <Content Include="DataExport\DoiTuongKhaoSat-CTDT\DoiTuongDaKhaoSat_20240611082636.xlsx" />
+    <Content Include="DataExport\KetQuaPKS\KetQuaKhaoSat_20240609200946.xlsx" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Scripts\Firebase.js" />
     <Content Include="Scripts\jquery-3.7.1.js" />
@@ -1155,10 +1179,13 @@
     <Content Include="Scripts\User\Phieukhaosat.js" />
     <Content Include="Scripts\User\Survey\AnswerPKS.js" />
     <Content Include="Scripts\User\Survey\ListAnswerSurvey.js" />
+    <Content Include="Scripts\LoginVersion.js" />
     <Content Include="Scripts\User\Survey\Survey.js" />
     <Content Include="Scripts\User\Survey\SurveyForm.js" />
+    <Content Include="Scripts\User\XacthucBySinhVien.js" />
     <Content Include="Scripts\User\Xacthuc.js" />
     <Content Include="Scripts\User\XacthucCTDT.js" />
+    <Content Include="Style\Icon.png" />
     <Content Include="Style\user\ckfinder\1 %282%29de33.jpg" />
     <Content Include="Style\user\ckfinder\123 %281%29f50d.jpg" />
     <Content Include="Style\user\ckfinder\LINE_ALBUM_20230425_2306121275f.jpg" />
@@ -1338,13 +1365,14 @@
     <Content Include="Views\Survey\SurveyForm.cshtml" />
     <Content Include="Views\Survey\AnswerPKS.cshtml" />
     <Content Include="Views\Survey\ListAnswerSurvey.cshtml" />
+    <Content Include="Views\Home\XacThucbySV.cshtml" />
+    <Content Include="Views\Home\XacThucbyCBVC.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\CTDT\Data\" />
     <Folder Include="Content\Exports\" />
     <Folder Include="Scripts\Admin\" />
-    <Folder Include="Views\Firebase\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

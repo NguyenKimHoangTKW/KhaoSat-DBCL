@@ -4,9 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-
+using System.Data.Entity;
 namespace CTDT.Areas.Admin.Controllers
 {
+    [AdminAuthorize]
     public class LopController : Controller
     {
         dbSurveyEntities db = new dbSurveyEntities();
@@ -55,6 +56,7 @@ namespace CTDT.Areas.Admin.Controllers
                         MaLop = l.ma_lop,
                         NgayCapNhat = l.ngaycapnhat,
                         NgayTao = l.ngaytao,
+                        hienthi =l.status,
                     }).ToList();
 
                 var totalRecords = query.Count();
@@ -139,6 +141,46 @@ namespace CTDT.Areas.Admin.Controllers
             catch (Exception ex)
             {
                 status = "Xóa lớp thất bại: " + ex.Message;
+            }
+            return Json(new { status = status }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult IsStatus(int id)
+        {
+            var status = "";
+            var items = db.lop.Find(id);
+            if (items != null)
+            {
+                items.status = !items.status;
+                db.Entry(items).State = EntityState.Modified;
+                db.SaveChanges();
+                status = "Thay đổi trạng thái lớp thành công";
+            }
+            return Json(new { status = status }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult ChangeStatusMultiple(List<int> ids)
+        {
+            var status = "";
+            if (ids != null && ids.Count > 0)
+            {
+                foreach (var id in ids)
+                {
+                    var item = db.lop.Find(id);
+                    if (item != null)
+                    {
+                        item.status = !item.status;
+                        db.Entry(item).State = EntityState.Modified;
+                    }
+                }
+                db.SaveChanges();
+                status = "Thay đổi trạng thái lớp thành công";
+            }
+            else
+            {
+                status = "Không có lớp nào được chọn";
             }
             return Json(new { status = status }, JsonRequestBehavior.AllowGet);
         }

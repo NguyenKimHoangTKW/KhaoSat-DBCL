@@ -25,6 +25,7 @@ namespace CTDT.Models
         public string ma_lop { get; set; }
         public int ngaycapnhat { get; set; }
         public int ngaytao { get; set; }
+        public Nullable<bool> status { get; set; }
     
         public virtual ctdt ctdt { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

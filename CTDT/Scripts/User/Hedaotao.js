@@ -1,4 +1,4 @@
-﻿var isAuthenticated = document.getElementById('isAuthenticated').value === 'true';
+﻿var isAuthenticated = document.getElementById('isAuthenticated').value;
 var userType = document.getElementById('userType').value;
 document.addEventListener('DOMContentLoaded', function () {
     LoadData(userType, isAuthenticated);
@@ -60,19 +60,7 @@ function LoadData(userType, isAuthenticated) {
                         html += "</div>";
                         html += "</div>";
                     } else if (userType === '2') {
-                        // Dành cho admin
-                        html += "<div class='col-sm-12 mb-4'>";
-                        html += "<div class='card feature-card'>";
-                        html += "<div class='card-body'>";
-                        html += "<a href='#' class='feature-icon'>";
-                        html += "<img src='https://tdmu.edu.vn/hinh/Icon.png' class='feature-icon' alt='Icon' style='width: 50px;'>";
-                        html += "</a>";
-                        html += "<h5 class='card-title'>KHẢO SÁT CÁC BÊN LIÊN QUAN - <span style='color: #009900;'>DÀNH CHO QUẢN TRỊ VIÊN</span></h5>";
-                        html += "<p class='card-text'>Thống kê, quản lý kết quả khảo sát ý kiến, đánh giá, góp ý của Cán Bộ Viên Chức Giảng viên, Sinh viên, Cựu Sinh Viên, Doanh Nghiệp thực hiện khảo sát...</p>";
-                        html += "<button class='btn btn-primary' onclick='window.location.href=\"/Admin/PhieuKhaoSat/Index\"'>Đi đến</button>";
-                        html += "</div>";
-                        html += "</div>";
-                        html += "</div>";
+                        window.location.href = "/Admin/PhieuKhaoSat/Index";
                     }
                     document.getElementById('showdata').innerHTML = html;
                 } else {

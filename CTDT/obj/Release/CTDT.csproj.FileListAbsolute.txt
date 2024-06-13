@@ -128,3 +128,7 @@ D:\TTDBCL\KhaoSat-DBCL\CTDT\obj\Release\CTDT.csproj.CoreCompileInputs.cache
 D:\TTDBCL\KhaoSat-DBCL\CTDT\obj\Release\CTDT.csproj.Up2Date
 D:\TTDBCL\KhaoSat-DBCL\CTDT\obj\Release\CTDT.dll
 D:\TTDBCL\KhaoSat-DBCL\CTDT\obj\Release\CTDT.pdb
+D:\TTDBCL\KhaoSat-DBCL\CTDT\bin\FirebaseAdmin.dll
+D:\TTDBCL\KhaoSat-DBCL\CTDT\bin\System.Collections.Immutable.dll
+D:\TTDBCL\KhaoSat-DBCL\CTDT\bin\FirebaseAdmin.xml
+D:\TTDBCL\KhaoSat-DBCL\CTDT\bin\System.Collections.Immutable.xml

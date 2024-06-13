@@ -1,14 +1,16 @@
-﻿$(document).ready(function () {
+﻿var id = document.getElementById('viewbagid').value;
+$(document).ready(function () {
     var isKhoaSelected = false;
     var isCTDTSelected = false;
     var isLopSelected = false;
     var isSVSelected = false;
+
     $("#btnCheckMSSV").click(function () {
         var mssv = $("#mssv").val();
         $.ajax({
             type: "POST",
             url: "/Home/GetSvIdByMssv",
-            data: { mssv: mssv },
+            data: { mssv: mssv, surveyid: id },
             success: function (response) {
                 if (response.success) {
                     var idsv = response.svId;
@@ -16,7 +18,16 @@
                     $.ajax({
                         type: "POST",
                         url: "/Home/SaveDataXacThucCTDT",
-                        data: { ctdt: idctdt, sv: idsv },
+                        data: { ctdt: idctdt, sv: idsv , surveyid: id},
+                        beforeSend: function () {
+                            Swal.fire({
+                                title: 'Đang tải bộ câu hỏi...',
+                                allowOutsideClick: false,
+                                onBeforeOpen: () => {
+                                    Swal.showLoading();
+                                }
+                            });
+                        },
                         success: function (response) {
                             if (response.success) {
                                 Swal.fire({
@@ -26,7 +37,7 @@
                                     showConfirmButton: false,
                                     timer: 2000
                                 }).then(function () {
-                                    window.location.href = "/Survey/Survey?id=" + response.idPhieu;
+                                    window.location.href = "/Survey/Survey?id=" + id;
                                 });
                             }
                         },
@@ -52,8 +63,6 @@
             }
         });
     });
-
-
 
     $("#forget_mssv_button").click(function () {
         if (!isKhoaSelected) {
@@ -97,7 +106,16 @@
         $.ajax({
             type: "POST",
             url: "/Home/SaveDataXacThucCTDT",
-            data: { ctdt: ctdt, sv: sv },
+            data: { ctdt: ctdt, sv: sv, surveyid : id},
+            beforeSend: function () {
+                Swal.fire({
+                    title: 'Đang tải bộ câu hỏi...',
+                    allowOutsideClick: false,
+                    onBeforeOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+            },
             success: function (response) {
                 if (response.success) {
                     Swal.fire({
@@ -106,7 +124,7 @@
                         showConfirmButton: false,
                         timer: 2000
                     }).then(function () {
-                        window.location.href = "/Survey/Survey?id=" + response.idPhieu;
+                        window.location.href = "/Survey/Survey?id=" + id;
                     });
                 } else {
                     Swal.fire({
@@ -180,7 +198,6 @@
         });
     });
 
-
     $("#select2-sv").change(function () {
         if ($(this).val() == "Chọn tên của bạn") {
             isSVSelected = false;
@@ -193,6 +210,7 @@
         }
     });
 });
+
 function activaTab(tabID) {
     $('.nav-tabs a[href="#' + tabID + '"]').tab('show');
 }

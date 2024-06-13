@@ -1,9 +1,10 @@
-﻿var ids = document.getElementById('surveyIds').value;
-$(document).ready(function () {
+﻿$(document).ready(function () {
     LoadData();
 });
 
 function LoadData() {
+    var ids = document.getElementById('surveyIds').value;
+
     $.ajax({
         url: '/Survey/LoadSurveyForm?ids=' + ids,
         type: 'GET',

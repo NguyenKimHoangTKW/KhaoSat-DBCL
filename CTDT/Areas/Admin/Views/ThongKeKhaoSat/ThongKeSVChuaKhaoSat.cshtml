@@ -18,7 +18,7 @@
             <h4>Danh sách đối tượng thực hiện khảo sát</h4>
             <div class="col-sm-10" style="margin-top: 10px;">
                 <select id="MaCTDT" class="form-control">
-                    <option value="">Tất cả</option>
+                    <option value="0">Tất cả</option>
                     @foreach (var item in ViewBag.CTDTList)
                     {
                         <option value="@item.Value">@item.Text</option>
@@ -27,7 +27,7 @@
             </div>
             <div class="col-sm-10" style="margin-top: 10px;">
                 <select id="MaPKS" class="form-control">
-                    <option value="">Tất cả</option>
+                    <option value="0">Tất cả</option>
                     @foreach (var item in ViewBag.PKSList)
                     {
                         <option value="@item.Value">@item.Text</option>
@@ -47,16 +47,8 @@
             <div id="data-table-section" class="m-t-25" style="display: none;">
                 <div class="table-responsive">
                     <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th scope="col">STT</th>
-                                <th scope="col">Mã sinh viên</th>
-                                <th scope="col">Họ và tên</th>
-                                <th scope="col">Ngày sinh</th>
-                                <th scope="col">Số điện thoại</th>
-                                <th scope="col">CTĐT</th>
-                                <th scope="col">Lớp</th>
-                            </tr>
+                        <thead id="table-header">
+                            <!-- Header will be updated dynamically based on the data -->
                         </thead>
                         <tbody id="showdata">
                             <!-- Data will be appended here by the script -->
@@ -86,7 +78,7 @@
 
         $("#ExportExcel").click(function () {
             Swal.fire({
-                title: "Đang xuất dữ liệu...",
+                title: "Đang kiểm tra và xuất dữ liệu...",
                 html: "Vui lòng chờ trong <b></b> giây.",
                 timer: 3000,
                 timerProgressBar: true,
@@ -105,11 +97,31 @@
                     var selectCtdt = $("#MaCTDT").val();
                     var selectPks = $("#MaPKS").val();
                     var surveyStatus = $("#SurveyStatus").val();
-                    window.location = '/Admin/ThongKeKhaoSat/ExportToExcel?ctdt=' + selectCtdt + '&survey=' + selectPks + '&completed=' + (surveyStatus == "1");
+
+                    $.ajax({
+                        url: '/Admin/ThongKeKhaoSat/ExportToExcel',
+                        type: 'GET',
+                        data: {
+                            ctdt: selectCtdt,
+                            survey: selectPks,
+                            completed: (surveyStatus == "1")
+                        },
+                        success: function (response) {
+                            if (response.data === null) {
+                                Swal.fire({
+                                    title: 'Thông báo',
+                                    text: response.message,
+                                    icon: 'info',
+                                    confirmButtonText: 'OK'
+                                });
+                            } else {
+                                window.location = '/Admin/ThongKeKhaoSat/ExportToExcel?ctdt=' + selectCtdt + '&survey=' + selectPks + '&completed=' + (surveyStatus == "1");
+                            }
+                        }
+                    });
                 }
             });
         });
-
 
         $(document).on("click", ".page-link", function () {
             var page = $(this).data("page");
@@ -127,31 +139,79 @@
         $.ajax({
             url: '/Admin/ThongKeKhaoSat/LoadSVChuaKhaoSat',
             type: 'GET',
-            data: { pageNumber: pageNumber, pageSize: 10, ctdt: ctdt, survey: survey, completed: completed == "1" },
+            data: {
+                pageNumber: pageNumber,
+                pageSize: 10,
+                ctdt: ctdt,
+                survey: survey,
+                completed: completed == "1"
+            },
             success: function (res) {
                 var items = res.data;
                 totalPages = res.totalPages;
                 var html = "";
 
-                if (items.length === 0) {
+                if (items == null || items.length === 0) {
                     html += "<tr><td colspan='7' class='text-center'>Không có dữ liệu</td></tr>";
+                    $('#pagination').html('');
                 } else {
+                    var headerHtml = "<tr>";
+                    if (items[0].IDSV !== undefined) {
+                        headerHtml += "<th scope='col'>STT</th>";
+                        headerHtml += "<th scope='col'>Mã sinh viên</th>";
+                        headerHtml += "<th scope='col'>Họ và tên</th>";
+                        headerHtml += "<th scope='col'>Ngày sinh</th>";
+                        headerHtml += "<th scope='col'>Số điện thoại</th>";
+                        headerHtml += "<th scope='col'>CTĐT</th>";
+                        headerHtml += "<th scope='col'>Lớp</th>";
+                    } else if (items[0].IDCTDT !== undefined) {
+                        headerHtml += "<th scope='col'>STT</th>";
+                        headerHtml += "<th scope='col'>Tên CTĐT</th>";
+                        headerHtml += "<th scope='col'>Tên khoa</th>";
+                    } else if (items[0].IDCBVC !== undefined && items[0].MaDonVi !== undefined) {
+                        headerHtml += "<th scope='col'>STT</th>";
+                        headerHtml += "<th scope='col'>Mã CBVC</th>";
+                        headerHtml += "<th scope='col'>Tên CBVC</th>";
+                        headerHtml += "<th scope='col'>Ngày sinh</th>";
+                        headerHtml += "<th scope='col'>Email</th>";
+                        headerHtml += "<th scope='col'>Đơn vị</th>";
+                        headerHtml += "<th scope='col'>Chương trình đào tạo</th>";
+                        headerHtml += "<th scope='col'>Chức vụ</th>";
+                    }
+                    headerHtml += "</tr>";
+                    $('#table-header').html(headerHtml);
+
                     for (let i = 0; i < items.length; i++) {
                         var index = (pageNumber - 1) * 10 + i + 1;
                         html += "<tr>";
-                        html += "<td>" + index + "</td>";
-                        html += "<td>" + items[i].MSSV + "</td>";
-                        html += "<td>" + items[i].Hoten + "</td>";
-                        html += "<td>" + items[i].NgaySinh + "</td>";
-                        html += "<td>" + items[i].SDT + "</td>";
-                        html += "<td>" + items[i].CTDT + "</td>";
-                        html += "<td>" + items[i].Lop + "</td>";
+                        if (items[i].IDSV !== undefined) {
+                            html += "<td>" + index + "</td>";
+                            html += "<td>" + items[i].MSSV + "</td>";
+                            html += "<td>" + items[i].Hoten + "</td>";
+                            html += "<td>" + items[i].NgaySinh + "</td>";
+                            html += "<td>" + items[i].SDT + "</td>";
+                            html += "<td>" + items[i].CTDT + "</td>";
+                            html += "<td>" + items[i].Lop + "</td>";
+                        } else if (items[i].IDCTDT !== undefined) {
+                            html += "<td>" + index + "</td>";
+                            html += "<td>" + items[i].TenCTDT + "</td>";
+                            html += "<td>" + items[i].Tenkhoa + "</td>";
+                        } else if (items[i].IDCBVC !== undefined) {
+                            html += "<td>" + index + "</td>";
+                            html += "<td>" + items[i].MaCBVC + "</td>";
+                            html += "<td>" + items[i].TenCBVC + "</td>";
+                            html += "<td>" + items[i].NgaySinh + "</td>";
+                            html += "<td>" + items[i].Email + "</td>";
+                            html += "<td>" + items[i].DonVi + "</td>";
+                            html += "<td>" + items[i].ChuongTrinh + "</td>";
+                            html += "<td>" + items[i].ChucVu + "</td>";
+                        }
                         html += "</tr>";
                     }
+                    renderPagination(pageNumber, totalPages);
                 }
                 $('#showdata').html(html);
                 $('#data-table-section').show();
-                renderPagination(pageNumber, totalPages);
             },
             error: function () {
                 var html = "<tr><td colspan='7' class='text-center'>Không thể tải dữ liệu</td></tr>";
@@ -162,6 +222,9 @@
     }
 
     function renderPagination(currentPage, totalPages) {
+        if (totalPages === 0) {
+            return;
+        }
         var html = '<nav aria-label="Page navigation example"><ul class="pagination justify-content-end">';
 
         var startPage = currentPage - 2;
@@ -193,3 +256,4 @@
         $('#pagination').html(html);
     }
 </script>
+

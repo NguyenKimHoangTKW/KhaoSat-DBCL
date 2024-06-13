@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using Google.Cloud.Translation.V2;
 namespace CTDT.Areas.Admin.Controllers
 {
+    [AdminAuthorize]
     public class SinhVienController : Controller
     {
         dbSurveyEntities db = new dbSurveyEntities();

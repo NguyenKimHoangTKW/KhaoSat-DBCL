@@ -1,0 +1,148 @@
+﻿@{
+    ViewBag.Title = "Xác thực thông tin khảo sát";
+}
+
+<style>
+    #spinner-div {
+        position: fixed;
+        display: none;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        text-align: center;
+        background-color: rgba(255, 255, 255, 0.8);
+        z-index: 2;
+    }
+</style>
+
+<input type="hidden" class="form-control" id="base_url" name="base_url" value="@Url.Content("~/")">
+
+<div id="vungbon" style="padding-top: 50px; padding-bottom: 70px;">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 columns">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12">
+                        <div class="text-center">
+                            <h2 class="text-center" style="font-weight: 700">XÁC THỰC THÔNG TIN</h2>
+                            <input type="hidden" id="viewbagid" value="@ViewBag.id" />
+                        </div>
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a onclick="activaTab('home')" style="color: #0a58ca" class="nav-link active" data-toggle="tab" href="#home">Xác thực</a>
+                            </li>
+                            <li class="nav-item">
+                                <a onclick="activaTab('menu1')" style="color: #0a58ca" class="nav-link" data-toggle="tab" href="#menu1">#</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div id="home" class="container tab-pane active" style="margin-left: 0">
+                                <div class="mt-4 p-5 text-black rounded" style="background-color: #E7E9EB!important">
+                                    <div id="spinner-div" class="pt-5">
+                                        <div class="spinner-border text-primary" role="status"></div>
+                                    </div>
+                                    <form id="form_xacthuc_ctdt" style="margin-bottom: 5px">
+                                        <div class="mb-3">
+                                            <select class="form-control" id="select2-xacthucCBVC">
+                                                <option selected>Chọn đơn vị công tác</option>
+                                                @foreach (var item in ViewBag.DonViList)
+                                                {
+                                                    <option value="@item.Value">@item.Text</option>
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="d-flex justify-content-center">
+                                            <button style="width: 150px; margin: 5px" id="btnXacThucCBVC"
+                                                    type="button" class="btn btn-primary"
+                                                    data-loading-text="Đang xử lý....">
+                                                Xác thực
+                                            </button>
+                                            <button style="width: 150px; margin: 5px"
+                                                    onclick="window.location='@Url.Action("Index","Home")';" type="button"
+                                                    class="btn btn-secondary">
+                                                Trở về trang chủ
+                                            </button>
+                                        </div>
+                                        <br>
+                                        <div id="show_error_xacthuc_ctdt" class="alert alert-danger d-flex align-items-center"
+                                             role="alert" style="visibility:hidden">
+                                            <div id="error_xacthuc_ctdt"></div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div id="menu1" class="container tab-pane active" style="margin-left: 0"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script>
+    var id = document.getElementById('viewbagid').value;
+    $(document).ready(function () {
+        var isKhoaSelected = false;
+
+        $("#select2-xacthucCBVC").change(function () {
+            if ($(this).val() != "Chọn đơn vị công tác") {
+                isKhoaSelected = true;
+            } else {
+                isKhoaSelected = false;
+            }
+        });
+
+        $("#btnXacThucCBVC").click(function () {
+            if (!isKhoaSelected) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Vui lòng chọn đơn vị trước khi xác thực!'
+                });
+                return;
+            }
+
+            var donvi = $("#select2-xacthucCBVC").val();
+            $.ajax({
+                type: "POST",
+                url: "/Home/SaveDataXacThucByCBVC",
+                data: { donvi: donvi, surveyid: id },
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Xác thực thành công!',
+                            showConfirmButton: false,
+                            timer: 2000
+                        }).then(function () {
+                            window.location.href = "/Survey/Survey?id=" + id;
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: response.message
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Có lỗi xảy ra khi gửi dữ liệu lên server!'
+                    });
+                }
+            });
+        });
+    });
+
+    function activaTab(tabID) {
+        $('.nav-tabs a[href="#' + tabID + '"]').tab('show');
+    }
+</script>
