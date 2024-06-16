@@ -26,6 +26,8 @@
     <Property Name="id_donvi" Type="int" />
     <Property Name="id_chucvu" Type="int" />
     <Property Name="id_chuongtrinhdaotao" Type="int" />
+    <Property Name="namhoatdong" Type="int" />
+    <Property Name="status" Type="bit" />
   </EntityType>
   <EntityType Name="ctdt">
     <Key>
@@ -124,6 +126,7 @@
     <Property Name="surveyStatus" Type="tinyint" />
     <Property Name="id_loaikhaosat" Type="int" Nullable="false" />
     <Property Name="creator" Type="int" />
+    <Property Name="namhoatdong" Type="int" />
   </EntityType>
   <EntityType Name="sysdiagrams">
     <Key>

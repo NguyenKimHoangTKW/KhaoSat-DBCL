@@ -117,6 +117,8 @@
     <Property Name="id_donvi" Type="Int32" />
     <Property Name="id_chucvu" Type="Int32" />
     <Property Name="id_chuongtrinhdaotao" Type="Int32" />
+    <Property Name="namhoatdong" Type="Int32" />
+    <Property Name="status" Type="Boolean" />
     <NavigationProperty Name="answer_response" Relationship="dbSurveyModel.FK_answer_response_CanBoVienChuc" FromRole="CanBoVienChuc" ToRole="answer_response" />
     <NavigationProperty Name="ChucVu" Relationship="dbSurveyModel.FK_CanBoVienChuc_ChucVu" FromRole="CanBoVienChuc" ToRole="ChucVu" />
     <NavigationProperty Name="ChuongTrinhDaoTao" Relationship="dbSurveyModel.FK_CanBoVienChuc_ChuongTrinhDaoTao" FromRole="CanBoVienChuc" ToRole="ChuongTrinhDaoTao" />
@@ -234,6 +236,7 @@
     <Property Name="surveyStatus" Type="Byte" />
     <Property Name="id_loaikhaosat" Type="Int32" Nullable="false" />
     <Property Name="creator" Type="Int32" />
+    <Property Name="namhoatdong" Type="Int32" />
     <NavigationProperty Name="answer_response" Relationship="dbSurveyModel.FK_answer_response_survey" FromRole="survey" ToRole="answer_response" />
     <NavigationProperty Name="hedaotao" Relationship="dbSurveyModel.FK_survey_hedaotao" FromRole="survey" ToRole="hedaotao" />
     <NavigationProperty Name="LoaiKhaoSat" Relationship="dbSurveyModel.FK_survey_LoaiKhaoSat" FromRole="survey" ToRole="LoaiKhaoSat" />

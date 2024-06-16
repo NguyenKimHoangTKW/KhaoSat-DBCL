@@ -24,15 +24,16 @@ namespace CTDT.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult LoadSVChuaKhaoSat(int pageNumber = 1, int pageSize = 10, int ctdt = 0, int survey = 0, bool completed = false)
         {
-            var hasAnswerResponse = db.answer_response;
-            if (hasAnswerResponse.Any(aw => aw.id_sv != null && (survey == 0 || aw.surveyID == survey) && aw.id_ctdt != null))
+            bool hasAnswerResponseForStudent = db.answer_response.Any(aw => aw.id_sv != null && (survey == 0 || aw.surveyID == survey));
+            bool hasAnswerResponseForProgram = db.answer_response.Any(aw => aw.id_sv == null && (survey == 0 || aw.surveyID == survey) && aw.id_ctdt != null);
+            bool hasAnswerResponseForStaff = db.answer_response.Any(aw => aw.id_CBVC != null && (survey == 0 || aw.surveyID == survey) && aw.id_donvi != null);
+            if (hasAnswerResponseForStudent)
             {
                 var query = db.sinhvien.Where(x => x.lop.status == true).AsQueryable();
                 if (ctdt != 0)
                 {
                     query = query.Where(ct => ct.lop.ctdt.id_ctdt == ctdt);
                 }
-                var totalRecords = query.Count();
                 if (completed)
                 {
                     query = query.Where(sv => db.answer_response.Any(aw => aw.id_sv == sv.id_sv && (survey == 0 || aw.surveyID == survey)));
@@ -50,35 +51,35 @@ namespace CTDT.Areas.Admin.Controllers
                     .Select(x => new
                     {
                         IDSV = x.id_sv,
-                        MSSV = x.ma_sv,
-                        Hoten = x.hovaten,
+                        MSSV = x.ma_sv ?? "Không có dữ liệu",
+                        Hoten = x.hovaten ?? "Không có dữ liệu",
                         NgaySinh =x.ngaysinh.ToString("dd-MM-yyyy"),
-                        SDT = x.sodienthoai,
-                        CTDT = x.lop?.ctdt?.ten_ctdt ?? "",
-                        Lop = x.lop?.ma_lop ?? ""
+                        SDT = x.sodienthoai ?? "Không có dữ liệu",
+                        CTDT = x.lop?.ctdt?.ten_ctdt ?? "Không có dữ liệu",
+                        Lop = x.lop?.ma_lop ?? "Không có dữ liệu"
                     })
                     .ToList();
                 var totalPages = (int)Math.Ceiling((double)filteredRecords / pageSize);
                 return Json(new { data = GetSV, totalPages = totalPages }, JsonRequestBehavior.AllowGet);
             }
-            else if (hasAnswerResponse.Any(aw => aw.id_sv == null && (survey == 0 || aw.surveyID == survey) && aw.id_ctdt != null))
+            else if (hasAnswerResponseForProgram)
             {
                 var query = db.ctdt.AsQueryable();
                 if (ctdt != 0)
                 {
                     query = query.Where(ct => ct.id_ctdt == ctdt);
                 }
-                var totalRecords = query.Count();
                 if (completed)
                 {
-                    query = query.Where(sv => db.answer_response.Any(aw => aw.id_ctdt == sv.id_ctdt && (survey == 0 || aw.surveyID == survey)));
+                    query = query.Where(ct => db.answer_response.Any(aw => aw.id_ctdt == ct.id_ctdt && (survey == 0 || aw.surveyID == survey)));
                 }
                 else
                 {
-                    query = query.Where(sv => !db.answer_response.Any(aw => aw.id_ctdt == sv.id_ctdt && (survey == 0 || aw.surveyID == survey)));
+                    query = query.Where(ct => !db.answer_response.Any(aw => aw.id_ctdt == ct.id_ctdt && (survey == 0 || aw.surveyID == survey)));
                 }
+
                 var filteredRecords = query.Count();
-                var GetSV = query
+                var GetPrograms = query
                     .OrderBy(l => l.id_ctdt)
                     .Skip((pageNumber - 1) * pageSize)
                     .Take(pageSize)
@@ -86,23 +87,23 @@ namespace CTDT.Areas.Admin.Controllers
                     .Select(x => new
                     {
                         IDCTDT = x.id_ctdt,
-                        Tenkhoa = x.khoa?.ten_khoa ?? "",
-                        TenCTDT = x.ten_ctdt
+                        Tenkhoa = x.khoa?.ten_khoa ?? "Không có dữ liệu",
+                        TenCTDT = x.ten_ctdt ?? "Không có dữ liệu"
                     })
                     .ToList();
                 var totalPages = (int)Math.Ceiling((double)filteredRecords / pageSize);
-                return Json(new { data = GetSV, totalPages = totalPages }, JsonRequestBehavior.AllowGet);
+                return Json(new { data = GetPrograms, totalPages = totalPages }, JsonRequestBehavior.AllowGet);
             }
-            else if (hasAnswerResponse.Any(aw => aw.id_CBVC != null && (survey == 0 || aw.surveyID == survey) && aw.id_donvi != null))
+            else if (hasAnswerResponseForStaff)
             {
                 var query = db.CanBoVienChuc.AsQueryable();
                 if (completed)
                 {
-                    query = query.Where(sv => db.answer_response.Any((aw => aw.id_CBVC == sv.id_CBVC && survey == 0 || aw.surveyID == survey)));
+                    query = query.Where(cbvc => db.answer_response.Any(aw => aw.id_CBVC == cbvc.id_CBVC && (survey == 0 || aw.surveyID == survey)));
                 }
                 else
                 {
-                    query = query.Where(sv => !db.answer_response.Any((aw => aw.id_CBVC == sv.id_CBVC && survey == 0 || aw.surveyID == survey)));
+                    query = query.Where(cbvc => !db.answer_response.Any(aw => aw.id_CBVC == cbvc.id_CBVC && (survey == 0 || aw.surveyID == survey)));
                 }
                 var filteredRecords = query.Count();
                 var GetSV = query
@@ -113,14 +114,14 @@ namespace CTDT.Areas.Admin.Controllers
                     .Select(x => new
                     {
                         IDCBVC = x.id_CBVC,
-                        TenCBVC = x.TenCBVC,
-                        MaCBVC = x.MaCBVC,
-                        NgaySinh = x.NgaySinh.HasValue ? x.NgaySinh.Value.ToString("dd-MM-yyyy") : "",
-                        Email = x.Email,
-                        DonVi = x.DonVi?.name_donvi ?? "",
-                        ChuongTrinh = x.ChuongTrinhDaoTao?.name_chuongtrinhdaotao ?? "",
-                        ChucVu = x.ChucVu?.name_chucvu ?? "",
-                        MaDonVi = x.DonVi?.id_donvi ?? 0
+                        TenCBVC = x.TenCBVC ?? "Không có dữ liệu",
+                        MaCBVC = x.MaCBVC ?? "Không có dữ liệu",
+                        NgaySinh = x.NgaySinh.HasValue ? x.NgaySinh.Value.ToString("dd-MM-yyyy") : "Không có dữ liệu",
+                        Email = x.Email ?? "Không có dữ liệu",
+                        DonVi = x.DonVi?.name_donvi ?? "Không có dữ liệu",
+                        ChuongTrinh = x.ChuongTrinhDaoTao?.name_chuongtrinhdaotao ?? "Không có dữ liệu",
+                        ChucVu = x.ChucVu?.name_chucvu ?? "Không có dữ liệu",
+                        MaDonVi = x.DonVi?.id_donvi ?? 0,
                     })
                     .ToList();
                 var totalPages = (int)Math.Ceiling((double)filteredRecords / pageSize);
@@ -134,10 +135,13 @@ namespace CTDT.Areas.Admin.Controllers
 
         public ActionResult ExportToExcel(int ctdt = 0, int survey = 0, bool completed = false)
         {
-            var query = db.sinhvien.Where(x => x.lop.status == true).AsQueryable();
-            bool hasAnswerResponse = db.answer_response.Any(aw => aw.id_sv != null && (survey == 0 || aw.surveyID == survey));
-            if (hasAnswerResponse)
+            bool hasAnswerResponseForStudent = db.answer_response.Any(aw => aw.id_sv != null && (survey == 0 || aw.surveyID == survey));
+            bool hasAnswerResponseForProgram = db.answer_response.Any(aw => aw.id_sv == null && (survey == 0 || aw.surveyID == survey) && aw.id_ctdt != null);
+            bool hasAnswerResponseForStaff = db.answer_response.Any(aw => aw.id_CBVC != null && (survey == 0 || aw.surveyID == survey) && aw.id_donvi != null);
+
+            if (hasAnswerResponseForStudent)
             {
+                var query = db.sinhvien.Where(x => x.lop.status == true).AsQueryable();
                 if (ctdt != 0)
                 {
                     query = query.Where(ct => ct.lop.ctdt.id_ctdt == ctdt);
@@ -150,8 +154,7 @@ namespace CTDT.Areas.Admin.Controllers
                 {
                     query = query.Where(sv => !db.answer_response.Any(aw => aw.id_sv == sv.id_sv && (survey == 0 || aw.surveyID == survey)));
                 }
-                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-                string tittle = completed ? "Đối tượng đã khảo sát" : "Đối tượng chưa khảo sát";
+
                 var GetSV = query
                     .OrderBy(l => l.id_sv)
                     .AsEnumerable()
@@ -161,62 +164,114 @@ namespace CTDT.Areas.Admin.Controllers
                         Hoten = x.hovaten,
                         NgaySinh = x.ngaysinh.ToString("yyyy-MM-dd"),
                         SDT = x.sodienthoai,
-                        CTDT = x.lop.ctdt.ten_ctdt,
-                        Lop = x.lop.ma_lop,
+                        CTDT = x.lop?.ctdt?.ten_ctdt ?? "",
+                        Lop = x.lop?.ma_lop ?? ""
                     })
                     .ToList();
 
-                if (!GetSV.Any())
+                return ExportDataToExcel(GetSV, completed ? "Đối tượng đã khảo sát" : "Đối tượng chưa khảo sát", "SinhVien");
+            }
+            else if (hasAnswerResponseForProgram)
+            {
+                var query = db.ctdt.AsQueryable();
+                if (ctdt != 0)
                 {
-                    return Json(new { data = (object)null, message = "Không có dữ liệu đối tượng khảo sát ở phiếu này" }, JsonRequestBehavior.AllowGet);
+                    query = query.Where(ct => ct.id_ctdt == ctdt);
+                }
+                if (completed)
+                {
+                    query = query.Where(ct => db.answer_response.Any(aw => aw.id_ctdt == ct.id_ctdt && (survey == 0 || aw.surveyID == survey)));
+                }
+                else
+                {
+                    query = query.Where(ct => !db.answer_response.Any(aw => aw.id_ctdt == ct.id_ctdt && (survey == 0 || aw.surveyID == survey)));
                 }
 
-                using (ExcelPackage package = new ExcelPackage())
-                {
-                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("SinhVienChuaKhaoSat");
-
-                    if (GetSV.Any())
+                var GetPrograms = query
+                    .OrderBy(l => l.id_ctdt)
+                    .AsEnumerable()
+                    .Select(x => new
                     {
-                        var ctdtName = GetSV.First().CTDT;
-                        worksheet.Cells["A1:G1"].Merge = true;
-                        worksheet.Cells["A1"].Value = tittle;
-                        worksheet.Cells["A1"].Style.Font.Bold = true;
-                        worksheet.Cells["A1"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                        IDCTDT = x.id_ctdt,
+                        Tenkhoa = x.khoa?.ten_khoa ?? "",
+                        TenCTDT = x.ten_ctdt
+                    })
+                    .ToList();
 
-                        worksheet.Cells["A2:G2"].Merge = true;
-                        worksheet.Cells["A2"].Value = $"CTDT: {ctdtName}";
-                        worksheet.Cells["A2"].Style.Font.Bold = true;
-                        worksheet.Cells["A2"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                return ExportDataToExcel(GetPrograms, completed ? "Chương trình đã khảo sát" : "Chương trình chưa khảo sát", "ChuongTrinh");
+            }
+            else if (hasAnswerResponseForStaff)
+            {
+                var query = db.CanBoVienChuc.AsQueryable();
+                if (completed)
+                {
+                    query = query.Where(cbvc => db.answer_response.Any(aw => aw.id_CBVC == cbvc.id_CBVC && (survey == 0 || aw.surveyID == survey)));
+                }
+                else
+                {
+                    query = query.Where(cbvc => !db.answer_response.Any(aw => aw.id_CBVC == cbvc.id_CBVC && (survey == 0 || aw.surveyID == survey)));
+                }
+
+                var GetStaff = query
+                    .OrderBy(l => l.id_CBVC)
+                    .AsEnumerable()
+                    .Select(x => new
+                    {
+                        IDCBVC = x.id_CBVC,
+                        TenCBVC = x.TenCBVC,
+                        MaCBVC = x.MaCBVC,
+                        NgaySinh = x.NgaySinh.HasValue ? x.NgaySinh.Value.ToString("yyyy-MM-dd") : "",
+                        Email = x.Email,
+                        DonVi = x.DonVi?.name_donvi ?? "",
+                        ChuongTrinh = x.ChuongTrinhDaoTao?.name_chuongtrinhdaotao ?? "",
+                        ChucVu = x.ChucVu?.name_chucvu ?? "",
+                        MaDonVi = x.DonVi?.id_donvi ?? 0
+                    })
+                    .ToList();
+
+                return ExportDataToExcel(GetStaff, completed ? "Cán bộ viên chức đã khảo sát" : "Cán bộ viên chức chưa khảo sát", "CanBoVienChuc");
+            }
+            else
+            {
+                return Json(new { data = (object)null, message = "Không có dữ liệu đối tượng khảo sát ở phiếu này" }, JsonRequestBehavior.AllowGet);
+            }
+        }
+        private ActionResult ExportDataToExcel<T>(List<T> data, string title, string sheetName)
+        {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            using (ExcelPackage package = new ExcelPackage())
+            {
+                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add(sheetName);
+
+                if (data.Any())
+                {
+                    var properties = typeof(T).GetProperties();
+
+                    worksheet.Cells["A1:" + GetExcelColumnName(properties.Length) + "1"].Merge = true;
+                    worksheet.Cells["A1"].Value = title;
+                    worksheet.Cells["A1"].Style.Font.Bold = true;
+                    worksheet.Cells["A1"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+
+                    for (int i = 0; i < properties.Length; i++)
+                    {
+                        worksheet.Cells[2, i + 1].Value = properties[i].Name;
                     }
 
-                    worksheet.Cells["A3"].Value = "STT";
-                    worksheet.Cells["B3"].Value = "Mã sinh viên";
-                    worksheet.Cells["C3"].Value = "Họ và tên";
-                    worksheet.Cells["D3"].Value = "Ngày sinh";
-                    worksheet.Cells["E3"].Value = "Số điện thoại";
-                    worksheet.Cells["F3"].Value = "CTĐT";
-                    worksheet.Cells["G3"].Value = "Lớp";
-
-                    int row = 4;
-                    int stt = 1;
-
-                    foreach (var sv in GetSV)
+                    int row = 3;
+                    foreach (var item in data)
                     {
-                        worksheet.Cells[row, 1].Value = stt++;
-                        worksheet.Cells[row, 2].Value = sv.MSSV;
-                        worksheet.Cells[row, 3].Value = sv.Hoten;
-                        worksheet.Cells[row, 4].Value = sv.NgaySinh;
-                        worksheet.Cells[row, 5].Value = sv.SDT;
-                        worksheet.Cells[row, 6].Value = sv.CTDT;
-                        worksheet.Cells[row, 7].Value = sv.Lop;
+                        for (int col = 0; col < properties.Length; col++)
+                        {
+                            worksheet.Cells[row, col + 1].Value = properties[col].GetValue(item)?.ToString() ?? "";
+                        }
                         row++;
                     }
 
                     worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
 
                     string timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
-                    string status = completed ? "DoiTuongDaKhaoSat" : "DoiTuongChuaKhaoSat";
-                    string fileName = $"{status}_{timestamp}.xlsx";
+                    string fileName = $"{sheetName}_{timestamp}.xlsx";
                     string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
                     string folderPath = Server.MapPath("~/DataExport/DoiTuongKhaoSat");
@@ -232,11 +287,24 @@ namespace CTDT.Areas.Admin.Controllers
                     byte[] fileBytes = System.IO.File.ReadAllBytes(filePath);
                     return File(fileBytes, contentType, fileName);
                 }
+                else
+                {
+                    return Json(new { data = (object)null, message = "Không có dữ liệu đối tượng khảo sát ở phiếu này" }, JsonRequestBehavior.AllowGet);
+                }
             }
-            else
+        }
+
+        private string GetExcelColumnName(int index)
+        {
+            const string letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            string result = "";
+            while (index > 0)
             {
-                return Json(new { data = (object)null, message = "Không có dữ liệu đối tượng khảo sát ở phiếu này" }, JsonRequestBehavior.AllowGet);
+                index--;
+                result = letters[index % 26] + result;
+                index /= 26;
             }
+            return result;
         }
     }
 }

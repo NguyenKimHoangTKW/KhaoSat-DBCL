@@ -18,28 +18,73 @@ function LoadData() {
                 for (let i = 0; i < items.length; i++) {
                     var index = i + 1;
                     var formattedDate1 = unixTimestampToDate(items[i].ThoiGianKhaoSat);
-                    html += "<tr>";
-                    html += "    <td>" + index + "</td>";
-                    html += "    <td>";
-                    html += "        <div class='d-flex align-items-center'>";
-                    html += "            <div class='ms-3'>";
-                    html += "                <p class='fw-bold mb-1'>" + items[i].TenCTDT + "</p>";
-                    html += "            </div>";
-                    html += "        </div>";
-                    html += "    </td>";
-                    html += "    <td>";
-                    html += "        <p class='fw-normal mb-1'>" + (items[i].TenSV == null ? "Không có dữ liệu" : items[i].TenSV) + "</p>";
-                    html += "    </td>";
-                    html += "    <td>";
-                    html += "        <span class='badge badge-success rounded-pill d-inline'>" + (items[i].MSSV == null ? "Không có dữ liệu" : items[i].MSSV) + "</span>";
-                    html += "    </td>";
-                    html += "    <td>" + formattedDate1 + "</td>";
-                    html += "    <td>";
-                    html += "        <button onclick=\"window.location.href='/Survey/AnswerPKS?id=" + items[i].MaPhieu + "'\" type='button' class='btn btn-link btn-sm btn-rounded'>";
-                    html += "            Xem chi tiết câu hỏi";
-                    html += "        </button>";
-                    html += "    </td>";
-                    html += "</tr>";
+                    if (items[i].MSSV !== null && items[i].TenCTDT !== null) {
+                        html += "<tr>";
+                        html += "    <td>" + index + "</td>";
+                        html += "    <td>";
+                        html += "        <div class='d-flex align-items-center'>";
+                        html += "            <div class='ms-3'>";
+                        html += "                <p class='fw-bold mb-1'>" + items[i].TenCTDT + "</p>";
+                        html += "            </div>";
+                        html += "        </div>";
+                        html += "    </td>";
+                        html += "    <td>";
+                        html += "        <p class='fw-normal mb-1'>" + items[i].TenSV + "</p>";
+                        html += "    </td>";
+                        html += "    <td>";
+                        html += "        <span class='badge badge-success rounded-pill d-inline'>" + items[i].MSSV + "</span>";
+                        html += "    </td>";
+                        html += "    <td>" + formattedDate1 + "</td>";
+                        html += "    <td>";
+                        html += "        <button onclick=\"window.location.href='/Survey/AnswerPKS?id=" + items[i].MaPhieu + "'\" type='button' class='btn btn-link btn-sm btn-rounded'>";
+                        html += "            Xem chi tiết câu hỏi";
+                        html += "        </button>";
+                        html += "    </td>";
+                        html += "</tr>";
+                    } else if (items[i].MSSV === null && items[i].TenCTDT !== null) {
+                        html += "<tr>";
+                        html += "    <td>" + index + "</td>";
+                        html += "    <td>";
+                        html += "        <div class='d-flex align-items-center'>";
+                        html += "            <div class='ms-3'>";
+                        html += "                <p class='fw-bold mb-1'>" + items[i].TenCTDT + "</p>";
+                        html += "            </div>";
+                        html += "        </div>";
+                        html += "    </td>";
+                        html += "    <td>";
+                        html += "        <p class='fw-normal mb-1'>" + items[i].Khoa + "</p>";
+                        html += "    </td>";
+                        html += "    <td>" + formattedDate1 + "</td>";
+                        html += "    <td>";
+                        html += "        <button onclick=\"window.location.href='/Survey/AnswerPKS?id=" + items[i].MaPhieu + "'\" type='button' class='btn btn-link btn-sm btn-rounded'>";
+                        html += "            Xem chi tiết câu hỏi";
+                        html += "        </button>";
+                        html += "    </td>";
+                        html += "</tr>";
+                    } else if (items[i].CBVC !== null && items[i].Donvi !== null) {
+                        html += "<tr>";
+                        html += "    <td>" + index + "</td>";
+                        html += "    <td>";
+                        html += "        <div class='d-flex align-items-center'>";
+                        html += "            <div class='ms-3'>";
+                        html += "                <p class='fw-bold mb-1'>" + items[i].CBVC + "</p>";
+                        html += "            </div>";
+                        html += "        </div>";
+                        html += "    </td>";
+                        html += "    <td>";
+                        html += "        <p class='fw-normal mb-1'>" + items[i].Donvi + "</p>";
+                        html += "    </td>";
+                        html += "    <td>" + formattedDate1 + "</td>";
+                        html += "    <td>";
+                        html += "        <button onclick=\"window.location.href='/Survey/AnswerPKS?id=" + items[i].MaPhieu + "'\" type='button' class='btn btn-link btn-sm btn-rounded'>";
+                        html += "            Xem chi tiết câu hỏi";
+                        html += "        </button>";
+                        html += "    </td>";
+                        html += "</tr>";
+                    } else {
+                        html += "<h2>Không có dữ liệu</h2>";
+                    }
+                    
                 }
             }
             $('#showdata').html(html);

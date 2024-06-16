@@ -33,26 +33,20 @@ namespace CTDT.Controllers
             int? getctdt = TryParseSessionValue("XTCTDT");
             int? getsv = TryParseSessionValue("XTSV");
             int? getdonvi = TryParseSessionValue("XTDV");
-            int? getcbvc = TryParseSessionValue("CBVC");
-
             var status = "";
             if (ModelState.IsValid)
             {
                 status = "Khảo sát thành công";
                 DateTime now = DateTime.UtcNow;
                 int unixTimestamp = (int)(now.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-
                 answer.time = unixTimestamp;
                 answer.id_users = getuser.id_users;
                 answer.id_ctdt = getctdt;
                 answer.id_sv = getsv;
                 answer.id_donvi = getdonvi;
-                answer.id_CBVC = getcbvc;
-
                 db.answer_response.Add(answer);
                 db.SaveChanges();
             }
-
             return Json(new { status = status }, JsonRequestBehavior.AllowGet);
         }
 
@@ -105,7 +99,8 @@ namespace CTDT.Controllers
         public ActionResult ListAnswerSurvey(int id)
         {
             ViewBag.id = id;
-            return View();
+            var answerlist = db.answer_response.Where(x=>x.surveyID == id).ToList();
+            return View(answerlist);
         }
 
         [HttpGet]
@@ -118,7 +113,10 @@ namespace CTDT.Controllers
                     TenCTDT = f.ctdt.ten_ctdt,
                     TenSV = f.sinhvien.hovaten,
                     MSSV = f.sinhvien.ma_sv,
+                    Khoa = f.ctdt.khoa.ten_khoa,
                     MaPhieu = f.id,
+                    Donvi = f.DonVi.name_donvi,
+                    CBVC = f.CanBoVienChuc.TenCBVC,
                     ThoiGianKhaoSat = f.time,
                 })
                 .ToList();

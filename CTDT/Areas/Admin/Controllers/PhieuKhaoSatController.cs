@@ -52,6 +52,7 @@ namespace CTDT.Areas.Admin.Controllers
             ViewBag.id = id;
             var litsKQ = db.answer_response.Where(kq => kq.surveyID == id).ToList();
             ViewBag.CTDTList = new SelectList(db.ctdt.OrderBy(l => l.id_ctdt), "id_ctdt", "ten_ctdt");
+            ViewBag.DonViList = new SelectList(db.DonVi.OrderBy(l => l.id_donvi), "id_donvi", "name_donvi");
             return View(litsKQ);
         }
         public ActionResult AnswerPKS(int id)
@@ -110,21 +111,79 @@ namespace CTDT.Areas.Admin.Controllers
             }
         }
         [HttpGet]
-        public ActionResult LoadKetQuaPKS(int id)
+        public ActionResult LoadKetQuaPKS(int id, int pageNumber = 1, int pageSize = 10)
         {
-            var ListKQPKS = db.answer_response.Where(kq => kq.surveyID == id).Select(kq => new
+            bool hasAnswerResponseForStudent = db.answer_response.Any(aw => aw.id_sv != null && (aw.surveyID == id));
+            bool hasAnswerResponseForProgram = db.answer_response.Any(aw => aw.id_sv == null && (aw.surveyID == id) && aw.id_ctdt != null);
+            bool hasAnswerResponseForStaff = db.answer_response.Any(aw => aw.id_CBVC != null && (aw.surveyID == id) && aw.id_donvi != null);
+            if (hasAnswerResponseForStudent)
             {
-                MaKQ = kq.id,
-                Email = kq.users.email,
-                SinhVien = kq.sinhvien.hovaten,
-                ThoiGianThucHien = kq.time,
-                CTDT = kq.ctdt.ten_ctdt,
-                MaAnswer = kq.id,
-                MSSV = kq.sinhvien.ma_sv,
-            }).ToList();
-            return Json(new {status= "Load dữ liệu thành công" , data = ListKQPKS }, JsonRequestBehavior.AllowGet);
-        }
+                var totalRecords = db.answer_response.Count(aw => aw.surveyID == id && aw.id_sv != null);
+                var GetStuden = db.answer_response
+                    .Where(kq => kq.surveyID == id && kq.id_sv != null)
+                    .OrderBy(kq => kq.id)
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .Select(kq => new
+                    {
+                        MaKQ = kq.id,
+                        Email = kq.users.email,
+                        SinhVien = kq.sinhvien.hovaten,
+                        ThoiGianThucHien = kq.time,
+                        CTDT = kq.ctdt.ten_ctdt,
+                        MaAnswer = kq.id,
+                        MSSV = kq.sinhvien.ma_sv,
+                    }).ToList();
 
+                var totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
+                return Json(new { status = "Load dữ liệu thành công", totalPages = totalPages, data = GetStuden }, JsonRequestBehavior.AllowGet);
+            }
+            else if (hasAnswerResponseForProgram)
+            {
+                var totalRecords = db.answer_response.Count(aw => aw.surveyID == id && aw.id_sv == null && aw.id_ctdt != null);
+                var GetProgram = db.answer_response
+                    .Where(kq => kq.surveyID == id && kq.id_sv == null && kq.id_ctdt != null)
+                    .OrderBy(kq => kq.id)
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .Select(kq => new
+                    {
+                        MaKQ = kq.id,
+                        Email = kq.users.email,
+                        IDCTDT = kq.id_ctdt,
+                        Tenkhoa = kq.ctdt.khoa.ten_khoa ?? "",
+                        TenCTDT = kq.ctdt.ten_ctdt,
+                        ThoiGianThucHien = kq.time,
+                    }).ToList();
+
+                var totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
+                return Json(new { status = "Load dữ liệu thành công", totalPages = totalPages, data = GetProgram }, JsonRequestBehavior.AllowGet);
+            }
+            else if (hasAnswerResponseForStaff)
+            {
+                var totalRecords = db.answer_response.Count(aw => aw.surveyID == id && aw.id_CBVC != null && aw.id_donvi != null);
+                var GetStaff = db.answer_response
+                    .Where(kq => kq.surveyID == id && kq.id_CBVC != null && kq.id_donvi != null)
+                    .OrderBy(kq => kq.id)
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .Select(kq => new
+                    {
+                        MaKQ = kq.id,
+                        DonVi = kq.DonVi.name_donvi,
+                        Email = kq.users.email,
+                        CBVC = kq.CanBoVienChuc.TenCBVC,
+                        ThoiGianThucHien = kq.time,
+                    }).ToList();
+
+                var totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
+                return Json(new { status = "Load dữ liệu thành công", totalPages = totalPages, data = GetStaff }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new { data = (object)null }, JsonRequestBehavior.AllowGet);
+            }
+        }
         public ActionResult AnswerSurvey(int id)
         {
             var answers = db.answer_response.Where(d => d.id == id).Select(x => x.json_answer).ToList();
@@ -138,44 +197,111 @@ namespace CTDT.Areas.Admin.Controllers
 
             return Content(JsonConvert.SerializeObject(surveyData), "application/json");
         }
-        public ActionResult ExportExcelSurvey(int id, int cttdt = 0)
+        public ActionResult ExportExcelSurvey(int id, int cttdt = 0, int donvi = 0)
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-            var query = db.answer_response.AsQueryable();
-            if (cttdt != 0)
+            bool hasAnswerResponseForStudent = db.answer_response.Any(aw => aw.id_sv != null && aw.surveyID == id);
+            bool hasAnswerResponseForProgram = db.answer_response.Any(aw => aw.id_sv == null && aw.surveyID == id && aw.id_ctdt != null);
+            bool hasAnswerResponseForStaff = db.answer_response.Any(aw => aw.id_CBVC != null && aw.surveyID == id && aw.id_donvi != null);
+            if (hasAnswerResponseForStudent)
             {
-                query = query.Where(p => p.id_ctdt == cttdt);
-            }
-            var answers = query.Where(d => d.surveyID == id && d.id_ctdt == cttdt)
-                            .Select(x => new
-                            {
-                                DauThoiGian = x.time,
-                                x.json_answer,
-                                MSSV = x.sinhvien.ma_sv,
-                                HoTen = x.sinhvien.hovaten,
-                                Email = x.users.email,
-                                NgaySinh = (DateTime?)x.sinhvien.ngaysinh,
-                                Lop = x.sinhvien.lop.ma_lop,
-                                CTDT = x.ctdt.ten_ctdt,
-                                SDT = x.sinhvien.sodienthoai,
-                            }).ToList();
-            List<JObject> surveyData = new List<JObject>();
+                var query = db.answer_response.AsQueryable();
+                if (cttdt != 0)
+                {
+                    query = query.Where(p => p.id_ctdt == cttdt);
+                }
+                var answers = query.Where(d => d.surveyID == id && d.id_ctdt == cttdt)
+                                 .Select(x => new
+                                 {
+                                     DauThoiGian = x.time,
+                                     x.json_answer,
+                                     Email = x.users.email,
+                                     MSSV = x.sinhvien.ma_sv,
+                                     HoTen = x.sinhvien.hovaten,
+                                     NgaySinh = (DateTime?)x.sinhvien.ngaysinh,
+                                     Lop = x.sinhvien.lop.ma_lop,
+                                     CTDT = x.ctdt.ten_ctdt,
+                                     SDT = x.sinhvien.sodienthoai,
+                                 }).ToList();
+                List<JObject> surveyData = new List<JObject>();
 
-            foreach (var answer in answers)
-            {
-                JObject answerObject = JObject.Parse(answer.json_answer);
-                answerObject["DauThoiGian"] = answer.DauThoiGian;
-                answerObject["MSSV"] = answer.MSSV;
-                answerObject["HoTen"] = answer.HoTen;
-                answerObject["Email"] = answer.Email;
-                answerObject["NgaySinh"] = answer.NgaySinh?.ToString("yyyy-MM-dd");
-                answerObject["Lop"] = answer.Lop;
-                answerObject["CTDT"] = answer.CTDT;
-                answerObject["SDT"] = answer.SDT;
-                surveyData.Add(answerObject);
+                foreach (var answer in answers)
+                {
+                    JObject answerObject = JObject.Parse(answer.json_answer);
+                    answerObject["DauThoiGian"] = answer.DauThoiGian;
+                    answerObject["Email"] = answer.Email;
+                    answerObject["MSSV"] = answer.MSSV;
+                    answerObject["HoTen"] = answer.HoTen;
+                    answerObject["NgaySinh"] = answer.NgaySinh?.ToString("yyyy-MM-dd");
+                    answerObject["Lop"] = answer.Lop;
+                    answerObject["CTDT"] = answer.CTDT;
+                    answerObject["SDT"] = answer.SDT;
+                    surveyData.Add(answerObject);
+                }
+                return Content(JsonConvert.SerializeObject(surveyData), "application/json");
             }
-            return Content(JsonConvert.SerializeObject(surveyData), "application/json");
+            else if (hasAnswerResponseForProgram)
+            {
+                var query = db.answer_response.AsQueryable();
+                if (cttdt != 0)
+                {
+                    query = query.Where(p => p.id_ctdt == cttdt);
+                }
+                var answers = query.Where(d => d.surveyID == id && d.id_ctdt == cttdt)
+                                 .Select(x => new
+                                 {
+                                     DauThoiGian = x.time,
+                                     x.json_answer,
+                                     Email = x.users.email,
+                                     CTDT = x.ctdt.ten_ctdt,
+                                 }).ToList();
+                List<JObject> surveyData = new List<JObject>();
+
+                foreach (var answer in answers)
+                {
+                    JObject answerObject = JObject.Parse(answer.json_answer);
+                    answerObject["DauThoiGian"] = answer.DauThoiGian;
+                    answerObject["Email"] = answer.Email;
+                    answerObject["CTDT"] = answer.CTDT;
+                    surveyData.Add(answerObject);
+                }
+                return Content(JsonConvert.SerializeObject(surveyData), "application/json");
+            }
+            else if (hasAnswerResponseForStaff)
+            {
+                var query = db.answer_response.AsQueryable();
+                if (donvi != 0)
+                {
+                    query = query.Where(p => p.id_donvi == donvi);
+                }
+                var answers = query.Where(d => d.surveyID == id && d.id_donvi == donvi)
+                                 .Select(x => new
+                                 {
+                                     DauThoiGian = x.time,
+                                     x.json_answer,
+                                     HoTen = x.CanBoVienChuc.TenCBVC,
+                                     Email = x.users.email,
+                                     DonVi = x.DonVi.name_donvi,
+                                 }).ToList();
+                List<JObject> surveyData = new List<JObject>();
+
+                foreach (var answer in answers)
+                {
+                    JObject answerObject = JObject.Parse(answer.json_answer);
+                    answerObject["DauThoiGian"] = answer.DauThoiGian;
+                    answerObject["Email"] = answer.Email;
+                    answerObject["HoTen"] = answer.HoTen;
+                    answerObject["DonVi"] = answer.DonVi;
+                    surveyData.Add(answerObject);
+                }
+                return Content(JsonConvert.SerializeObject(surveyData), "application/json");
+            }
+            else
+            {
+                return new EmptyResult();
+            }
         }
+
         [HttpPost]
         public ActionResult SaveExcelFile()
         {
@@ -204,6 +330,5 @@ namespace CTDT.Areas.Admin.Controllers
                 return Json(new { success = false, message = "Error saving file: " + ex.Message });
             }
         }
-
     }
 }

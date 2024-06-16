@@ -1,4 +1,5 @@
-﻿@using CTDT.Helper
+﻿@model IEnumerable<CTDT.Models.answer_response>
+@using CTDT.Helper
 @{
     ViewBag.Title = "Danh sách chi tiết phiếu khảo sát - TDMU";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -24,14 +25,37 @@
                             <input type="hidden" id="userid" value="@user.id_users" />
                             <table class="table table-striped table-bordered align-middle mb-0 bg-white custom-table">
                                 <thead class="bg-primary text-white">
-                                    <tr>
-                                        <th>STT</th>
-                                        <th>CTĐT</th>
-                                        <th>Sinh Viên</th>
-                                        <th>MSSV</th>
-                                        <th>Thời gian khảo sát</th>
-                                        <th>Chức năng</th>
-                                    </tr>
+                                    @if (Model.FirstOrDefault().id_sv != null && Model.FirstOrDefault().id_ctdt != null)
+                                    {
+                                        <tr>
+                                            <th>STT</th>
+                                            <th>CTĐT</th>
+                                            <th>Sinh Viên</th>
+                                            <th>MSSV</th>
+                                            <th>Thời gian khảo sát</th>
+                                            <th>Chức năng</th>
+                                        </tr>
+                                    }
+                                    else if (Model.FirstOrDefault().id_sv == null && Model.FirstOrDefault().id_ctdt != null)
+                                    {
+                                        <tr>
+                                            <th>STT</th>
+                                            <th>CTĐT</th>
+                                            <th>Khoa</th>
+                                            <th>Thời gian khảo sát</th>
+                                            <th>Chức năng</th>
+                                        </tr>
+                                    }
+                                    else if (Model.FirstOrDefault().id_CBVC != null && Model.FirstOrDefault().id_donvi != null)
+                                    {
+                                        <tr>
+                                            <th>STT</th>
+                                            <th>Họ và tên</th>
+                                            <th>Đơn vị</th>
+                                            <th>Thời gian khảo sát</th>
+                                            <th>Chức năng</th>
+                                        </tr>
+                                    }
                                 </thead>
                                 <tbody id="showdata">
 

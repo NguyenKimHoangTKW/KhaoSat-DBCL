@@ -5,21 +5,21 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="4bde84ba2e194664bf55980208618204" Name="Diagram1">
-        <EntityTypeShape EntityType="dbSurveyModel.answer_response" Width="1.5" PointX="5.25" PointY="3.25" />
-        <EntityTypeShape EntityType="dbSurveyModel.CanBoVienChuc" Width="1.5" PointX="3" PointY="3.5" />
-        <EntityTypeShape EntityType="dbSurveyModel.ctdt" Width="1.5" PointX="3" PointY="22.875" />
-        <EntityTypeShape EntityType="dbSurveyModel.ChucVu" Width="1.5" PointX="0.75" PointY="7.625" />
-        <EntityTypeShape EntityType="dbSurveyModel.ChuongTrinhDaoTao" Width="1.5" PointX="0.75" PointY="1.25" />
-        <EntityTypeShape EntityType="dbSurveyModel.DonVi" Width="1.5" PointX="0.75" PointY="4.375" />
-        <EntityTypeShape EntityType="dbSurveyModel.hedaotao" Width="1.5" PointX="0.75" PointY="10.25" />
-        <EntityTypeShape EntityType="dbSurveyModel.khoa" Width="1.5" PointX="0.75" PointY="23.25" />
-        <EntityTypeShape EntityType="dbSurveyModel.LoaiKhaoSat" Width="1.5" PointX="0.75" PointY="20.5" />
-        <EntityTypeShape EntityType="dbSurveyModel.lop" Width="1.5" PointX="0.75" PointY="26.75" />
-        <EntityTypeShape EntityType="dbSurveyModel.sinhvien" Width="1.5" PointX="3" PointY="26.375" />
-        <EntityTypeShape EntityType="dbSurveyModel.survey" Width="1.5" PointX="3" PointY="12.625" />
-        <EntityTypeShape EntityType="dbSurveyModel.sysdiagrams" Width="1.5" PointX="7.75" PointY="0.75" />
-        <EntityTypeShape EntityType="dbSurveyModel.typeusers" Width="1.5" PointX="1.5" PointY="17.875" />
-        <EntityTypeShape EntityType="dbSurveyModel.users" Width="1.5" PointX="0.75" PointY="12.625" />
+        <EntityTypeShape EntityType="dbSurveyModel.answer_response" Width="1.5" PointX="3" PointY="3.75" />
+        <EntityTypeShape EntityType="dbSurveyModel.CanBoVienChuc" Width="1.5" PointX="6" PointY="3.875" />
+        <EntityTypeShape EntityType="dbSurveyModel.ctdt" Width="1.5" PointX="0.75" PointY="36" />
+        <EntityTypeShape EntityType="dbSurveyModel.ChucVu" Width="1.5" PointX="3.75" PointY="9.125" />
+        <EntityTypeShape EntityType="dbSurveyModel.ChuongTrinhDaoTao" Width="1.5" PointX="3.75" PointY="0.75" />
+        <EntityTypeShape EntityType="dbSurveyModel.DonVi" Width="1.5" PointX="0.75" PointY="4.875" />
+        <EntityTypeShape EntityType="dbSurveyModel.hedaotao" Width="1.5" PointX="1.5" PointY="25.375" />
+        <EntityTypeShape EntityType="dbSurveyModel.khoa" Width="1.5" PointX="1.5" PointY="40.375" />
+        <EntityTypeShape EntityType="dbSurveyModel.LoaiKhaoSat" Width="1.5" PointX="1.5" PointY="9.125" />
+        <EntityTypeShape EntityType="dbSurveyModel.lop" Width="1.5" PointX="1.5" PointY="32.25" />
+        <EntityTypeShape EntityType="dbSurveyModel.sinhvien" Width="1.5" PointX="0.75" PointY="27.75" />
+        <EntityTypeShape EntityType="dbSurveyModel.survey" Width="1.5" PointX="0.75" PointY="12.375" />
+        <EntityTypeShape EntityType="dbSurveyModel.sysdiagrams" Width="1.5" PointX="5.75" PointY="1" />
+        <EntityTypeShape EntityType="dbSurveyModel.typeusers" Width="1.5" PointX="1.5" PointY="22.75" />
+        <EntityTypeShape EntityType="dbSurveyModel.users" Width="1.5" PointX="1.5" PointY="17.5" />
         <AssociationConnector Association="dbSurveyModel.FK_answer_response_CanBoVienChuc" />
         <AssociationConnector Association="dbSurveyModel.FK_answer_response_ctdt" />
         <AssociationConnector Association="dbSurveyModel.FK_answer_response_DonVi" />

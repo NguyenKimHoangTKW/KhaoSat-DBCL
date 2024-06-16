@@ -19,6 +19,8 @@
     <EntitySetMapping Name="CanBoVienChuc">
       <EntityTypeMapping TypeName="dbSurveyModel.CanBoVienChuc">
         <MappingFragment StoreEntitySet="CanBoVienChuc">
+          <ScalarProperty Name="status" ColumnName="status" />
+          <ScalarProperty Name="namhoatdong" ColumnName="namhoatdong" />
           <ScalarProperty Name="id_chuongtrinhdaotao" ColumnName="id_chuongtrinhdaotao" />
           <ScalarProperty Name="id_chucvu" ColumnName="id_chucvu" />
           <ScalarProperty Name="id_donvi" ColumnName="id_donvi" />
@@ -123,6 +125,7 @@
     <EntitySetMapping Name="survey">
       <EntityTypeMapping TypeName="dbSurveyModel.survey">
         <MappingFragment StoreEntitySet="survey">
+          <ScalarProperty Name="namhoatdong" ColumnName="namhoatdong" />
           <ScalarProperty Name="creator" ColumnName="creator" />
           <ScalarProperty Name="id_loaikhaosat" ColumnName="id_loaikhaosat" />
           <ScalarProperty Name="surveyStatus" ColumnName="surveyStatus" />

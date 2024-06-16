@@ -64,6 +64,8 @@ namespace CTDT.Controllers
         //Xác thực
         public ActionResult XacThucCTDT(int id)
         {
+            Session.Remove("XTDV");
+            Session.Remove("CBVC");
             ViewBag.id = id;
             var xacthuc = db.survey.Where(x => x.surveyID == id).ToList();
             ViewBag.KhoaList = new SelectList(db.khoa.OrderBy(l => l.id_khoa), "id_khoa", "ten_khoa");
@@ -123,9 +125,6 @@ namespace CTDT.Controllers
         [HttpPost]
         public ActionResult SaveDataXacThucByCBVC(string donvi)
         {
-            Session.Remove("SelectedSvByXT");
-            Session.Remove("SelectedKhoaByXTCTDT");
-            Session.Remove("SelectedCTDTByXTCTDT");
             var user = SessionHelper.GetUser();
             try
             {
@@ -144,8 +143,11 @@ namespace CTDT.Controllers
                     {
                         return Json(new { success = false, message = "Tài khoản bạn không thể thực hiện khảo sát vì Email bạn đang sử dụng không nằm trong dữ liệu CBVC, vui lòng đổi Email để tiếp tục" });
                     }
-                   
-                    Session["CBVC"] = canBoVienChuc.id_CBVC;
+                    else
+                    {
+                        Session["CBVC"] = canBoVienChuc.id_CBVC;
+                    }
+                    
                 }
                 else
                 {
@@ -159,17 +161,19 @@ namespace CTDT.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
+
         [HttpPost]
         public ActionResult SaveDataXacThucCTDT(string ctdt, string sv, int surveyid)
         {
             try
             {
+                var user = SessionHelper.GetUser();
                 Session["XTCTDT"] = ctdt;
                 Session["XTSV"] = sv;
 
                 if (int.TryParse(ctdt, out int intCtdt) && int.TryParse(sv, out int intSv))
                 {
-                    var surveyResponse = db.answer_response.FirstOrDefault(x => x.id_ctdt == intCtdt && x.id_sv == intSv && x.surveyID == surveyid);
+                    var surveyResponse = db.answer_response.FirstOrDefault(x => x.id_ctdt == intCtdt && x.id_sv == intSv && x.surveyID == surveyid && x.id_users == user.id_users);
                     if (surveyResponse != null)
                     {
                         return Json(new { success = false, message = "Sinh viên này đã thực hiện khảo sát" });
@@ -199,7 +203,7 @@ namespace CTDT.Controllers
 
                 if (int.TryParse(ctdt, out int intCtdt) && int.TryParse(sv, out int intSv))
                 {
-                    var surveyResponse = db.answer_response.SingleOrDefault(x => x.id_ctdt == intCtdt && x.id_sv == intSv && x.surveyID == surveyid);
+                    var surveyResponse = db.answer_response.SingleOrDefault(x => x.id_ctdt == intCtdt && x.id_sv == intSv && x.surveyID == surveyid && x.id_users == user.id_users);
                     if (surveyResponse != null)
                     {
                         return Json(new { success = false, message = "Sinh viên này đã thực hiện khảo sát" });
@@ -256,17 +260,18 @@ namespace CTDT.Controllers
         [HttpPost]
         public ActionResult GetSvIdByMssv(string mssv, int surveyid)
         {
+            var user = SessionHelper.GetUser();
             var student = db.sinhvien.SingleOrDefault(s => s.ma_sv == mssv && s.lop.status == true);
             if (student != null)
             {
-                var surveyResponse = db.answer_response.FirstOrDefault(r => r.id_sv == student.id_sv && r.surveyID == surveyid);
+                var surveyResponse = db.answer_response.FirstOrDefault(r => r.id_sv == student.id_sv && r.surveyID == surveyid && r.id_users == user.id_users);
                 if (surveyResponse != null)
                 {
                     return Json(new { success = false, message = "Sinh viên này đã thực hiện khảo sát" });
                 }
                 else
                 {
-                    return Json(new { success = true, svId = student.id_sv, ctdt = student.lop.ctdt.id_ctdt });
+                    return Json(new { success  = true, svId = student.id_sv, ctdt = student.lop.ctdt.id_ctdt });
                 }
             }
             else

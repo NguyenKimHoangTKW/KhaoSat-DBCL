@@ -1,5 +1,5 @@
 ﻿var surveyid = document.getElementById('idSurvey').value;
-
+var cbvcid = document.getElementById('idCBVC').value;
 $(document).ready(function () {
     $('#submit_phieu').click(function () {
         // Hiển thị modal CAPTCHA
@@ -184,6 +184,7 @@ function saveFormData() {
                 contentType: "application/json; charset=utf-8",
                 data: JSON.stringify({
                     surveyID: surveyid,
+                    id_CBVC: cbvcid,
                     json_answer: JSON.stringify(formData),
                     captchaResponse: grecaptcha.getResponse()
                 }),

@@ -225,6 +225,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
+    <Compile Include="Areas\Admin\Controllers\CBVCController.cs" />
     <Compile Include="Areas\Admin\Controllers\CTDTController.cs" />
     <Compile Include="Areas\Admin\Controllers\KhoaController.cs" />
     <Compile Include="Areas\Admin\Controllers\LopController.cs" />
@@ -1151,18 +1152,8 @@
     <Content Include="Areas\CTDT\Views\ThongKeKhaoSat\Index.cshtml" />
     <Content Include="App_Data\serviceAccountKey.json" />
     <Content Include="DataExport\Mau\MauUploadSinhVien.xlsx" />
-    <Content Include="DataExport\DoiTuongKhaoSat\DoiTuongDaKhaoSat_20240609182705.xlsx" />
     <Content Include="DataExport\Mau\MauUploadUser.xlsx" />
-    <Content Include="DataExport\DoiTuongKhaoSat\DoiTuongChuaKhaoSat_20240610215320.xlsx" />
-    <Content Include="DataExport\DoiTuongKhaoSat\DoiTuongChuaKhaoSat_20240610220321.xlsx" />
-    <Content Include="DataExport\DoiTuongKhaoSat\DoiTuongChuaKhaoSat_20240610220757.xlsx" />
-    <Content Include="DataExport\DoiTuongKhaoSat\DoiTuongChuaKhaoSat_20240610220842.xlsx" />
-    <Content Include="DataExport\DoiTuongKhaoSat\DoiTuongDaKhaoSat_20240611082636.xlsx" />
-    <Content Include="DataExport\DoiTuongKhaoSat-CTDT\DoiTuongChuaKhaoSat_20240610141646.xlsx" />
-    <Content Include="DataExport\DoiTuongKhaoSat-CTDT\DoiTuongChuaKhaoSat_20240610142102.xlsx" />
-    <Content Include="DataExport\DoiTuongKhaoSat-CTDT\DoiTuongChuaKhaoSat_20240610142533.xlsx" />
-    <Content Include="DataExport\DoiTuongKhaoSat-CTDT\DoiTuongDaKhaoSat_20240611082636.xlsx" />
-    <Content Include="DataExport\KetQuaPKS\KetQuaKhaoSat_20240609200946.xlsx" />
+    <Content Include="Areas\Admin\Views\CBVC\ViewCBVC.cshtml" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Scripts\Firebase.js" />
     <Content Include="Scripts\jquery-3.7.1.js" />
@@ -1372,6 +1363,9 @@
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\CTDT\Data\" />
     <Folder Include="Content\Exports\" />
+    <Folder Include="DataExport\DoiTuongKhaoSat-CTDT\" />
+    <Folder Include="DataExport\DoiTuongKhaoSat\" />
+    <Folder Include="DataExport\KetQuaPKS\" />
     <Folder Include="Scripts\Admin\" />
   </ItemGroup>
   <ItemGroup>

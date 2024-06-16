@@ -32,6 +32,7 @@ namespace CTDT.Models
         public Nullable<byte> surveyStatus { get; set; }
         public int id_loaikhaosat { get; set; }
         public Nullable<int> creator { get; set; }
+        public Nullable<int> namhoatdong { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<answer_response> answer_response { get; set; }
